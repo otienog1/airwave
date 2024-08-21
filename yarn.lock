@@ -460,6 +460,7 @@ __metadata:
     "@types/react-dom": "npm:^18"
     eslint: "npm:^8"
     eslint-config-next: "npm:14.2.5"
+    media-chrome: "npm:^4.1.0"
     next: "npm:14.2.5"
     postcss: "npm:^8"
     react: "npm:^18"
@@ -2533,6 +2534,13 @@ __metadata:
     promise-retry: "npm:^2.0.1"
     ssri: "npm:^10.0.0"
   checksum: 10c0/df5f4dbb6d98153b751bccf4dc4cc500de85a96a9331db9805596c46aa9f99d9555983954e6c1266d9f981ae37a9e4647f42b9a4bb5466f867f4012e582c9e7e
+  languageName: node
+  linkType: hard
+
+"media-chrome@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "media-chrome@npm:4.1.0"
+  checksum: 10c0/f802d25ad74d4328aa4292d9724c21c90bf4083f9c6d71951afc164cd57b90863d9a2c65cdb8b59202412b1d7d384eddb2cd78afaeb7c533a39e658899ec7def
   languageName: node
   linkType: hard
 
