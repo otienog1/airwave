@@ -11,6 +11,7 @@ interface AudioPlayerProps {
     isMuted: boolean;
     onMuteToggle: () => void;
     metadata: string | null;
+    isLoading: boolean;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -22,7 +23,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     onVolumeChange,
     isMuted,
     onMuteToggle,
-    metadata
+    metadata,
+    isLoading
 }) => {
     return (
         <>
@@ -53,6 +55,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                     {metadata}
                 </div>
             )}
+            {isLoading && <p>Loading...</p>}
         </>
     );
 };
