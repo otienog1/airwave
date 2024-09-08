@@ -83,7 +83,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ gainNode }) => {
                             value={value}
                             onChange={handleChange(setValue)}
                             className="w-6 h-32 appearance-none bg-transparent [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-runnable-track]:appearance-none [&::-webkit-slider-runnable-track]:w-1 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-gray-300"
-                            style={{ writingMode: 'bt-lr' }}
+                            style={{ writingMode: 'vertical-lr' }}
                         />
                         <span className="text-white mt-2">{label}</span>
                         <span className="text-white text-sm">{value}dB</span>

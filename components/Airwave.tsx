@@ -53,7 +53,6 @@ const Airwave = () => {
     const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
     const [gainNode, setGainNode] = useState<GainNode | null>(null);
 
-
     useEffect(() => {
         const context = new (window.AudioContext || (window as any).webkitAudioContext)();
         const gain = context.createGain();
@@ -65,8 +64,6 @@ const Airwave = () => {
             context.close();
         };
     }, []);
-
-
 
     useEffect(() => {
         checkInternetSpeed();
@@ -288,8 +285,8 @@ const Airwave = () => {
                                 <button
                                     onClick={() => toggleStation(station)}
                                     className={`w-full py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75 transition-all duration-300 ${currentStation === station.url && isPlaying
-                                        ? 'bg-red-500 hover:bg-red-600 focus:ring-red-400 text-white'
-                                        : 'bg-green-500 hover:bg-green-600 focus:ring-green-400 text-white'
+                                            ? 'bg-red-500 hover:bg-red-600 focus:ring-red-400 text-white'
+                                            : 'bg-green-500 hover:bg-green-600 focus:ring-green-400 text-white'
                                         }`}
                                     disabled={isLoading && currentStation === station.url}
                                 >
