@@ -15,7 +15,7 @@ export const PlayControl: React.FC<PlayControlProps> = ({
   <button
     onClick={onTogglePlay}
     disabled={isLoading}
-    className="w-12 h-12 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors"
+    className="w-12 h-12 bg-blue-600 hover:bg-blue-700  flex items-center justify-center transition-colors"
   >
     {isLoading ? (
       <Loader2 className="w-6 h-6 text-white animate-spin" />

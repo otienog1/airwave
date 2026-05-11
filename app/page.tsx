@@ -1,9 +1,13 @@
-import MordernAirwave from "@/components/MordernAirwave";
+import React from 'react';
+import { Layout } from '@/components/layout/Layout';
+import ModernAirwave from '@/components/MordernAirwave';
 
 export default function Home() {
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <MordernAirwave />
-        </main>
+        <Layout>
+            <main className="max-w-7xl mx-auto px-4 py-8 pb-24">
+                <ModernAirwave />
+            </main>
+        </Layout>
     );
 }

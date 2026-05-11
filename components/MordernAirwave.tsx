@@ -1,73 +1,199 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AudioPlayer } from '@/components/player';
-import { StationCard } from '@/components/station/StationCard'
-import { Station } from '@/types/Station';
-import { Radio, Search, Filter } from 'lucide-react';
-import { useRef } from 'react';
+import { StationGrid } from '@/components/station/StationGrid';
+import { SearchAndFilters } from '@/components/station/SearchAndFilters';
+import type { Station } from '@/types/Station';
 
+// Mock Station Data
 const mockStations: Station[] = [
-    { id: 1, name: 'Capital FM', url: 'https://atunwadigital.streamguys1.com/capitalfm', genre: 'Pop', region: 'Nairobi', listeners: 15420, isLive: true, description: 'Kenya\'s Number One Hit Music Station' },
-    { id: 2, name: 'Classic 105', url: 'https://atunwadigital.streamguys1.com/classic105', genre: 'Soul', region: 'Nairobi', listeners: 12350, isLive: true, description: 'No.1 for Soul and Great Hits' },
-    { id: 3, name: 'Kiss 100', url: 'https://atunwadigital.streamguys1.com/kiss100fm', genre: 'Hip Hop', region: 'Nairobi', listeners: 18920, isLive: true, description: 'Tha Beat of Nairobi' },
-    { id: 4, name: 'Homeboyz Radio', url: 'https://atunwadigital.streamguys1.com/homeboyzradio', genre: 'Urban', region: 'Nairobi', listeners: 9800, isLive: true, description: '103.5 Homeboyz Radio' },
-    { id: 5, name: 'Hot 96', url: 'https://hot96-atunwadigital.streamguys1.com/hot96', genre: 'Contemporary', region: 'Nairobi', listeners: 11240, isLive: true, description: 'We Play What We Want' },
-    { id: 6, name: 'Ramogi FM', url: 'https://ramogifm-atunwadigital.streamguys1.com/ramogifm', genre: 'Talk', region: 'Nairobi', listeners: 7650, isLive: true, description: 'Vernacular Radio Station' },
-    { id: 7, name: 'Ghetto Radio', url: 'https://stream-158.zeno.fm/eghcv7h647zuv', genre: 'Hip Hop', region: 'Nairobi', listeners: 5420, isLive: true, description: 'Mtaani Radio' },
+    {
+        id: 1,
+        name: 'Capital FM',
+        description: "Kenya's No. 1 Hit Music Station",
+        url: 'https://atunwadigital.streamguys1.com/capitalfm',
+        genre: 'Pop',
+        region: 'Nairobi',
+        frequency: '98.4 FM',
+        current_listeners: 15420,
+        is_live: true,
+        language: 'English',
+        total_plays: 125430
+    },
+    {
+        id: 2,
+        name: 'Classic 105',
+        description: 'No.1 for Soul and Great Hits',
+        url: 'https://atunwadigital.streamguys1.com/classic105',
+        genre: 'Soul',
+        region: 'Nairobi',
+        frequency: '105.2 FM',
+        current_listeners: 12350,
+        is_live: true,
+        language: 'English',
+        total_plays: 98760
+    },
+    {
+        id: 3,
+        name: 'Kiss 100',
+        description: 'Tha Beat of Nairobi',
+        url: 'https://atunwadigital.streamguys1.com/kiss100fm',
+        genre: 'Hip Hop',
+        region: 'Nairobi',
+        frequency: '100.3 FM',
+        current_listeners: 18920,
+        is_live: true,
+        language: 'English',
+        total_plays: 156890
+    },
+    {
+        id: 4,
+        name: 'Homeboyz Radio',
+        description: '103.5 Homeboyz Radio',
+        url: 'https://atunwadigital.streamguys1.com/homeboyzradio',
+        genre: 'Urban',
+        region: 'Nairobi',
+        frequency: '103.5 FM',
+        current_listeners: 9800,
+        is_live: true,
+        language: 'English',
+        total_plays: 87230
+    },
+    {
+        id: 5,
+        name: 'Hot 96',
+        description: 'We Play What We Want',
+        url: 'https://hot96-atunwadigital.streamguys1.com/hot96',
+        genre: 'Contemporary',
+        region: 'Nairobi',
+        frequency: '96.0 FM',
+        current_listeners: 11240,
+        is_live: true,
+        language: 'English',
+        total_plays: 76540
+    },
+    {
+        id: 6,
+        name: 'Ramogi FM',
+        description: 'Vernacular Radio Station',
+        url: 'https://ramogifm-atunwadigital.streamguys1.com/ramogifm',
+        genre: 'Talk',
+        region: 'Nairobi',
+        frequency: '107.1 FM',
+        current_listeners: 7650,
+        is_live: true,
+        language: 'Luo',
+        total_plays: 45320
+    },
+    {
+        id: 7,
+        name: 'Ghetto Radio',
+        description: 'Mtaani Radio',
+        url: 'https://stream-158.zeno.fm/eghcv7h647zuv',
+        genre: 'Hip Hop',
+        region: 'Nairobi',
+        current_listeners: 5420,
+        is_live: true,
+        language: 'Swahili',
+        total_plays: 34210
+    },
+    {
+        id: 8,
+        name: 'Radio Citizen',
+        description: 'Citizen Radio - Mzalendo',
+        url: 'https://radiocitizen-atunwadigital.streamguys1.com/radiocitizen',
+        genre: 'News',
+        region: 'Nairobi',
+        frequency: '106.7 FM',
+        current_listeners: 13450,
+        is_live: true,
+        language: 'English',
+        total_plays: 89760
+    },
+    {
+        id: 9,
+        name: 'Radio Maisha',
+        description: 'Maisha ni Yetu',
+        url: 'https://radiomaisha-atunwadigital.streamguys1.com/radiomaisha',
+        genre: 'Contemporary',
+        region: 'Nairobi',
+        frequency: '102.7 FM',
+        current_listeners: 16780,
+        is_live: true,
+        language: 'Swahili',
+        total_plays: 112340
+    },
+    {
+        id: 10,
+        name: 'NRG Radio',
+        description: 'Energy to the Max',
+        url: 'https://uksouth.streaming.broadcast.radio/nrg',
+        genre: 'Dance',
+        region: 'Nairobi',
+        frequency: '100.9 FM',
+        current_listeners: 8920,
+        is_live: true,
+        language: 'English',
+        total_plays: 67890
+    },
+    {
+        id: 11,
+        name: 'Kass FM',
+        description: 'Kalenjin Community Radio',
+        url: 'https://stream-158.zeno.fm/mr4w3nu1qzzuv',
+        genre: 'Talk',
+        region: 'Nakuru',
+        frequency: '89.1 FM',
+        current_listeners: 4320,
+        is_live: true,
+        language: 'Kalenjin',
+        total_plays: 28760
+    },
+    {
+        id: 12,
+        name: 'Radio Jambo',
+        description: 'Redio ya Kwanza Kenya',
+        url: 'https://atunwadigital.streamguys1.com/radiojambo',
+        genre: 'Talk',
+        region: 'Nairobi',
+        frequency: '97.5 FM',
+        current_listeners: 9870,
+        is_live: true,
+        language: 'Swahili',
+        total_plays: 78650
+    }
 ];
 
-const genres = ['All', 'Pop', 'Soul', 'Hip Hop', 'Urban', 'Contemporary', 'Talk'];
-const regions = ['All', 'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru'];
-
 const ModernAirwave: React.FC = () => {
-    const [stations, setStations] = useState<Station[]>(mockStations);
+    // State management
+    const [stations] = useState<Station[]>(mockStations);
     const [filteredStations, setFilteredStations] = useState<Station[]>(mockStations);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedGenre, setSelectedGenre] = useState('All');
+    const [selectedRegion, setSelectedRegion] = useState('All');
+    const [favorites, setFavorites] = useState<Set<number>>(new Set());
     const [currentStation, setCurrentStation] = useState<Station | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [volume, setVolume] = useState(0.8);
     const [isMuted, setIsMuted] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedGenre, setSelectedGenre] = useState('All');
-    const [selectedRegion, setSelectedRegion] = useState('All');
-    const [favorites, setFavorites] = useState<Set<number>>(new Set());
+    const [audioError, setAudioError] = useState<string | null>(null);
+    const [audioInitialized, setAudioInitialized] = useState(false);
 
+    // Audio refs
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const playAttemptRef = useRef<boolean>(false);
 
-    // Initialize audio
-    useEffect(() => {
-        audioRef.current = new Audio();
-        audioRef.current.crossOrigin = 'anonymous';
+    // Extract unique genres and regions from mock data
+    const genres = ['All', ...Array.from(new Set(stations.map(station => station.genre)))];
+    const regions = ['All', ...Array.from(new Set(stations.map(station => station.region)))];
 
-        const audio = audioRef.current;
-
-        const handleCanPlay = () => {
-            setIsLoading(false);
-            if (isPlaying) {
-                audio.play().catch(console.error);
-            }
-        };
-
-        const handleError = () => {
-            setIsLoading(false);
-            setIsPlaying(false);
-        };
-
-        audio.addEventListener('canplay', handleCanPlay);
-        audio.addEventListener('error', handleError);
-
-        return () => {
-            audio.removeEventListener('canplay', handleCanPlay);
-            audio.removeEventListener('error', handleError);
-            audio.pause();
-        };
-    }, []);
-
-    // Filter stations
+    // Filter stations based on search and filters
     useEffect(() => {
         let filtered = stations;
 
+        // Apply search filter
         if (searchTerm) {
             filtered = filtered.filter(station =>
                 station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -75,10 +201,12 @@ const ModernAirwave: React.FC = () => {
             );
         }
 
+        // Apply genre filter
         if (selectedGenre !== 'All') {
             filtered = filtered.filter(station => station.genre === selectedGenre);
         }
 
+        // Apply region filter
         if (selectedRegion !== 'All') {
             filtered = filtered.filter(station => station.region === selectedRegion);
         }
@@ -86,26 +214,163 @@ const ModernAirwave: React.FC = () => {
         setFilteredStations(filtered);
     }, [stations, searchTerm, selectedGenre, selectedRegion]);
 
-    const playStation = (station: Station) => {
+    // Initialize audio only when needed (lazy initialization)
+    const initializeAudio = () => {
+        if (audioInitialized || audioRef.current) return;
+
+        console.log('Initializing audio element...');
+
+        audioRef.current = new Audio();
+        audioRef.current.crossOrigin = 'anonymous';
+        audioRef.current.preload = 'none';
+
+        // Important: Don't set src here - leave it empty to avoid the error
+
+        const audio = audioRef.current;
+
+        const handleLoadStart = () => {
+            setIsLoading(true);
+            setAudioError(null);
+        };
+
+        const handleCanPlay = () => {
+            console.log('Audio can play');
+            setIsLoading(false);
+
+            // If we initiated a play attempt, try to play now
+            if (playAttemptRef.current) {
+                playAttemptRef.current = false;
+                audio.play().then(() => {
+                    setIsPlaying(true);
+                    console.log('Audio playing successfully');
+                }).catch((error) => {
+                    console.error('Autoplay failed:', error);
+                    setIsPlaying(false);
+                    setAudioError('Click play to start listening');
+                });
+            }
+        };
+
+        const handlePlay = () => {
+            setIsPlaying(true);
+            setIsLoading(false);
+            setAudioError(null);
+        };
+
+        const handlePause = () => {
+            setIsPlaying(false);
+        };
+
+        const handleEnded = () => {
+            setIsPlaying(false);
+        };
+
+        const handleError = (e: Event) => {
+            // Only log errors if we actually have a src set
+            if (audio.src && audio.src !== window.location.href) {
+                console.error('Audio error:', audio.error);
+                setIsLoading(false);
+                setIsPlaying(false);
+                setAudioError('Failed to load audio stream');
+            }
+        };
+
+        const handleWaiting = () => {
+            // Only show loading if we have a valid src
+            if (audio.src && audio.src !== window.location.href) {
+                setIsLoading(true);
+            }
+        };
+
+        const handleCanPlayThrough = () => {
+            setIsLoading(false);
+        };
+
+        // Add all event listeners
+        audio.addEventListener('loadstart', handleLoadStart);
+        audio.addEventListener('canplay', handleCanPlay);
+        audio.addEventListener('play', handlePlay);
+        audio.addEventListener('pause', handlePause);
+        audio.addEventListener('ended', handleEnded);
+        audio.addEventListener('error', handleError);
+        audio.addEventListener('waiting', handleWaiting);
+        audio.addEventListener('canplaythrough', handleCanPlayThrough);
+
+        setAudioInitialized(true);
+    };
+
+    // Cleanup audio on component unmount
+    useEffect(() => {
+        return () => {
+            if (audioRef.current) {
+                const audio = audioRef.current;
+
+                // Remove all event listeners
+                audio.removeEventListener('loadstart', () => { });
+                audio.removeEventListener('canplay', () => { });
+                audio.removeEventListener('play', () => { });
+                audio.removeEventListener('pause', () => { });
+                audio.removeEventListener('ended', () => { });
+                audio.removeEventListener('error', () => { });
+                audio.removeEventListener('waiting', () => { });
+                audio.removeEventListener('canplaythrough', () => { });
+
+                // Clean stop
+                audio.pause();
+                audio.src = '';
+                audio.load(); // Clear the audio element
+            }
+        };
+    }, []);
+
+    // Update volume when it changes
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.volume = isMuted ? 0 : volume;
+        }
+    }, [volume, isMuted]);
+
+    const playStation = async (station: Station) => {
+        // Initialize audio on first use
+        initializeAudio();
+
         if (!audioRef.current) return;
 
         const audio = audioRef.current;
 
+        console.log('Playing station:', station.name);
+
+        // If same station, just toggle play/pause
         if (currentStation?.id === station.id) {
             if (isPlaying) {
                 audio.pause();
-                setIsPlaying(false);
             } else {
-                audio.play().catch(console.error);
-                setIsPlaying(true);
+                // Only try to play if we have a valid src
+                if (audio.src && audio.src !== window.location.href) {
+                    audio.play().catch(error => {
+                        console.error('Play failed:', error);
+                        setAudioError('Failed to play audio');
+                    });
+                } else {
+                    setAudioError('No audio source available');
+                }
             }
             return;
         }
 
-        setIsLoading(true);
-        setCurrentStation(station);
-        setIsPlaying(true);
+        // Stop current audio if playing
+        if (currentStation) {
+            audio.pause();
+        }
 
+        // Set new station
+        setCurrentStation(station);
+        setIsPlaying(false);
+        setIsLoading(true);
+        setAudioError(null);
+        playAttemptRef.current = true;
+
+        // Set audio source and load
         audio.src = station.url;
         audio.volume = isMuted ? 0 : volume;
         audio.load();
@@ -114,20 +379,31 @@ const ModernAirwave: React.FC = () => {
     const togglePlay = () => {
         if (!audioRef.current || !currentStation) return;
 
+        const audio = audioRef.current;
+
         if (isPlaying) {
-            audioRef.current.pause();
-            setIsPlaying(false);
+            audio.pause();
         } else {
-            audioRef.current.play().catch(console.error);
-            setIsPlaying(true);
+            // Clear any previous error
+            setAudioError(null);
+
+            // Only try to play if we have a valid src
+            if (audio.src && audio.src !== window.location.href) {
+                audio.play().then(() => {
+                    setIsPlaying(true);
+                }).catch(error => {
+                    console.error('Play failed:', error);
+                    setIsPlaying(false);
+                    setAudioError('Failed to play audio. Try clicking again.');
+                });
+            } else {
+                setAudioError('No audio source available');
+            }
         }
     };
 
     const handleVolumeChange = (newVolume: number) => {
         setVolume(newVolume);
-        if (audioRef.current) {
-            audioRef.current.volume = isMuted ? 0 : newVolume;
-        }
         if (newVolume === 0) {
             setIsMuted(true);
         } else if (isMuted) {
@@ -137,9 +413,6 @@ const ModernAirwave: React.FC = () => {
 
     const toggleMute = () => {
         setIsMuted(!isMuted);
-        if (audioRef.current) {
-            audioRef.current.volume = !isMuted ? 0 : volume;
-        }
     };
 
     const toggleFavorite = (stationId: number) => {
@@ -155,97 +428,41 @@ const ModernAirwave: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-            {/* Header */}
-            <header className="sticky top-0 z-40 bg-black/20 backdrop-blur-lg border-b border-white/10">
-                <div className="max-w-7xl mx-auto px-4 py-4">
-                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                        {/* Logo */}
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                                <Radio className="w-6 h-6 text-white" />
-                            </div>
-                            <h1 className="text-2xl font-bold text-white">AirWave</h1>
-                            <span className="text-sm text-gray-400 hidden sm:inline">Kenyan Radio</span>
-                        </div>
+        <>
+            <SearchAndFilters
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                selectedGenre={selectedGenre}
+                onGenreChange={setSelectedGenre}
+                selectedRegion={selectedRegion}
+                onRegionChange={setSelectedRegion}
+                genres={genres}
+                regions={regions}
+                stationCount={filteredStations.length}
+            />
 
-                        {/* Search */}
-                        <div className="flex-1 max-w-md">
-                            <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                <input
-                                    type="text"
-                                    placeholder="Search stations..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Stats */}
-                        <div className="text-right">
-                            <p className="text-white font-semibold">{filteredStations.length} Stations</p>
-                            <p className="text-gray-400 text-sm">Kenya's Best Radio</p>
-                        </div>
-                    </div>
-
-                    {/* Filters */}
-                    <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-white/10">
-                        <div className="flex items-center gap-2">
-                            <Filter className="w-4 h-4 text-gray-400" />
-                            <span className="text-gray-400 text-sm">Filter:</span>
-                        </div>
-
-                        <select
-                            value={selectedGenre}
-                            onChange={(e) => setSelectedGenre(e.target.value)}
-                            className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            {genres.map(genre => (
-                                <option key={genre} value={genre} className="bg-gray-800">{genre}</option>
-                            ))}
-                        </select>
-
-                        <select
-                            value={selectedRegion}
-                            onChange={(e) => setSelectedRegion(e.target.value)}
-                            className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            {regions.map(region => (
-                                <option key={region} value={region} className="bg-gray-800">{region}</option>
-                            ))}
-                        </select>
-                    </div>
+            {/* Audio Error Display */}
+            {audioError && (
+                <div className="mb-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                    <p className="text-yellow-400 text-sm flex items-center gap-2">
+                        <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                        {audioError}
+                    </p>
                 </div>
-            </header>
+            )}
 
-            {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-4 py-8 pb-24">
-                {filteredStations.length === 0 ? (
-                    <div className="text-center py-16">
-                        <Radio className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-white mb-2">No stations found</h3>
-                        <p className="text-gray-400">Try adjusting your search or filters</p>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {filteredStations.map((station) => (
-                            <StationCard
-                                key={station.id}
-                                station={station}
-                                isPlaying={isPlaying && currentStation?.id === station.id}
-                                isCurrentStation={currentStation?.id === station.id}
-                                onPlay={() => playStation(station)}
-                                onFavorite={() => toggleFavorite(station.id)}
-                                isFavorite={favorites.has(station.id)}
-                            />
-                        ))}
-                    </div>
-                )}
-            </main>
+            <StationGrid
+                stations={filteredStations}
+                loading={false} // No API loading since we're using mock data
+                error={null}    // No API errors since we're using mock data
+                currentStation={currentStation}
+                isPlaying={isPlaying}
+                favorites={favorites}
+                onPlay={playStation}
+                onFavorite={toggleFavorite}
+                onRetry={() => { }} // No retry needed for mock data
+            />
 
-            {/* Audio Player */}
             <AudioPlayer
                 currentStation={currentStation}
                 isPlaying={isPlaying}
@@ -256,7 +473,7 @@ const ModernAirwave: React.FC = () => {
                 onMuteToggle={toggleMute}
                 isLoading={isLoading}
             />
-        </div>
+        </>
     );
 };
 

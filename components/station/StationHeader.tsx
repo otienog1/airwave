@@ -23,9 +23,8 @@ export const StationHeader: React.FC<StationHeaderProps> = ({
     </div>
     <button
       onClick={onFavorite}
-      className={`p-2 rounded-full transition-all duration-200 hover:scale-110 ${
-        isFavorite ? 'text-red-400' : 'text-white/60 hover:text-red-400'
-      }`}
+      className={`p-2  transition-all duration-200 hover:scale-110 ${isFavorite ? 'text-red-400' : 'text-white/60 hover:text-red-400'
+        }`}
     >
       <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
     </button>

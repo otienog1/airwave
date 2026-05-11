@@ -70,4 +70,8 @@ def create_app(config_name='development'):
     def health_check():
         return jsonify({'status': 'healthy', 'service': 'airwave-api'})
     
+    with app.app_context():
+        db.create_all()
+
     return app
+

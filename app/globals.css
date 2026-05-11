@@ -1,33 +1,78 @@
-/* @tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --foreground-rgb: 255, 255, 255;
+      --background-start-rgb: 0, 0, 0;
+      --background-end-rgb: 0, 0, 0;
+    }
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@layer components {
+  .glass-morphism {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+  }
+
+  .gradient-primary {
+    @apply bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600;
+  }
+
+  .gradient-secondary {
+    @apply bg-gradient-to-r from-blue-500 to-purple-600;
+  }
+
+  .station-card {
+    @apply glass-morphism  p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl;
+  }
+
+  .btn-primary {
+    @apply gradient-secondary hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6  transition-all duration-200 hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply glass-morphism hover:bg-white/20 text-white font-medium py-2 px-4  transition-all duration-200;
+  }
+
+  .input-field {
+    @apply glass-morphism  px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-} */
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
