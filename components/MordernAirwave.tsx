@@ -1,12 +1,16 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
+import { useAudioPlayer } from '@/hooks/useAudioPlayer';
+import { useStationFilter } from '@/hooks/useStationFilter';
+import { useFavorites } from '@/hooks/useFavorites';
+import { useStreamMetadata } from '@/hooks/useStreamMetadata';
+import { useAuth } from '@/context/AuthContext';
 import { AudioPlayer } from '@/components/player';
 import { StationGrid } from '@/components/station/StationGrid';
 import { SearchAndFilters } from '@/components/station/SearchAndFilters';
 import type { Station } from '@/types/Station';
 
-// Mock Station Data
 const mockStations: Station[] = [
     {
         id: 1,
@@ -162,270 +166,122 @@ const mockStations: Station[] = [
         is_live: true,
         language: 'Swahili',
         total_plays: 78650
+    },
+    {
+        id: 13,
+        name: 'Hope FM',
+        description: "Nairobi's Inspirational Radio",
+        url: 'https://a5.asurahosting.com:7530/radio.mp3',
+        genre: 'Contemporary',
+        region: 'Nairobi',
+        frequency: '93.3 FM',
+        is_live: true,
+        language: 'English',
+        current_listeners: 6200,
+        total_plays: 41500
+    },
+    {
+        id: 14,
+        name: 'Inooro FM',
+        description: 'Gîkûyû Community Radio',
+        url: 'https://inoorofm-atunwadigital.streamguys1.com/inoorofm',
+        genre: 'Talk',
+        region: 'Nairobi',
+        frequency: '88.9 FM',
+        is_live: true,
+        language: 'Kikuyu',
+        current_listeners: 8100,
+        total_plays: 62300
+    },
+    {
+        id: 15,
+        name: 'Family Radio',
+        description: 'Wholesome Family Entertainment',
+        url: 'https://uksoutha.streaming.broadcast.radio/familyradio',
+        genre: 'Contemporary',
+        region: 'Nairobi',
+        frequency: '103.9 FM',
+        is_live: true,
+        language: 'English',
+        current_listeners: 5400,
+        total_plays: 38900
+    },
+    {
+        id: 16,
+        name: 'Waumini FM',
+        description: 'Catholic Radio Kenya',
+        url: 'https://stream-282.zeno.fm/gvk894g072quv',
+        genre: 'Talk',
+        region: 'Nairobi',
+        frequency: '88.3 FM',
+        is_live: true,
+        language: 'Swahili',
+        current_listeners: 3800,
+        total_plays: 27100
+    },
+    {
+        id: 17,
+        name: 'Mulembe FM',
+        description: 'Luhya Community Radio',
+        url: 'https://atunwadigital.streamguys1.com/mulembefm',
+        genre: 'Talk',
+        region: 'Nairobi',
+        frequency: '97.9 FM',
+        is_live: true,
+        language: 'Luhya',
+        current_listeners: 4600,
+        total_plays: 31200
+    },
+    {
+        id: 18,
+        name: 'KBC English Service',
+        description: "Kenya's National Broadcaster",
+        url: 'https://stream-285.zeno.fm/c0myzdb71s8uv',
+        genre: 'News',
+        region: 'Nairobi',
+        frequency: '95.6 FM',
+        is_live: true,
+        language: 'English',
+        current_listeners: 11200,
+        total_plays: 84700
     }
 ];
 
 const ModernAirwave: React.FC = () => {
-    // State management
-    const [stations] = useState<Station[]>(mockStations);
-    const [filteredStations, setFilteredStations] = useState<Station[]>(mockStations);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedGenre, setSelectedGenre] = useState('All');
-    const [selectedRegion, setSelectedRegion] = useState('All');
-    const [favorites, setFavorites] = useState<Set<number>>(new Set());
-    const [currentStation, setCurrentStation] = useState<Station | null>(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [volume, setVolume] = useState(0.8);
-    const [isMuted, setIsMuted] = useState(false);
-    const [audioError, setAudioError] = useState<string | null>(null);
-    const [audioInitialized, setAudioInitialized] = useState(false);
+    const { isAuthenticated } = useAuth();
 
-    // Audio refs
-    const audioRef = useRef<HTMLAudioElement | null>(null);
-    const playAttemptRef = useRef<boolean>(false);
+    const {
+        currentStation,
+        isPlaying,
+        isLoading,
+        volume,
+        isMuted,
+        error: audioError,
+        playStation,
+        togglePlay,
+        handleVolumeChange,
+        toggleMute,
+        clearError,
+    } = useAudioPlayer();
 
-    // Extract unique genres and regions from mock data
-    const genres = ['All', ...Array.from(new Set(stations.map(station => station.genre)))];
-    const regions = ['All', ...Array.from(new Set(stations.map(station => station.region)))];
+    const {
+        filteredStations,
+        searchTerm,
+        setSearchTerm,
+        selectedGenre,
+        setSelectedGenre,
+        selectedRegion,
+        setSelectedRegion,
+        genres,
+        regions,
+    } = useStationFilter(mockStations);
 
-    // Filter stations based on search and filters
-    useEffect(() => {
-        let filtered = stations;
+    const { favorites, toggleFavorite } = useFavorites(isAuthenticated);
 
-        // Apply search filter
-        if (searchTerm) {
-            filtered = filtered.filter(station =>
-                station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                station.description?.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }
-
-        // Apply genre filter
-        if (selectedGenre !== 'All') {
-            filtered = filtered.filter(station => station.genre === selectedGenre);
-        }
-
-        // Apply region filter
-        if (selectedRegion !== 'All') {
-            filtered = filtered.filter(station => station.region === selectedRegion);
-        }
-
-        setFilteredStations(filtered);
-    }, [stations, searchTerm, selectedGenre, selectedRegion]);
-
-    // Initialize audio only when needed (lazy initialization)
-    const initializeAudio = () => {
-        if (audioInitialized || audioRef.current) return;
-
-        console.log('Initializing audio element...');
-
-        audioRef.current = new Audio();
-        audioRef.current.crossOrigin = 'anonymous';
-        audioRef.current.preload = 'none';
-
-        // Important: Don't set src here - leave it empty to avoid the error
-
-        const audio = audioRef.current;
-
-        const handleLoadStart = () => {
-            setIsLoading(true);
-            setAudioError(null);
-        };
-
-        const handleCanPlay = () => {
-            console.log('Audio can play');
-            setIsLoading(false);
-
-            // If we initiated a play attempt, try to play now
-            if (playAttemptRef.current) {
-                playAttemptRef.current = false;
-                audio.play().then(() => {
-                    setIsPlaying(true);
-                    console.log('Audio playing successfully');
-                }).catch((error) => {
-                    console.error('Autoplay failed:', error);
-                    setIsPlaying(false);
-                    setAudioError('Click play to start listening');
-                });
-            }
-        };
-
-        const handlePlay = () => {
-            setIsPlaying(true);
-            setIsLoading(false);
-            setAudioError(null);
-        };
-
-        const handlePause = () => {
-            setIsPlaying(false);
-        };
-
-        const handleEnded = () => {
-            setIsPlaying(false);
-        };
-
-        const handleError = (e: Event) => {
-            // Only log errors if we actually have a src set
-            if (audio.src && audio.src !== window.location.href) {
-                console.error('Audio error:', audio.error);
-                setIsLoading(false);
-                setIsPlaying(false);
-                setAudioError('Failed to load audio stream');
-            }
-        };
-
-        const handleWaiting = () => {
-            // Only show loading if we have a valid src
-            if (audio.src && audio.src !== window.location.href) {
-                setIsLoading(true);
-            }
-        };
-
-        const handleCanPlayThrough = () => {
-            setIsLoading(false);
-        };
-
-        // Add all event listeners
-        audio.addEventListener('loadstart', handleLoadStart);
-        audio.addEventListener('canplay', handleCanPlay);
-        audio.addEventListener('play', handlePlay);
-        audio.addEventListener('pause', handlePause);
-        audio.addEventListener('ended', handleEnded);
-        audio.addEventListener('error', handleError);
-        audio.addEventListener('waiting', handleWaiting);
-        audio.addEventListener('canplaythrough', handleCanPlayThrough);
-
-        setAudioInitialized(true);
-    };
-
-    // Cleanup audio on component unmount
-    useEffect(() => {
-        return () => {
-            if (audioRef.current) {
-                const audio = audioRef.current;
-
-                // Remove all event listeners
-                audio.removeEventListener('loadstart', () => { });
-                audio.removeEventListener('canplay', () => { });
-                audio.removeEventListener('play', () => { });
-                audio.removeEventListener('pause', () => { });
-                audio.removeEventListener('ended', () => { });
-                audio.removeEventListener('error', () => { });
-                audio.removeEventListener('waiting', () => { });
-                audio.removeEventListener('canplaythrough', () => { });
-
-                // Clean stop
-                audio.pause();
-                audio.src = '';
-                audio.load(); // Clear the audio element
-            }
-        };
-    }, []);
-
-    // Update volume when it changes
-    useEffect(() => {
-        if (audioRef.current) {
-            audioRef.current.volume = isMuted ? 0 : volume;
-        }
-    }, [volume, isMuted]);
-
-    const playStation = async (station: Station) => {
-        // Initialize audio on first use
-        initializeAudio();
-
-        if (!audioRef.current) return;
-
-        const audio = audioRef.current;
-
-        console.log('Playing station:', station.name);
-
-        // If same station, just toggle play/pause
-        if (currentStation?.id === station.id) {
-            if (isPlaying) {
-                audio.pause();
-            } else {
-                // Only try to play if we have a valid src
-                if (audio.src && audio.src !== window.location.href) {
-                    audio.play().catch(error => {
-                        console.error('Play failed:', error);
-                        setAudioError('Failed to play audio');
-                    });
-                } else {
-                    setAudioError('No audio source available');
-                }
-            }
-            return;
-        }
-
-        // Stop current audio if playing
-        if (currentStation) {
-            audio.pause();
-        }
-
-        // Set new station
-        setCurrentStation(station);
-        setIsPlaying(false);
-        setIsLoading(true);
-        setAudioError(null);
-        playAttemptRef.current = true;
-
-        // Set audio source and load
-        audio.src = station.url;
-        audio.volume = isMuted ? 0 : volume;
-        audio.load();
-    };
-
-    const togglePlay = () => {
-        if (!audioRef.current || !currentStation) return;
-
-        const audio = audioRef.current;
-
-        if (isPlaying) {
-            audio.pause();
-        } else {
-            // Clear any previous error
-            setAudioError(null);
-
-            // Only try to play if we have a valid src
-            if (audio.src && audio.src !== window.location.href) {
-                audio.play().then(() => {
-                    setIsPlaying(true);
-                }).catch(error => {
-                    console.error('Play failed:', error);
-                    setIsPlaying(false);
-                    setAudioError('Failed to play audio. Try clicking again.');
-                });
-            } else {
-                setAudioError('No audio source available');
-            }
-        }
-    };
-
-    const handleVolumeChange = (newVolume: number) => {
-        setVolume(newVolume);
-        if (newVolume === 0) {
-            setIsMuted(true);
-        } else if (isMuted) {
-            setIsMuted(false);
-        }
-    };
-
-    const toggleMute = () => {
-        setIsMuted(!isMuted);
-    };
-
-    const toggleFavorite = (stationId: number) => {
-        setFavorites(prev => {
-            const newFavorites = new Set(prev);
-            if (newFavorites.has(stationId)) {
-                newFavorites.delete(stationId);
-            } else {
-                newFavorites.add(stationId);
-            }
-            return newFavorites;
-        });
-    };
+    const { title: nowPlaying } = useStreamMetadata(
+        isPlaying && currentStation ? currentStation.url : null,
+        currentStation
+    );
 
     return (
         <>
@@ -441,26 +297,41 @@ const ModernAirwave: React.FC = () => {
                 stationCount={filteredStations.length}
             />
 
-            {/* Audio Error Display */}
             {audioError && (
-                <div className="mb-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
-                    <p className="text-yellow-400 text-sm flex items-center gap-2">
-                        <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
-                        {audioError}
-                    </p>
+                <div
+                    className="mb-5 rounded-xl p-3.5 flex items-center gap-3 text-sm"
+                    style={{
+                        background: 'rgba(251, 191, 36, 0.08)',
+                        border: '1px solid rgba(251, 191, 36, 0.2)',
+                    }}
+                >
+                    <span
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{ background: '#fbbf24', animation: 'pulse-glow 1.5s ease-in-out infinite' }}
+                    />
+                    <span style={{ color: '#fbbf24' }}>{audioError}</span>
+                    <button
+                        onClick={clearError}
+                        className="ml-auto text-xs opacity-60 hover:opacity-100"
+                        style={{ color: '#fbbf24' }}
+                    >
+                        ✕
+                    </button>
                 </div>
             )}
 
             <StationGrid
                 stations={filteredStations}
-                loading={false} // No API loading since we're using mock data
-                error={null}    // No API errors since we're using mock data
+                loading={false}
+                error={null}
                 currentStation={currentStation}
                 isPlaying={isPlaying}
+                isAudioLoading={isLoading}
                 favorites={favorites}
                 onPlay={playStation}
                 onFavorite={toggleFavorite}
-                onRetry={() => { }} // No retry needed for mock data
+                onRetry={() => {}}
+                nowPlaying={nowPlaying}
             />
 
             <AudioPlayer
@@ -472,6 +343,7 @@ const ModernAirwave: React.FC = () => {
                 onVolumeChange={handleVolumeChange}
                 onMuteToggle={toggleMute}
                 isLoading={isLoading}
+                nowPlaying={nowPlaying}
             />
         </>
     );
