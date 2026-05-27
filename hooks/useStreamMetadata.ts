@@ -25,6 +25,35 @@ const EMPTY_META: StreamMetadata = {
   source: null, loading: false,
 };
 
+const SMART_POLL_BUFFER_MS = 2_000;
+const SMART_POLL_MIN_MS   = 2_000;
+const SMART_POLL_MAX_MS   = 10 * 60 * 1000;
+
+function parseDurationString(duration: string): number | null {
+  const parts = duration.split(':');
+  if (parts.length !== 2) return null;
+  const [mm, ss] = parts.map(Number);
+  if (isNaN(mm) || isNaN(ss)) return null;
+  return mm * 60 + ss;
+}
+
+function msUntilSongEnd(data: StreamMetadata): number | null {
+  const startMs = data.startTime ? new Date(data.startTime).getTime() : null;
+  if (!startMs || isNaN(startMs)) return null;
+
+  const durationSec =
+    data.durationSeconds ??
+    (data.duration ? parseDurationString(data.duration) : null);
+  if (durationSec == null) return null;
+
+  const songEndsAt = startMs + durationSec * 1000;
+  const remaining  = songEndsAt - Date.now();
+
+  if (remaining <= SMART_POLL_MIN_MS) return null;
+  if (remaining > SMART_POLL_MAX_MS)  return null;
+  return remaining;
+}
+
 async function postPlayEvent(station: Station, meta: StreamMetadata): Promise<string | null> {
   try {
     const res = await fetch('/api/analytics/play-event', {
@@ -70,13 +99,22 @@ export function useStreamMetadata(
   pollInterval = 15_000
 ): StreamMetadata {
   const [meta, setMeta] = useState<StreamMetadata>(EMPTY_META);
-  const timerRef       = useRef<ReturnType<typeof setInterval> | null>(null);
-  const prevTitleRef   = useRef<string | null>(null);
-  const openPlayIdRef  = useRef<string | null>(null);
-  const stationRef     = useRef<Station | null>(station);
+  const timerRef          = useRef<ReturnType<typeof setInterval> | null>(null);
+  const smartPollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevTitleRef      = useRef<string | null>(null);
+  const openPlayIdRef     = useRef<string | null>(null);
+  const stationRef        = useRef<Station | null>(station);
+  const streamUrlRef      = useRef<string | null>(streamUrl);
 
-  // Keep stationRef in sync so fetchMetadata closure always sees the latest station
-  useEffect(() => { stationRef.current = station; }, [station]);
+  useEffect(() => { stationRef.current   = station;   }, [station]);
+  useEffect(() => { streamUrlRef.current = streamUrl; }, [streamUrl]);
+
+  const cancelSmartPoll = useCallback(() => {
+    if (smartPollTimerRef.current) {
+      clearTimeout(smartPollTimerRef.current);
+      smartPollTimerRef.current = null;
+    }
+  }, []);
 
   const closeOpenPlay = useCallback(async () => {
     if (openPlayIdRef.current) {
@@ -87,13 +125,24 @@ export function useStreamMetadata(
 
   const fetchMetadata = useCallback(async (url: string) => {
     try {
-      const res  = await fetch(`/api/stream-metadata?url=${encodeURIComponent(url)}`);
+      const res      = await fetch(`/api/stream-metadata?url=${encodeURIComponent(url)}`);
       const data: StreamMetadata = await res.json();
       const fullMeta = { ...EMPTY_META, ...data, loading: false };
 
       setMeta(fullMeta);
 
-      // Detect title change — only record if we have a real title and station
+      // Cancel previous smart poll, then reschedule for current song's end
+      cancelSmartPoll();
+      const remaining = msUntilSongEnd(data);
+      if (remaining !== null) {
+        const delay = remaining + SMART_POLL_BUFFER_MS;
+        smartPollTimerRef.current = setTimeout(() => {
+          smartPollTimerRef.current = null;
+          const currentUrl = streamUrlRef.current;
+          if (currentUrl) fetchMetadata(currentUrl);
+        }, delay);
+      }
+
       const currentStation = stationRef.current;
       if (data.title && data.title !== prevTitleRef.current && currentStation) {
         await closeOpenPlay();
@@ -102,7 +151,6 @@ export function useStreamMetadata(
         openPlayIdRef.current = playId;
       }
 
-      // Fire-and-forget health snapshot
       if (currentStation) {
         fetch('/api/analytics/snapshot', {
           method: 'POST',
@@ -126,12 +174,13 @@ export function useStreamMetadata(
         }).catch(() => {});
       }
     }
-  }, [closeOpenPlay]);
+  }, [closeOpenPlay, cancelSmartPoll]);
 
   useEffect(() => {
     if (!streamUrl) {
       setMeta(EMPTY_META);
       prevTitleRef.current = null;
+      cancelSmartPoll();
       closeOpenPlay();
       if (timerRef.current) clearInterval(timerRef.current);
       return;
@@ -144,13 +193,16 @@ export function useStreamMetadata(
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
+      cancelSmartPoll();
     };
-  }, [streamUrl, pollInterval, fetchMetadata, closeOpenPlay]);
+  }, [streamUrl, pollInterval, fetchMetadata, closeOpenPlay, cancelSmartPoll]);
 
-  // Close open play on unmount
   useEffect(() => {
-    return () => { closeOpenPlay(); };
-  }, [closeOpenPlay]);
+    return () => {
+      closeOpenPlay();
+      cancelSmartPoll();
+    };
+  }, [closeOpenPlay, cancelSmartPoll]);
 
   return meta;
 }
