@@ -52,6 +52,10 @@ const Airwave = () => {
     const metadataIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
     const [gainNode, setGainNode] = useState<GainNode | null>(null);
+    const playPromiseRef = useRef<Promise<void> | null>(null);
+    const sourceNodesRef = useRef<{ [key: string]: MediaElementAudioSourceNode }>({});
+    const [loadingStations, setLoadingStations] = useState<Set<string>>(new Set());
+    const [playingStation, setPlayingStation] = useState<string | null>(null);
 
     useEffect(() => {
         const context = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -61,6 +65,7 @@ const Airwave = () => {
         setGainNode(gain);
 
         return () => {
+            Object.values(sourceNodesRef.current).forEach(source => source.disconnect());
             context.close();
         };
     }, []);
@@ -106,38 +111,37 @@ const Airwave = () => {
         });
     }
 
+    const stopCurrentAudio = () => {
+        // Stop all audio
+        Object.values(audioRefs.current).forEach(audio => {
+            audio.pause();
+            audio.currentTime = 0;
+        });
+
+        setIsPlaying(false);
+        setPlayingStation(null);
+        setCurrentAudio(null);
+        stopMetadataInterval();
+    }
+
     const toggleStation = (station: any) => {
-        if (currentStation === station.url) {
-            handleTogglePlay();
+        if (currentStation === station.url && isPlaying) {
+            stopCurrentAudio();
         } else {
-            if (currentStation && isPlaying) {
-                audioRefs.current[currentStation]?.pause();
-                stopMetadataInterval();
-            }
+            stopCurrentAudio(); // Stop any currently playing audio
             setCurrentStation(station.url);
             setCurrentStationName(station.name);
-            setIsPlaying(true);
-            setIsLoading(true);
+            setLoadingStations(prev => new Set(prev).add(station.url));
 
             if (!audioRefs.current[station.url]) {
                 loadAudio(station.url);
             } else {
-                // If the audio was preloaded, just play it
-                const audio = audioRefs.current[station.url];
-                audio.play().then(() => {
-                    setIsLoading(false);
-                    setCurrentAudio(audio);
-                }).catch(error => {
-                    console.error("Error playing audio:", error);
-                    setIsPlaying(false);
-                    setIsLoading(false);
-                });
+                playAudio(audioRefs.current[station.url]);
             }
 
             fetchMetadata(station.url);
             startMetadataInterval(station.url);
 
-            // Add the station to the played stations set
             setPlayedStations(prev => new Set(prev).add(station.url));
         }
     }
@@ -147,42 +151,80 @@ const Airwave = () => {
             const audio = new Audio(url);
             audio.crossOrigin = "anonymous";
             audioRefs.current[url] = audio;
+
+            if (audioContext && gainNode) {
+                const source = audioContext.createMediaElementSource(audio);
+                source.connect(gainNode);
+                sourceNodesRef.current[url] = source;
+            }
         }
         const audio = audioRefs.current[url];
 
         audio.addEventListener('canplay', () => {
-            setIsLoading(false);
-            setIsPlaying(true);
-            setCurrentAudio(audio);
-            if (audioContext && gainNode) {
-                const source = audioContext.createMediaElementSource(audio);
-                source.connect(gainNode);
+            if (currentStation === url) {
+                setCurrentAudio(audio);
+                playAudio(audio);
             }
-            audio.play().catch(error => {
-                console.error("Error playing audio:", error);
-                setIsPlaying(false);
-            });
         }, { once: true });
+
+        audio.addEventListener('playing', () => {
+            setLoadingStations(prev => {
+                const next = new Set(prev);
+                next.delete(url);
+                return next;
+            });
+            if (currentStation === url) {
+                setIsPlaying(true);
+                setPlayingStation(url);
+            }
+        });
+
+        audio.addEventListener('ended', () => {
+            if (currentStation === url) {
+                setIsPlaying(false);
+                setPlayingStation(null);
+            }
+        });
 
         audio.addEventListener('error', () => {
             console.error("Error loading audio:", audio.error);
-            setIsLoading(false);
-            setIsPlaying(false);
+            setLoadingStations(prev => {
+                const next = new Set(prev);
+                next.delete(url);
+                return next;
+            });
+            if (currentStation === url) {
+                setIsPlaying(false);
+                setPlayingStation(null);
+            }
         }, { once: true });
 
         audio.load();
     }
 
+    const playAudio = (audio: HTMLAudioElement) => {
+        stopCurrentAudio(); // Ensure any playing audio is stopped before starting new one
+        audio.play().catch(error => {
+            if (error.name !== 'AbortError') {
+                console.error("Error playing audio:", error);
+                setIsPlaying(false);
+                setPlayingStation(null);
+                setLoadingStations(prev => {
+                    const next = new Set(prev);
+                    next.delete(audio.src);
+                    return next;
+                });
+            }
+        });
+    }
+
     const handleTogglePlay = () => {
         if (currentStation) {
             if (isPlaying) {
-                audioRefs.current[currentStation]?.pause();
-                stopMetadataInterval();
-                setIsPlaying(false);
-            } else if (!isLoading) {
-                audioRefs.current[currentStation]?.play();
+                stopCurrentAudio();
+            } else if (!loadingStations.has(currentStation)) {
+                playAudio(audioRefs.current[currentStation]);
                 startMetadataInterval(currentStation);
-                setIsPlaying(true);
             }
         }
     }
@@ -244,26 +286,20 @@ const Airwave = () => {
 
     const handleReload = () => {
         if (currentStation) {
-            setIsLoading(true);
-            setIsPlaying(false);
+            stopCurrentAudio();
+            setLoadingStations(prev => new Set(prev).add(currentStation));
 
             const audio = audioRefs.current[currentStation];
             if (audio) {
-                audio.pause();
-                audio.currentTime = 0;
-
                 audio.load();
-                audio.play().then(() => {
-                    setIsLoading(false);
-                    setIsPlaying(true);
-                }).catch(error => {
-                    console.error("Error reloading audio:", error);
-                    setIsLoading(false);
-                    setIsPlaying(false);
-                });
+                playAudio(audio);
             } else {
                 console.error("Audio element not found for current station");
-                setIsLoading(false);
+                setLoadingStations(prev => {
+                    const next = new Set(prev);
+                    next.delete(currentStation);
+                    return next;
+                });
             }
 
             fetchMetadata(currentStation);
@@ -284,14 +320,14 @@ const Airwave = () => {
                                 <h3 className="text-xl font-semibold text-white mb-4">{station.name}</h3>
                                 <button
                                     onClick={() => toggleStation(station)}
-                                    className={`w-full py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75 transition-all duration-300 ${currentStation === station.url && isPlaying
+                                    className={`w-full py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75 transition-all duration-300 ${playingStation === station.url
                                             ? 'bg-red-500 hover:bg-red-600 focus:ring-red-400 text-white'
                                             : 'bg-green-500 hover:bg-green-600 focus:ring-green-400 text-white'
                                         }`}
-                                    disabled={isLoading && currentStation === station.url}
+                                    disabled={loadingStations.has(station.url)}
                                 >
-                                    {isLoading && currentStation === station.url ? 'Loading...' :
-                                        currentStation === station.url && isPlaying ? 'Pause' : 'Play'}
+                                    {loadingStations.has(station.url) ? 'Loading...' :
+                                        playingStation === station.url ? 'Pause' : 'Play'}
                                 </button>
                             </div>
                         </div>
@@ -309,7 +345,7 @@ const Airwave = () => {
                 isMuted={isMuted}
                 onMuteToggle={handleMuteToggle}
                 metadata={metadata}
-                isLoading={isLoading}
+                isLoading={loadingStations.has(currentStation || '')}
             />
         </div>
     )
