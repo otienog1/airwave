@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Search, X } from 'lucide-react';
 
 interface SearchAndFiltersProps {
@@ -13,7 +13,7 @@ interface SearchAndFiltersProps {
     stationCount: number;
 }
 
-export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
+export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersProps>(({
     searchTerm,
     onSearchChange,
     selectedGenre,
@@ -23,7 +23,7 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
     genres,
     regions,
     stationCount,
-}) => {
+}, ref) => {
     return (
         <div className="mb-8 space-y-4">
             {/* Title row + search */}
@@ -47,6 +47,7 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
                         style={{ color: 'var(--color-text-muted)' }}
                     />
                     <input
+                        ref={ref}
                         type="text"
                         placeholder="Search stations..."
                         value={searchTerm}
@@ -101,4 +102,5 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
             </div>
         </div>
     );
-};
+});
+SearchAndFilters.displayName = 'SearchAndFilters';
