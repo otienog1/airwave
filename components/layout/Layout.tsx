@@ -1,5 +1,6 @@
 import React from 'react';
 import { Header } from './Header';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -7,9 +8,11 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
-        <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
-            <Header />
-            {children}
-        </div>
+        <TooltipProvider>
+            <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+                <Header />
+                {children}
+            </div>
+        </TooltipProvider>
     );
 };

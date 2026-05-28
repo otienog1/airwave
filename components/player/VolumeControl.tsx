@@ -59,6 +59,7 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({
         <div ref={containerRef} className="relative flex items-center gap-2">
             <Tooltip>
                 <TooltipTrigger
+                    type="button"
                     onClick={handleIconClick}
                     className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-150 hover:bg-white/10 active:scale-90"
                     style={{ color: isMuted ? 'var(--color-text-muted)' : 'var(--color-accent)' }}
@@ -66,7 +67,7 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({
                 >
                     {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                 </TooltipTrigger>
-                <TooltipContent side="top">
+                <TooltipContent side="top" aria-label={`${isMuted ? 'Unmute' : 'Mute'} (M)`}>
                     {isMuted ? 'Unmute' : 'Mute'}
                     <kbd data-slot="kbd">M</kbd>
                 </TooltipContent>

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Play, Pause, Loader2 } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -15,7 +17,7 @@ export const PlayControl: React.FC<PlayControlProps> = ({
 }) => {
     return (
         <Tooltip>
-            <TooltipTrigger asChild>
+            <TooltipTrigger asChild disabled={isLoading}>
                 <button
                     onClick={onTogglePlay}
                     disabled={isLoading}
@@ -37,7 +39,7 @@ export const PlayControl: React.FC<PlayControlProps> = ({
                     )}
                 </button>
             </TooltipTrigger>
-            <TooltipContent side="top">
+            <TooltipContent side="top" aria-label={`${isPlaying ? 'Pause' : 'Play'} (Space)`}>
                 {isPlaying ? 'Pause' : 'Play'}
                 <kbd data-slot="kbd">Space</kbd>
             </TooltipContent>

@@ -1,5 +1,6 @@
 "use client"
 
+import React from 'react'
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 
 import { cn } from "@/lib/utils"
@@ -27,10 +28,13 @@ interface TooltipTriggerProps extends Omit<TooltipPrimitive.Trigger.Props, 'rend
 
 function TooltipTrigger({ asChild, children, ...props }: TooltipTriggerProps) {
   if (asChild) {
+    if (!React.isValidElement(children)) {
+      throw new Error('TooltipTrigger with asChild requires a single React element as children');
+    }
     return (
       <TooltipPrimitive.Trigger
         data-slot="tooltip-trigger"
-        render={children as any}
+        render={children}
         {...props}
       />
     )
