@@ -80,3 +80,65 @@ def test_profile_rejects_without_cookie(client):
     """Profile endpoint returns 401 when no cookie is present."""
     response = client.get('/api/auth/profile')
     assert response.status_code == 401
+
+
+def test_refresh_issues_new_access_cookie(client, test_user):
+    """Calling /refresh with a valid refresh cookie rotates the access token."""
+    client.post('/api/auth/login', json={
+        'email': test_user['email'],
+        'password': test_user['password'],
+    })
+    original = {c.name: c.value for c in client.cookie_jar}
+
+    response = client.post('/api/auth/refresh')
+    assert response.status_code == 200
+    assert response.get_json() == {'ok': True}
+
+    updated = {c.name: c.value for c in client.cookie_jar}
+    assert updated['access_token'] != original['access_token']
+
+
+def test_refresh_rotates_refresh_cookie(client, test_user):
+    """Calling /refresh issues a new refresh cookie (token rotation)."""
+    client.post('/api/auth/login', json={
+        'email': test_user['email'],
+        'password': test_user['password'],
+    })
+    original_refresh = {c.name: c.value for c in client.cookie_jar}.get('refresh_token')
+
+    client.post('/api/auth/refresh')
+    updated_refresh = {c.name: c.value for c in client.cookie_jar}.get('refresh_token')
+    assert updated_refresh != original_refresh
+
+
+def test_refresh_without_cookie_returns_401(client):
+    """Calling /refresh without a refresh cookie returns 401."""
+    response = client.post('/api/auth/refresh')
+    assert response.status_code == 401
+
+
+def test_logout_clears_cookies(client, test_user):
+    """Logout clears both access and refresh cookies."""
+    client.post('/api/auth/login', json={
+        'email': test_user['email'],
+        'password': test_user['password'],
+    })
+    assert any(c.name == 'access_token' for c in client.cookie_jar)
+
+    response = client.post('/api/auth/logout')
+    assert response.status_code == 200
+    assert response.get_json() == {'ok': True}
+
+    cookie_values = {c.name: c.value for c in client.cookie_jar}
+    assert cookie_values.get('access_token', '') == ''
+
+
+def test_profile_inaccessible_after_logout(client, test_user):
+    """Profile returns 401 after logout clears the access cookie."""
+    client.post('/api/auth/login', json={
+        'email': test_user['email'],
+        'password': test_user['password'],
+    })
+    client.post('/api/auth/logout')
+    response = client.get('/api/auth/profile')
+    assert response.status_code == 401

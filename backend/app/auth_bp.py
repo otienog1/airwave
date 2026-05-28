@@ -110,6 +110,35 @@ def login():
         logging.error(f"Error logging in user: {str(e)}")
         return jsonify({'error': 'Login failed'}), 500
 
+@auth_bp.route('/refresh', methods=['POST'])
+@limiter.limit("30 per hour")
+@jwt_required(refresh=True)
+def refresh():
+    """Silently rotate access and refresh tokens using the refresh cookie."""
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        if not user or not user.is_active:
+            return jsonify({'error': 'Unauthorized'}), 401
+
+        access_token, refresh_token = user.generate_tokens()
+        response = make_response(jsonify({'ok': True}))
+        set_access_cookies(response, access_token)
+        set_refresh_cookies(response, refresh_token)
+        return response
+
+    except Exception as e:
+        logging.error(f"Error refreshing token: {str(e)}")
+        return jsonify({'error': 'Refresh failed'}), 500
+
+
+@auth_bp.route('/logout', methods=['POST'])
+def logout():
+    """Clear access and refresh cookies."""
+    response = make_response(jsonify({'ok': True}))
+    unset_jwt_cookies(response)
+    return response
+
 @auth_bp.route('/profile', methods=['GET'])
 @jwt_required()
 def get_profile():
