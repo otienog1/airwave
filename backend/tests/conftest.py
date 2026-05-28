@@ -1,6 +1,7 @@
 import pytest
 from app import create_app, db as _db
 from app.models.user import User
+from werkzeug.test import EnvironBuilder
 
 
 @pytest.fixture(scope='function')
@@ -20,7 +21,8 @@ def app():
 
 @pytest.fixture(scope='function')
 def client(app):
-    return app.test_client()
+    # use_cookies=True ensures cookies are maintained across requests
+    return app.test_client(use_cookies=True)
 
 
 @pytest.fixture(scope='function')
