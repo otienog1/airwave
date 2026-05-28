@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useStationFilter } from '@/hooks/useStationFilter';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -10,10 +10,18 @@ import { useAuth } from '@/context/AuthContext';
 import { AudioPlayer } from '@/components/player';
 import { StationGrid } from '@/components/station/StationGrid';
 import { SearchAndFilters } from '@/components/station/SearchAndFilters';
+import { ShortcutCheatsheet } from '@/components/ui/ShortcutCheatsheet';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { stations as mockStations } from '@/lib/stations';
+import type { Station } from '@/types/Station';
 
 const ModernAirwave: React.FC = () => {
     const { isAuthenticated } = useAuth();
+
+    const searchInputRef = useRef<HTMLInputElement>(null);
+    const [isCheatsheetOpen, setIsCheatsheetOpen] = useState(false);
+    const closeCheatsheet = useCallback(() => setIsCheatsheetOpen(false), []);
+    const toggleCheatsheet = useCallback(() => setIsCheatsheetOpen(prev => !prev), []);
 
     const {
         currentStation,
@@ -48,10 +56,33 @@ const ModernAirwave: React.FC = () => {
         currentStation
     );
 
+    // Adapter: useKeyboardShortcuts expects (station: Station) but useFavorites gives (stationId: number)
+    const toggleFavoriteByStation = useCallback(
+        (station: Station) => toggleFavorite(station.id),
+        [toggleFavorite]
+    );
+
+    const shortcuts = useKeyboardShortcuts({
+        togglePlay,
+        toggleMute,
+        handleVolumeChange,
+        volume,
+        playStation,
+        filteredStations,
+        currentStation,
+        toggleFavorite: toggleFavoriteByStation,
+        setSearchTerm,
+        searchInputRef,
+        isCheatsheetOpen,
+        onToggleCheatsheet: toggleCheatsheet,
+        onCloseCheatsheet: closeCheatsheet,
+    });
+
     return (
         <>
             {showHeart && <HeartBurst />}
             <SearchAndFilters
+                ref={searchInputRef}
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
                 selectedGenre={selectedGenre}
@@ -95,7 +126,7 @@ const ModernAirwave: React.FC = () => {
                 isAudioLoading={isLoading}
                 favorites={favorites}
                 onPlay={playStation}
-                onFavorite={toggleFavorite}
+                onFavorite={toggleFavorite}  // raw (stationId: number) — adapter only needed for keyboard hook
                 onRetry={() => {}}
                 nowPlaying={nowPlaying}
             />
@@ -110,6 +141,11 @@ const ModernAirwave: React.FC = () => {
                 onMuteToggle={toggleMute}
                 isLoading={isLoading}
                 nowPlaying={nowPlaying}
+            />
+            <ShortcutCheatsheet
+                isOpen={isCheatsheetOpen}
+                onClose={closeCheatsheet}
+                shortcuts={shortcuts}
             />
         </>
     );
