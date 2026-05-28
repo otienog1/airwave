@@ -27,6 +27,14 @@ def create_app(config_name='development', test_config=None):
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'jwt-secret-change-in-production')
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
+    # Cookie-based token delivery
+    app.config['JWT_TOKEN_LOCATION']      = ['cookies']
+    app.config['JWT_ACCESS_COOKIE_NAME']  = 'access_token'
+    app.config['JWT_REFRESH_COOKIE_NAME'] = 'refresh_token'
+    app.config['JWT_COOKIE_SECURE']       = os.environ.get('FLASK_ENV') != 'development'
+    app.config['JWT_COOKIE_SAMESITE']     = 'None'
+    app.config['JWT_COOKIE_CSRF_PROTECT'] = False
+    app.config['JWT_REFRESH_COOKIE_PATH'] = '/api/auth/refresh'
 
     # Apply test overrides before extensions are initialized
     if test_config is not None:
@@ -39,8 +47,11 @@ def create_app(config_name='development', test_config=None):
     limiter.init_app(app)
     
     # CORS configuration
-    # CORS(app, origins=['http://localhost:3000', 'https://yourdomain.com'])
-    CORS(app)
+    CORS(app,
+         origins=[os.environ.get('FRONTEND_URL', 'http://localhost:3000')],
+         supports_credentials=True,
+         allow_headers=['Content-Type'],
+         )
     
     # Register blueprints
     from .stations_bp import stations_bp
