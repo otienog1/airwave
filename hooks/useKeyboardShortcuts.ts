@@ -66,8 +66,9 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions): Shor
         return;
       }
 
-      // / always focuses search
+      // / focuses search, but not if already focused (allow typing / in search)
       if (e.key === '/') {
+        if (document.activeElement === searchInputRef.current) return;
         e.preventDefault();
         searchInputRef.current?.focus();
         return;
