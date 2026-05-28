@@ -5,12 +5,12 @@ from app.models.user import User
 
 @pytest.fixture(scope='function')
 def app():
-    application = create_app()
-    application.config.update({
+    application = create_app(test_config={
         'TESTING': True,
         'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
         'JWT_COOKIE_SECURE': False,      # allow http in tests
         'RATELIMIT_ENABLED': False,       # disable rate limiting in tests
+        'RATELIMIT_STORAGE_URI': 'memory://',
     })
     with application.app_context():
         _db.create_all()

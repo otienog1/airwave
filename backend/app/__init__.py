@@ -17,9 +17,9 @@ limiter = Limiter(
     default_limits=["100 per hour"]
 )
 
-def create_app(config_name='development'):
+def create_app(config_name='development', test_config=None):
     app = Flask(__name__)
-    
+
     # Configuration
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///airwave.db')
@@ -27,7 +27,11 @@ def create_app(config_name='development'):
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'jwt-secret-change-in-production')
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
-    
+
+    # Apply test overrides before extensions are initialized
+    if test_config is not None:
+        app.config.update(test_config)
+
     # Initialize extensions
     db.init_app(app)
     jwt.init_app(app)
