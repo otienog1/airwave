@@ -24,6 +24,8 @@ redis = "*"
 celery = "*"
 
 [dev-packages]
+pytest = "*"
+pytest-flask = "*"
 
 [requires]
 python_version = "3.13"
