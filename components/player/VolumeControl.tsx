@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 interface VolumeControlProps {
     volume: number;
@@ -56,14 +57,20 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({
 
     return (
         <div ref={containerRef} className="relative flex items-center gap-2">
-            <button
-                onClick={handleIconClick}
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-150 hover:bg-white/10 active:scale-90"
-                style={{ color: isMuted ? 'var(--color-text-muted)' : 'var(--color-accent)' }}
-                aria-label={isMuted ? 'Unmute' : 'Mute'}
-            >
-                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-            </button>
+            <Tooltip>
+                <TooltipTrigger
+                    onClick={handleIconClick}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-150 hover:bg-white/10 active:scale-90"
+                    style={{ color: isMuted ? 'var(--color-text-muted)' : 'var(--color-accent)' }}
+                    aria-label={isMuted ? 'Unmute' : 'Mute'}
+                >
+                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                    {isMuted ? 'Unmute' : 'Mute'}
+                    <kbd data-slot="kbd">M</kbd>
+                </TooltipContent>
+            </Tooltip>
 
             {/* Large screens: inline horizontal slider */}
             <div className="hidden sm:block volume-wrapper">
