@@ -7,6 +7,8 @@ interface PlayButtonProps {
     isLoading?: boolean;
     isLive?: boolean;
     onPlay: () => void;
+    accentColor?: string;
+    gradient?: string;
 }
 
 export const PlayButton: React.FC<PlayButtonProps> = ({
@@ -15,32 +17,51 @@ export const PlayButton: React.FC<PlayButtonProps> = ({
     isLoading,
     isLive = true,
     onPlay,
+    accentColor = '#6366f1',
 }) => {
-    const getButtonText = () => {
-        if (isLoading && isCurrentStation) return 'Loading...';
-        if (isCurrentStation && isPlaying) return 'Now Playing';
-        if (isCurrentStation) return 'Play';
-        return 'Listen';
-    };
+    const isActive = isCurrentStation && isPlaying;
+    const showSpinner = Boolean(isLoading && isCurrentStation);
+    const isDisabled = !isLive || showSpinner;
 
-    const getIcon = () => {
-        if (isLoading && isCurrentStation) {
-            return <Loader2 className="w-5 h-5 animate-spin" />;
-        }
-        if (isCurrentStation && isPlaying) {
-            return <Pause className="w-5 h-5" />;
-        }
-        return <Play className="w-5 h-5" />;
+    const getLabel = () => {
+        if (showSpinner) return 'Loading...';
+        if (isActive) return 'Pause';
+        if (isCurrentStation) return 'Resume';
+        return 'Listen Now';
     };
 
     return (
         <button
             onClick={onPlay}
-            disabled={!isLive || (isLoading && isCurrentStation)}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed py-3 px-4  font-semibold transition-all duration-200 hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+            disabled={isDisabled}
+            className="w-full py-2.5 px-4 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.97]"
+            style={{
+                background: isDisabled
+                    ? 'var(--color-surface-raised)'
+                    : isActive
+                    ? accentColor + '18'
+                    : accentColor,
+                color: isDisabled
+                    ? 'var(--color-text-muted)'
+                    : isActive
+                    ? accentColor
+                    : '#fff',
+                border: isActive ? `1px solid ${accentColor}40` : '1px solid transparent',
+                cursor: isDisabled ? 'not-allowed' : 'pointer',
+                opacity: isDisabled ? 0.45 : 1,
+            }}
+            aria-label={getLabel()}
         >
-            {getIcon()}
-            {getButtonText()}
+            {showSpinner ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : isActive ? (
+                <Pause className="w-3.5 h-3.5" />
+            ) : isCurrentStation ? (
+                <Play className="w-3.5 h-3.5" style={{ marginLeft: '1px' }} />
+            ) : (
+                <Play className="w-3.5 h-3.5" style={{ marginLeft: '1px' }} />
+            )}
+            {getLabel()}
         </button>
     );
 };

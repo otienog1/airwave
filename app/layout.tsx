@@ -1,29 +1,29 @@
 import { AuthProvider } from '@/context/AuthContext';
-import type { Metadata } from "next";
-// import localFont from "next/font/local";
+import { ThemeProvider } from 'next-themes';
+import type { Metadata, Viewport } from "next";
+import { Inter } from 'next/font/google';
 import "./globals.css";
+import { Toaster } from '@/components/ui/sonner';
 
-// const geistSans = localFont({
-//   src: "./fonts/GeistVF.woff",
-//   variable: "--font-geist-sans",
-//   weight: "100 900",
-// });
-// const geistMono = localFont({
-//   src: "./fonts/GeistMonoVF.woff",
-//   variable: "--font-geist-mono",
-//   weight: "100 900",
-// });
-
-
-import { Source_Sans_3 } from 'next/font/google'
-
-// If loading a variable font, you don't need to specify the font weight
-const font = Source_Sans_3({ weight: ['400'], subsets: ['latin'] })
-
+const inter = Inter({
+    subsets: ['latin'],
+    weight: ['400', '500', '600', '700'],
+    display: 'swap',
+});
 
 export const metadata: Metadata = {
-    title: "Airwave Radio",
-    description: "Online platform for streaming Kenyan radio stations",
+    title: "AirWave Radio",
+    description: "Stream Kenya's best radio stations live",
+    manifest: '/manifest.json',
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: 'black-translucent',
+        title: 'AirWave',
+    },
+};
+
+export const viewport: Viewport = {
+    themeColor: '#6366f1',
 };
 
 export default function RootLayout({
@@ -32,11 +32,14 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
-            <body className={`${font.className}`}>
-                <AuthProvider>
-                    {children}
-                </AuthProvider>
+        <html lang="en" suppressHydrationWarning>
+            <body className={inter.className}>
+                <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange={false}>
+                    <AuthProvider>
+                        {children}
+                        <Toaster position="bottom-right" />
+                    </AuthProvider>
+                </ThemeProvider>
             </body>
         </html>
     );

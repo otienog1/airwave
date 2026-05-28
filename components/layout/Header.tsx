@@ -3,59 +3,92 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
-import { Radio, User, LogOut, Settings, Heart } from 'lucide-react';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { Radio, User, LogOut, Settings, Heart, ChevronDown } from 'lucide-react';
 
 export const Header: React.FC = () => {
     const { user, logout, isAuthenticated, loading } = useAuth();
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
 
-    if (loading) {
-        return (
-            <header className="sticky top-0 z-40 bg-black/20 backdrop-blur-lg border-b border-white/10">
-                <div className="max-w-7xl mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600  flex items-center justify-center">
-                                <Radio className="w-6 h-6 text-white" />
-                            </div>
-                            <h1 className="text-2xl font-bold text-white">AirWave</h1>
-                        </div>
-                        <div className="w-8 h-8 bg-white/10  animate-pulse"></div>
-                    </div>
-                </div>
-            </header>
-        );
-    }
-
     return (
         <>
-            <header className="sticky top-0 z-40 bg-black/20 backdrop-blur-lg border-b border-white/10">
-                <div className="max-w-7xl mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
+            <header
+                className="sticky top-0 z-40"
+                style={{
+                    background: 'var(--color-header-bg)',
+                    backdropFilter: 'blur(24px)',
+                    WebkitBackdropFilter: 'blur(24px)',
+                    borderBottom: '1px solid var(--color-border)',
+                }}
+            >
+                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                    <div className="flex items-center justify-between h-16">
+
                         {/* Logo */}
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600  flex items-center justify-center">
-                                <Radio className="w-6 h-6 text-white" />
+                            <div
+                                className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                                style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' }}
+                            >
+                                <Radio style={{ width: '1.125rem', height: '1.125rem', color: 'white' }} />
                             </div>
                             <div>
-                                <h1 className="text-2xl font-bold text-white">AirWave</h1>
-                                <span className="text-xs text-gray-400 hidden sm:block">Kenyan Radio</span>
+                                <div
+                                    className="text-lg font-bold tracking-tight leading-none"
+                                    style={{ color: 'var(--color-text-primary)' }}
+                                >
+                                    AirWave
+                                </div>
+                                <div
+                                    className="text-xs hidden sm:block leading-none mt-0.5"
+                                    style={{ color: 'var(--color-text-muted)' }}
+                                >
+                                    Kenya&apos;s Radio
+                                </div>
                             </div>
                         </div>
 
-                        {/* User Menu */}
-                        <div className="relative">
-                            {isAuthenticated ? (
+                        {/* Right side */}
+                        <div className="flex items-center gap-2">
+                            <ThemeToggle />
+
+                            {loading ? (
+                                <div
+                                    className="w-9 h-9 rounded-full animate-pulse"
+                                    style={{ background: 'var(--color-surface-raised)' }}
+                                />
+                            ) : isAuthenticated ? (
                                 <div className="relative">
                                     <button
                                         onClick={() => setShowUserMenu(!showUserMenu)}
-                                        className="flex items-center gap-2 glass-morphism hover:bg-white/20  px-3 py-2 text-white transition-colors"
+                                        className="flex items-center gap-2 rounded-xl px-3 py-2 transition-colors duration-150"
+                                        style={{
+                                            background: 'var(--color-surface)',
+                                            border: '1px solid var(--color-border)',
+                                        }}
+                                        aria-label="User menu"
+                                        aria-expanded={showUserMenu}
                                     >
-                                        <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600  flex items-center justify-center">
-                                            <User className="w-4 h-4 text-white" />
+                                        <div
+                                            className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                                            style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' }}
+                                        >
+                                            <User className="w-3.5 h-3.5 text-white" />
                                         </div>
-                                        <span className="hidden sm:inline font-medium">{user?.username}</span>
+                                        <span
+                                            className="hidden sm:inline text-sm font-medium"
+                                            style={{ color: 'var(--color-text-primary)' }}
+                                        >
+                                            {user?.username}
+                                        </span>
+                                        <ChevronDown
+                                            className="w-3.5 h-3.5 transition-transform duration-200"
+                                            style={{
+                                                color: 'var(--color-text-muted)',
+                                                transform: showUserMenu ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            }}
+                                        />
                                     </button>
 
                                     {showUserMenu && (
@@ -64,36 +97,61 @@ export const Header: React.FC = () => {
                                                 className="fixed inset-0 z-10"
                                                 onClick={() => setShowUserMenu(false)}
                                             />
-                                            <div className="absolute right-0 mt-2 w-48 bg-white  shadow-lg py-2 z-20 border border-gray-200">
-                                                <div className="px-4 py-2 border-b border-gray-200">
-                                                    <p className="font-semibold text-gray-800">{user?.username}</p>
-                                                    <p className="text-sm text-gray-600 truncate">{user?.email}</p>
+                                            <div
+                                                className="absolute right-0 mt-2 w-52 rounded-xl overflow-hidden z-20 shadow-xl"
+                                                style={{
+                                                    background: 'var(--color-surface-raised)',
+                                                    border: '1px solid var(--color-border-strong)',
+                                                }}
+                                            >
+                                                <div
+                                                    className="px-4 py-3"
+                                                    style={{ borderBottom: '1px solid var(--color-border)' }}
+                                                >
+                                                    <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                                                        {user?.username}
+                                                    </p>
+                                                    <p className="text-xs truncate mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
+                                                        {user?.email}
+                                                    </p>
                                                 </div>
 
-                                                <button className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 transition-colors">
-                                                    <Heart className="w-4 h-4 text-gray-500" />
-                                                    <span className="text-gray-700">My Favorites</span>
-                                                </button>
-
-                                                {user?.is_admin && (
-                                                    <button className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 transition-colors">
-                                                        <Settings className="w-4 h-4 text-gray-500" />
-                                                        <span className="text-gray-700">Admin Panel</span>
+                                                <div className="py-1">
+                                                    <button
+                                                        className="w-full text-left px-4 py-2.5 flex items-center gap-2.5 text-sm transition-colors"
+                                                        style={{ color: 'var(--color-text-secondary)' }}
+                                                        onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-overlay-hover)')}
+                                                        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                                                    >
+                                                        <Heart className="w-4 h-4" />
+                                                        My Favorites
                                                     </button>
-                                                )}
 
-                                                <hr className="my-1" />
+                                                    {user?.is_admin && (
+                                                        <button
+                                                            className="w-full text-left px-4 py-2.5 flex items-center gap-2.5 text-sm transition-colors"
+                                                            style={{ color: 'var(--color-text-secondary)' }}
+                                                            onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-overlay-hover)')}
+                                                            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                                                        >
+                                                            <Settings className="w-4 h-4" />
+                                                            Admin Panel
+                                                        </button>
+                                                    )}
 
-                                                <button
-                                                    onClick={() => {
-                                                        logout();
-                                                        setShowUserMenu(false);
-                                                    }}
-                                                    className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-red-600 transition-colors"
-                                                >
-                                                    <LogOut className="w-4 h-4" />
-                                                    Sign Out
-                                                </button>
+                                                    <div style={{ borderTop: '1px solid var(--color-border)', margin: '4px 0' }} />
+
+                                                    <button
+                                                        onClick={() => { logout(); setShowUserMenu(false); }}
+                                                        className="w-full text-left px-4 py-2.5 flex items-center gap-2.5 text-sm transition-colors"
+                                                        style={{ color: '#ef4444' }}
+                                                        onMouseEnter={e => (e.currentTarget.style.background = 'rgba(239,68,68,0.08)')}
+                                                        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                                                    >
+                                                        <LogOut className="w-4 h-4" />
+                                                        Sign Out
+                                                    </button>
+                                                </div>
                                             </div>
                                         </>
                                     )}
@@ -101,7 +159,7 @@ export const Header: React.FC = () => {
                             ) : (
                                 <button
                                     onClick={() => setShowLoginModal(true)}
-                                    className="btn-primary text-xs uppercase"
+                                    className="btn-primary"
                                 >
                                     Sign In
                                 </button>
@@ -111,10 +169,7 @@ export const Header: React.FC = () => {
                 </div>
             </header>
 
-            <LoginModal
-                isOpen={showLoginModal}
-                onClose={() => setShowLoginModal(false)}
-            />
+            <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
         </>
     );
 };

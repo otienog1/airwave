@@ -94,7 +94,7 @@ async function patchClosePlay(playId: string): Promise<void> {
 }
 
 export function useStreamMetadata(
-  streamUrl: string | null,
+  stationId: number | null,
   station: Station | null,
   pollInterval = 15_000
 ): StreamMetadata {
@@ -104,10 +104,10 @@ export function useStreamMetadata(
   const prevTitleRef      = useRef<string | null>(null);
   const openPlayIdRef     = useRef<string | null>(null);
   const stationRef        = useRef<Station | null>(station);
-  const streamUrlRef      = useRef<string | null>(streamUrl);
+  const stationIdRef      = useRef<number | null>(stationId);
 
-  useEffect(() => { stationRef.current   = station;   }, [station]);
-  useEffect(() => { streamUrlRef.current = streamUrl; }, [streamUrl]);
+  useEffect(() => { stationRef.current  = station;   }, [station]);
+  useEffect(() => { stationIdRef.current = stationId; }, [stationId]);
 
   const cancelSmartPoll = useCallback(() => {
     if (smartPollTimerRef.current) {
@@ -123,9 +123,9 @@ export function useStreamMetadata(
     }
   }, []);
 
-  const fetchMetadata = useCallback(async (url: string) => {
+  const fetchMetadata = useCallback(async (id: number) => {
     try {
-      const res      = await fetch(`/api/stream-metadata?url=${encodeURIComponent(url)}`);
+      const res      = await fetch(`/api/stream-metadata?id=${id}`);
       const data: StreamMetadata = await res.json();
       const fullMeta = { ...EMPTY_META, ...data, loading: false };
 
@@ -138,8 +138,8 @@ export function useStreamMetadata(
         const delay = remaining + SMART_POLL_BUFFER_MS;
         smartPollTimerRef.current = setTimeout(() => {
           smartPollTimerRef.current = null;
-          const currentUrl = streamUrlRef.current;
-          if (currentUrl) fetchMetadata(currentUrl);
+          const currentId = stationIdRef.current;
+          if (currentId != null) fetchMetadata(currentId);
         }, delay);
       }
 
@@ -177,7 +177,7 @@ export function useStreamMetadata(
   }, [closeOpenPlay, cancelSmartPoll]);
 
   useEffect(() => {
-    if (!streamUrl) {
+    if (stationId == null) {
       setMeta(EMPTY_META);
       prevTitleRef.current = null;
       cancelSmartPoll();
@@ -187,15 +187,15 @@ export function useStreamMetadata(
     }
 
     setMeta(prev => ({ ...prev, loading: true }));
-    fetchMetadata(streamUrl);
+    fetchMetadata(stationId);
 
-    timerRef.current = setInterval(() => fetchMetadata(streamUrl), pollInterval);
+    timerRef.current = setInterval(() => fetchMetadata(stationId), pollInterval);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
       cancelSmartPoll();
     };
-  }, [streamUrl, pollInterval, fetchMetadata, closeOpenPlay, cancelSmartPoll]);
+  }, [stationId, pollInterval, fetchMetadata, closeOpenPlay, cancelSmartPoll]);
 
   useEffect(() => {
     return () => {

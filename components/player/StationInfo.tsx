@@ -1,19 +1,78 @@
-import React from 'react';
-import { Radio } from 'lucide-react';
+'use client';
+
+import React, { useRef, useEffect } from 'react';
+import { StationAvatar } from '@/components/station/StationAvatar';
 import { Station } from '../../types/Station';
 
 interface StationInfoProps {
-  station: Station;
+    station: Station;
+    isPlaying?: boolean;
+    nowPlaying?: string | null;
 }
 
-export const StationInfo: React.FC<StationInfoProps> = ({ station }) => (
-  <div className="flex items-center gap-3 flex-1 min-w-0">
-    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600  flex items-center justify-center">
-      <Radio className="w-6 h-6 text-white" />
-    </div>
-    <div className="min-w-0 flex-1">
-      <h4 className="text-white font-semibold truncate">{station.name}</h4>
-      <p className="text-gray-400 text-sm truncate">{station.description}</p>
-    </div>
-  </div>
-);
+export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, nowPlaying }) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const spanRef      = useRef<HTMLSpanElement>(null);
+
+    useEffect(() => {
+        if (!containerRef.current || !spanRef.current) return;
+        const spanW   = spanRef.current.offsetWidth;
+        const parentW = containerRef.current.parentElement?.offsetWidth ?? spanW;
+        const isSmallAndOverflow = window.innerWidth < 640 && spanW > window.innerWidth * 0.8;
+        containerRef.current.style.width = isSmallAndOverflow ? `${parentW}px` : `${Math.min(spanW, parentW)}px`;
+    }, [nowPlaying]);
+
+    return (
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="relative">
+                <StationAvatar
+                    name={station.name}
+                    logoUrl={station.logo_url}
+                    size={44}
+                    hideInitials={isPlaying}
+                />
+                {isPlaying && (
+                    <div
+                        className="absolute inset-0 rounded-xl flex items-center justify-center"
+                        style={{ background: 'rgba(99,102,241,0.15)' }}
+                    >
+                        <div className="flex items-end gap-0.5" style={{ height: '18px' }}>
+                            {[0, 1, 2, 3].map(i => (
+                                <div
+                                    key={i}
+                                    className="waveform-bar"
+                                    style={{ background: '#6366f1', animationDelay: `${i * 0.15}s` }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <div className="min-w-0 flex-1">
+                <h4
+                    className="font-semibold text-sm leading-tight truncate"
+                    style={{ color: 'var(--color-text-primary)' }}
+                >
+                    {station.name}
+                </h4>
+                {nowPlaying && (
+                    <div
+                        key={nowPlaying}
+                        ref={containerRef}
+                        className="mt-0.5 overflow-hidden now-playing-text now-playing-container"
+                    >
+                        <div className="now-playing-track">
+                            <span ref={spanRef} className="text-xs pr-10" style={{ color: 'var(--color-accent)' }}>
+                                <span className="music-note-icon">♪</span>{' '}{nowPlaying}
+                            </span>
+                            <span className="text-xs pr-10 now-playing-copy" style={{ color: 'var(--color-accent)' }}>
+                                <span className="music-note-icon">♪</span>{' '}{nowPlaying}
+                            </span>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
