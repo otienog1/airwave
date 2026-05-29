@@ -82,33 +82,47 @@ def test_profile_rejects_without_cookie(client):
     assert response.status_code == 401
 
 
+def _parse_set_cookies(response):
+    """Return {name: value} from a response's Set-Cookie headers."""
+    result = {}
+    for header in response.headers.getlist('Set-Cookie'):
+        parts = header.split(';')
+        name, _, value = parts[0].partition('=')
+        result[name.strip()] = value.strip()
+    return result
+
+
 def test_refresh_issues_new_access_cookie(client, test_user):
     """Calling /refresh with a valid refresh cookie rotates the access token."""
-    client.post('/api/auth/login', json={
+    login_res = client.post('/api/auth/login', json={
         'email': test_user['email'],
         'password': test_user['password'],
     })
-    original = {c.name: c.value for c in client.cookie_jar}
+    original_access = _parse_set_cookies(login_res).get('access_token')
+    assert original_access is not None
 
     response = client.post('/api/auth/refresh')
     assert response.status_code == 200
     assert response.get_json() == {'ok': True}
 
-    updated = {c.name: c.value for c in client.cookie_jar}
-    assert updated['access_token'] != original['access_token']
+    new_access = _parse_set_cookies(response).get('access_token')
+    assert new_access is not None
+    assert new_access != original_access
 
 
 def test_refresh_rotates_refresh_cookie(client, test_user):
     """Calling /refresh issues a new refresh cookie (token rotation)."""
-    client.post('/api/auth/login', json={
+    login_res = client.post('/api/auth/login', json={
         'email': test_user['email'],
         'password': test_user['password'],
     })
-    original_refresh = {c.name: c.value for c in client.cookie_jar}.get('refresh_token')
+    original_refresh = _parse_set_cookies(login_res).get('refresh_token')
+    assert original_refresh is not None
 
-    client.post('/api/auth/refresh')
-    updated_refresh = {c.name: c.value for c in client.cookie_jar}.get('refresh_token')
-    assert updated_refresh != original_refresh
+    refresh_res = client.post('/api/auth/refresh')
+    new_refresh = _parse_set_cookies(refresh_res).get('refresh_token')
+    assert new_refresh is not None
+    assert new_refresh != original_refresh
 
 
 def test_refresh_without_cookie_returns_401(client):
@@ -119,18 +133,19 @@ def test_refresh_without_cookie_returns_401(client):
 
 def test_logout_clears_cookies(client, test_user):
     """Logout clears both access and refresh cookies."""
-    client.post('/api/auth/login', json={
+    login_res = client.post('/api/auth/login', json={
         'email': test_user['email'],
         'password': test_user['password'],
     })
-    assert any(c.name == 'access_token' for c in client.cookie_jar)
+    assert _parse_set_cookies(login_res).get('access_token') is not None
 
     response = client.post('/api/auth/logout')
     assert response.status_code == 200
     assert response.get_json() == {'ok': True}
 
-    cookie_values = {c.name: c.value for c in client.cookie_jar}
-    assert cookie_values.get('access_token', '') == ''
+    # unset_jwt_cookies signals deletion by setting the cookie to empty value
+    cleared = _parse_set_cookies(response)
+    assert cleared.get('access_token', 'not-present') == ''
 
 
 def test_profile_inaccessible_after_logout(client, test_user):
