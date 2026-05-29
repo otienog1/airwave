@@ -8,7 +8,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   register: (email: string, username: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -23,16 +23,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const checkAuth = async () => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      apiService.setToken(token);
-      const response = await apiService.getProfile();
-      if (response.data) {
-        setUser(response.data.user);
-      } else {
-        // Token is invalid, clear it
-        apiService.logout();
-      }
+    const response = await apiService.getProfile();
+    if (response.data) {
+      setUser(response.data.user);
     }
     setLoading(false);
   };
@@ -55,8 +48,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return false;
   };
 
-  const logout = () => {
-    apiService.logout();
+  const logout = async () => {
+    await apiService.logout();
     setUser(null);
   };
 

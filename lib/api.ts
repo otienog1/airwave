@@ -36,16 +36,35 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
+async function fetchWithRefresh(
+  input: RequestInfo,
+  init?: RequestInit
+): Promise<Response> {
+  const res = await fetch(input, { ...init, credentials: 'include' });
+  if (res.status !== 401) return res;
+
+  // Attempt silent token refresh
+  const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+
+  if (!refreshRes.ok) {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('auth:expired'));
+    }
+    return res; // return original 401 to caller
+  }
+
+  // Retry original request once with new access cookie
+  return fetch(input, { ...init, credentials: 'include' });
+}
+
 class ApiService {
   private baseUrl: string;
-  private token: string | null = null;
 
   constructor() {
     this.baseUrl = API_BASE_URL;
-    // Get token from localStorage if available
-    if (typeof window !== 'undefined') {
-      this.token = localStorage.getItem('access_token');
-    }
   }
 
   private async request<T>(
@@ -53,21 +72,14 @@ class ApiService {
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     const url = `${this.baseUrl}${endpoint}`;
-    
+
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...(options.headers as Record<string, string>),
     };
 
-    if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
-    }
-
     try {
-      const response = await fetch(url, {
-        ...options,
-        headers,
-      });
+      const response = await fetchWithRefresh(url, { ...options, headers });
 
       const data = await response.json();
 
@@ -76,54 +88,32 @@ class ApiService {
       }
 
       return { data };
-    } catch (error) {
+    } catch {
       return { error: 'Network error occurred' };
     }
   }
 
   // Auth methods
-  async login(email: string, password: string): Promise<ApiResponse<{ user: User; access_token: string; refresh_token: string }>> {
-    const response = await this.request<{ user: User; access_token: string; refresh_token: string }>('/auth/login', {
+  async login(email: string, password: string): Promise<ApiResponse<{ user: User }>> {
+    return this.request<{ user: User }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-
-    if (response.data?.access_token) {
-      this.setToken(response.data.access_token);
-      localStorage.setItem('access_token', response.data.access_token);
-      localStorage.setItem('refresh_token', response.data.refresh_token);
-    }
-
-    return response;
   }
 
-  async register(email: string, username: string, password: string): Promise<ApiResponse<{ user: User; access_token: string; refresh_token: string }>> {
-    const response = await this.request<{ user: User; access_token: string; refresh_token: string }>('/auth/register', {
+  async register(email: string, username: string, password: string): Promise<ApiResponse<{ user: User }>> {
+    return this.request<{ user: User }>('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, username, password }),
     });
-
-    if (response.data?.access_token) {
-      this.setToken(response.data.access_token);
-      localStorage.setItem('access_token', response.data.access_token);
-      localStorage.setItem('refresh_token', response.data.refresh_token);
-    }
-
-    return response;
   }
 
   async getProfile(): Promise<ApiResponse<{ user: User }>> {
     return this.request<{ user: User }>('/auth/profile');
   }
 
-  logout() {
-    this.token = null;
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-  }
-
-  setToken(token: string) {
-    this.token = token;
+  async logout(): Promise<void> {
+    await fetchWithRefresh(`${this.baseUrl}/auth/logout`, { method: 'POST' });
   }
 
   // Station methods
