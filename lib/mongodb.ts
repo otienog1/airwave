@@ -36,6 +36,11 @@ export async function getSnapshotsCollection(): Promise<Collection<SnapshotDocum
   return db.collection<SnapshotDocument>('stationSnapshots');
 }
 
+export async function getListenerSessionsCollection(): Promise<Collection<ListenerSessionDocument>> {
+  const db = await getDb();
+  return db.collection<ListenerSessionDocument>('listenerSessions');
+}
+
 export interface PlayDocument {
   _id?: import('mongodb').ObjectId;
   stationId: number;
@@ -48,7 +53,10 @@ export interface PlayDocument {
   song: string | null;
   duration: string | null;
   durationSeconds: number | null;
+  startTime: string | null;
   category: string | null;
+  genre: string | null;
+  samplerate: number | null;
   source: 'zetta' | 'icecast' | 'icy' | null;
   bitrate: number | null;
   listeners: number | null;
@@ -67,6 +75,16 @@ export interface SnapshotDocument {
   snapshotAt: Date;
 }
 
+export interface ListenerSessionDocument {
+  _id?: import('mongodb').ObjectId;
+  sessionId: string;
+  stationId: number;
+  stationName: string;
+  startedAt: Date;
+  lastHeartbeat: Date;
+  endedAt: Date | null;
+}
+
 export async function ensureIndexes(): Promise<void> {
   const plays = await getPlaysCollection();
   const snapshots = await getSnapshotsCollection();
@@ -79,4 +97,19 @@ export async function ensureIndexes(): Promise<void> {
 
   await snapshots.createIndex({ stationId: 1, snapshotAt: -1 }, { name: 'snapshot_station_time' });
   await snapshots.createIndex({ snapshotAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 30, name: 'snapshot_ttl_30d' });
+
+  const sessions = await getListenerSessionsCollection();
+
+  await sessions.createIndex(
+    { lastHeartbeat: 1 },
+    { expireAfterSeconds: 45, name: 'session_heartbeat_ttl' }
+  );
+  await sessions.createIndex(
+    { stationId: 1, endedAt: 1 },
+    { name: 'session_station_active' }
+  );
+  await sessions.createIndex(
+    { sessionId: 1 },
+    { unique: true, name: 'session_id_unique' }
+  );
 }
