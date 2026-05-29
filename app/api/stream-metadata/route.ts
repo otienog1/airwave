@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stations } from '@/lib/stations';
+import { apiService } from '@/lib/api';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -237,10 +237,12 @@ export async function GET(req: NextRequest) {
   const id = parseInt(idParam, 10);
   if (isNaN(id)) return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
 
-  const station = stations.find(s => s.id === id);
-  if (!station) return NextResponse.json({ error: 'Station not found' }, { status: 404 });
+  const response = await apiService.getStation(id);
+  if (response.error || !response.data?.station) {
+    return NextResponse.json({ error: response.error || 'Station not found' }, { status: 404 });
+  }
 
-  const streamUrl = station.url;
+  const streamUrl = response.data.station.url;
 
   // Try Icecast JSON first (no audio data download)
   const icecast = await fetchIcecastData(streamUrl);

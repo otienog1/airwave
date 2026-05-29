@@ -12,11 +12,13 @@ import { StationGrid } from '@/components/station/StationGrid';
 import { SearchAndFilters } from '@/components/station/SearchAndFilters';
 import { ShortcutCheatsheet } from '@/components/ui/ShortcutCheatsheet';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { stations as mockStations } from '@/lib/stations';
+import { useStations } from '@/hooks/useStations';
 import type { Station } from '@/types/Station';
 
 const ModernAirwave: React.FC = () => {
     const { isAuthenticated } = useAuth();
+
+    const { stations, loading: stationsLoading, error: stationsError } = useStations({ autoFetch: true });
 
     const searchInputRef = useRef<HTMLInputElement>(null);
     const [isCheatsheetOpen, setIsCheatsheetOpen] = useState(false);
@@ -47,7 +49,7 @@ const ModernAirwave: React.FC = () => {
         setSelectedRegion,
         genres,
         regions,
-    } = useStationFilter(mockStations);
+    } = useStationFilter(stations);
 
     const { favorites, toggleFavorite, showHeart } = useFavorites(isAuthenticated);
 
@@ -119,8 +121,8 @@ const ModernAirwave: React.FC = () => {
 
             <StationGrid
                 stations={filteredStations}
-                loading={false}
-                error={null}
+                loading={stationsLoading}
+                error={stationsError}
                 currentStation={currentStation}
                 isPlaying={isPlaying}
                 isAudioLoading={isLoading}
