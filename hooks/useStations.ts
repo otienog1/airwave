@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { apiService, Station } from '@/lib/api';
 
 export interface UseStationsParams {
@@ -14,12 +14,14 @@ export function useStations(params: UseStationsParams = {}) {
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<any>(null);
 
-  const fetchStations = async (page = 1) => {
+  const { genre, region, search } = params;
+
+  const fetchStations = useCallback(async (page = 1) => {
     setLoading(true);
     setError(null);
 
     const response = await apiService.getStations({
-      ...params,
+      genre, region, search,
       page,
       include_stats: true,
     });
@@ -32,13 +34,13 @@ export function useStations(params: UseStationsParams = {}) {
     }
 
     setLoading(false);
-  };
+  }, [genre, region, search]);
 
   useEffect(() => {
     if (params.autoFetch !== false) {
       fetchStations();
     }
-  }, [params.genre, params.region, params.search]);
+  }, [fetchStations, params.autoFetch]);
 
   return {
     stations,

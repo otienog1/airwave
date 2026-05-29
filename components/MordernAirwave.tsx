@@ -18,7 +18,7 @@ import type { Station } from '@/types/Station';
 const ModernAirwave: React.FC = () => {
     const { isAuthenticated } = useAuth();
 
-    const { stations, loading: stationsLoading, error: stationsError } = useStations({ autoFetch: true });
+    const { stations, loading: stationsLoading, error: stationsError, refetch: refetchStations } = useStations({ autoFetch: true });
 
     const searchInputRef = useRef<HTMLInputElement>(null);
     const [isCheatsheetOpen, setIsCheatsheetOpen] = useState(false);
@@ -129,7 +129,7 @@ const ModernAirwave: React.FC = () => {
                 favorites={favorites}
                 onPlay={playStation}
                 onFavorite={toggleFavorite}  // raw (stationId: number) — adapter only needed for keyboard hook
-                onRetry={() => {}}
+                onRetry={refetchStations}
                 nowPlaying={nowPlaying}
             />
 
