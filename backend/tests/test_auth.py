@@ -36,7 +36,8 @@ def test_login_sets_access_cookie_not_body(client, test_user):
     assert 'access_token' not in body
     assert 'refresh_token' not in body
     set_cookie_header = response.headers.getlist('Set-Cookie')
-    assert any('access_token' in cookie for cookie in set_cookie_header)
+    access_cookie = next(c for c in set_cookie_header if 'access_token' in c)
+    assert 'HttpOnly' in access_cookie
 
 
 def test_login_returns_user_in_body(client, test_user):
@@ -62,7 +63,8 @@ def test_register_sets_cookies_not_body(client):
     assert 'access_token' not in body
     assert 'refresh_token' not in body
     set_cookie_header = response.headers.getlist('Set-Cookie')
-    assert any('access_token' in cookie for cookie in set_cookie_header)
+    access_cookie = next(c for c in set_cookie_header if 'access_token' in c)
+    assert 'HttpOnly' in access_cookie
 
 
 def test_profile_accessible_with_cookie(client, test_user):

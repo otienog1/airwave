@@ -29,11 +29,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const checkAuth = async () => {
-    const response = await apiService.getProfile();
-    if (response.data) {
-      setUser(response.data.user);
+    try {
+      const response = await apiService.getProfile();
+      if (response.data) setUser(response.data.user);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const login = async (email: string, password: string): Promise<boolean> => {

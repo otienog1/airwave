@@ -14,9 +14,10 @@ export function middleware(req: NextRequest) {
   const entry = Object.entries(LIMITS).find(([p]) => pathname.startsWith(p));
   if (!entry) return NextResponse.next();
 
-  const [, limit] = entry;
+  const [path, limit] = entry;
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
-  const key = `${ip}:${pathname}`;
+  // Key on the matched rule path (not the full pathname) so sub-paths share one bucket
+  const key = `${ip}:${path}`;
   const now = Date.now();
 
   const timestamps = (hits.get(key) ?? []).filter(t => now - t < limit.windowMs);

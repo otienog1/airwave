@@ -31,8 +31,10 @@ def create_app(config_name='development', test_config=None):
     app.config['JWT_TOKEN_LOCATION']      = ['cookies']
     app.config['JWT_ACCESS_COOKIE_NAME']  = 'access_token'
     app.config['JWT_REFRESH_COOKIE_NAME'] = 'refresh_token'
-    app.config['JWT_COOKIE_SECURE']       = os.environ.get('FLASK_ENV') != 'development'
-    app.config['JWT_COOKIE_SAMESITE']     = 'None'
+    _is_secure = os.environ.get('FLASK_ENV') != 'development'
+    app.config['JWT_COOKIE_SECURE']       = _is_secure
+    # SameSite=None requires Secure; use Lax for local http dev
+    app.config['JWT_COOKIE_SAMESITE']     = 'None' if _is_secure else 'Lax'
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
     app.config['JWT_REFRESH_COOKIE_PATH'] = '/api/auth/refresh'
 

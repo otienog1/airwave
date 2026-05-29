@@ -113,7 +113,11 @@ class ApiService {
   }
 
   async logout(): Promise<void> {
-    await fetchWithRefresh(`${this.baseUrl}/auth/logout`, { method: 'POST' });
+    // Plain fetch: logout doesn't require auth so no refresh retry needed
+    await fetch(`${this.baseUrl}/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
   }
 
   // Station methods
