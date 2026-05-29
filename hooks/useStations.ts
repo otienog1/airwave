@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { apiService, Station } from '@/lib/api';
 
+const CACHE_TTL_MS = 60_000;
+let cachedStations: Station[] | null = null;
+let cacheExpiresAt = 0;
+
 export interface UseStationsParams {
   genre?: string;
   region?: string;
@@ -17,6 +21,13 @@ export function useStations(params: UseStationsParams = {}) {
   const { genre, region, search } = params;
 
   const fetchStations = useCallback(async (page = 1) => {
+    // Serve from cache on first page if still fresh (no filter active)
+    if (page === 1 && !genre && !region && !search && cachedStations && Date.now() < cacheExpiresAt) {
+      setStations(cachedStations);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -31,6 +42,11 @@ export function useStations(params: UseStationsParams = {}) {
     } else if (response.data) {
       setStations(response.data.stations);
       setPagination(response.data.pagination);
+      // Cache only unfiltered page-1 results
+      if (page === 1 && !genre && !region && !search) {
+        cachedStations = response.data.stations;
+        cacheExpiresAt = Date.now() + CACHE_TTL_MS;
+      }
     }
 
     setLoading(false);
