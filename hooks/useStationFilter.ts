@@ -17,7 +17,7 @@ export function useStationFilter(stations: Station[]) {
   );
 
   const filteredStations = useMemo(() => {
-    let result = stations;
+    let result = stations.filter(s => s.is_active !== false);
     if (searchTerm)
       result = result.filter(
         s =>
