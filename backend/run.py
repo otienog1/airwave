@@ -15,12 +15,24 @@ def seed_stations():
         return
 
     stations_data = [
-        {'name': 'Capital FM', 'description': "Kenya's Number One Hit Music Station", 'url': 'https://atunwadigital.streamguys1.com/capitalfm', 'genre': 'Pop', 'region': 'Nairobi', 'frequency': '98.4 FM'},
-        {'name': 'Classic 105', 'description': 'No.1 for Soul and Great Hits', 'url': 'https://atunwadigital.streamguys1.com/classic105', 'genre': 'Soul', 'region': 'Nairobi', 'frequency': '105.2 FM'},
-        {'name': 'Kiss FM Kenya', 'description': 'Your Hit Music Station', 'url': 'https://atunwadigital.streamguys1.com/kissfm', 'genre': 'Pop', 'region': 'Nairobi', 'frequency': '100.3 FM'},
-        {'name': 'Radio Citizen', 'description': "Kenya's National Radio", 'url': 'https://stream.radioking.com/radio-citizen', 'genre': 'Talk', 'region': 'Nairobi', 'frequency': '98.4 FM'},
-        {'name': 'Milele FM', 'description': 'Kiswahili Hit Music', 'url': 'https://stream.zeno.fm/milele', 'genre': 'Urban', 'region': 'Nairobi', 'frequency': '90.7 FM'},
-        {'name': 'Ghetto Radio', 'description': 'Hip Hop & Urban', 'url': 'https://stream.zeno.fm/ghetto', 'genre': 'Hip Hop', 'region': 'Nairobi', 'frequency': '89.5 FM'},
+        {'name': 'Capital FM', 'description': "Kenya's No. 1 Hit Music Station", 'url': 'https://atunwadigital.streamguys1.com/capitalfm', 'genre': 'Pop', 'region': 'Nairobi', 'frequency': '98.4 FM', 'language': 'English', 'total_plays': 125430},
+        {'name': 'Classic 105', 'description': 'No.1 for Soul and Great Hits', 'url': 'https://atunwadigital.streamguys1.com/classic105', 'genre': 'Soul', 'region': 'Nairobi', 'frequency': '105.2 FM', 'language': 'English', 'total_plays': 98760},
+        {'name': 'KISS 100', 'description': 'Tha Beat of Nairobi', 'url': 'https://atunwadigital.streamguys1.com/kiss100fm', 'genre': 'Hip Hop', 'region': 'Nairobi', 'frequency': '100.3 FM', 'language': 'English', 'total_plays': 156890},
+        {'name': 'Homeboyz Radio', 'description': '103.5 Homeboyz Radio', 'url': 'https://atunwadigital.streamguys1.com/homeboyzradio', 'genre': 'Urban', 'region': 'Nairobi', 'frequency': '103.5 FM', 'language': 'English', 'total_plays': 87230},
+        {'name': 'Hot 96', 'description': 'We Play What We Want', 'url': 'https://hot96-atunwadigital.streamguys1.com/hot96', 'genre': 'Contemporary', 'region': 'Nairobi', 'frequency': '96.0 FM', 'language': 'English', 'total_plays': 76540},
+        {'name': 'Ramogi FM', 'description': 'Vernacular Radio Station', 'url': 'https://ramogifm-atunwadigital.streamguys1.com/ramogifm', 'genre': 'Talk', 'region': 'Nairobi', 'frequency': '107.1 FM', 'language': 'Luo', 'total_plays': 45320},
+        {'name': 'Ghetto Radio', 'description': 'Mtaani Radio', 'url': 'https://stream-158.zeno.fm/eghcv7h647zuv', 'genre': 'Hip Hop', 'region': 'Nairobi', 'language': 'Swahili', 'total_plays': 34210},
+        {'name': 'Radio Citizen', 'description': 'Citizen Radio - Mzalendo', 'url': 'https://radiocitizen-atunwadigital.streamguys1.com/radiocitizen', 'genre': 'News', 'region': 'Nairobi', 'frequency': '106.7 FM', 'language': 'English', 'total_plays': 89760},
+        {'name': 'Radio Maisha', 'description': 'Maisha ni Yetu', 'url': 'https://radiomaisha-atunwadigital.streamguys1.com/radiomaisha', 'genre': 'Contemporary', 'region': 'Nairobi', 'frequency': '102.7 FM', 'language': 'Swahili', 'total_plays': 112340},
+        {'name': 'NRG Radio', 'description': 'Energy to the Max', 'url': 'https://uksouth.streaming.broadcast.radio/nrg', 'genre': 'Dance', 'region': 'Nairobi', 'frequency': '100.9 FM', 'language': 'English', 'total_plays': 67890},
+        {'name': 'Kass FM', 'description': 'Kalenjin Community Radio', 'url': 'https://stream-158.zeno.fm/mr4w3nu1qzzuv', 'genre': 'Talk', 'region': 'Nakuru', 'frequency': '89.1 FM', 'language': 'Kalenjin', 'total_plays': 28760},
+        {'name': 'Radio Jambo', 'description': 'Redio ya Kwanza Kenya', 'url': 'https://atunwadigital.streamguys1.com/radiojambo', 'genre': 'Talk', 'region': 'Nairobi', 'frequency': '97.5 FM', 'language': 'Swahili', 'total_plays': 78650},
+        {'name': 'Hope FM', 'description': "Nairobi's Inspirational Radio", 'url': 'https://a5.asurahosting.com:7530/radio.mp3', 'genre': 'Contemporary', 'region': 'Nairobi', 'frequency': '93.3 FM', 'language': 'English', 'total_plays': 41500},
+        {'name': 'Inooro FM', 'description': 'Gikuyu Community Radio', 'url': 'https://inoorofm-atunwadigital.streamguys1.com/inoorofm', 'genre': 'Talk', 'region': 'Nairobi', 'frequency': '88.9 FM', 'language': 'Kikuyu', 'total_plays': 62300},
+        {'name': 'Family Radio', 'description': 'Wholesome Family Entertainment', 'url': 'https://uksoutha.streaming.broadcast.radio/familyradio', 'genre': 'Contemporary', 'region': 'Nairobi', 'frequency': '103.9 FM', 'language': 'English', 'total_plays': 38900},
+        {'name': 'Waumini FM', 'description': 'Catholic Radio Kenya', 'url': 'https://stream-282.zeno.fm/gvk894g072quv', 'genre': 'Talk', 'region': 'Nairobi', 'frequency': '88.3 FM', 'language': 'Swahili', 'total_plays': 27100},
+        {'name': 'Mulembe FM', 'description': 'Luhya Community Radio', 'url': 'https://atunwadigital.streamguys1.com/mulembefm', 'genre': 'Talk', 'region': 'Nairobi', 'frequency': '97.9 FM', 'language': 'Luhya', 'total_plays': 31200},
+        {'name': 'KBC English Service', 'description': "Kenya's National Broadcaster", 'url': 'https://stream-285.zeno.fm/c0myzdb71s8uv', 'genre': 'News', 'region': 'Nairobi', 'frequency': '95.6 FM', 'language': 'English', 'total_plays': 84700},
     ]
 
     for data in stations_data:
