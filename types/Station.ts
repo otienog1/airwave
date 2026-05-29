@@ -17,8 +17,4 @@ export interface Station {
   favorites_count?: number;
   created_at?: string;
   updated_at?: string;
-  // Legacy support
-  listeners?: number;
-  isLive?: boolean;
-  logo?: string;
 }
