@@ -1,25 +1,8 @@
+import type { Station } from '@/types/Station';
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-export interface Station {
-  id: number;
-  name: string;
-  description: string;
-  url: string;
-  logo_url?: string;
-  website?: string;
-  genre: string;
-  region: string;
-  language: string;
-  frequency?: string;
-  is_active: boolean;
-  is_live: boolean;
-  current_listeners?: number;
-  total_plays?: number;
-  rating?: number;
-  favorites_count?: number;
-  created_at: string;
-  updated_at: string;
-}
+export type { Station } from '@/types/Station';
 
 export interface User {
   id: number;
