@@ -8,9 +8,10 @@ interface StationInfoProps {
     station: Station;
     isPlaying?: boolean;
     nowPlaying?: string | null;
+    liveListeners?: number;
 }
 
-export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, nowPlaying }) => {
+export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, nowPlaying, liveListeners = 0 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const spanRef      = useRef<HTMLSpanElement>(null);
 
@@ -71,6 +72,11 @@ export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, no
                             </span>
                         </div>
                     </div>
+                )}
+                {liveListeners > 0 && (
+                    <p className="text-xs mt-0.5 tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
+                        {liveListeners.toLocaleString()} listening now
+                    </p>
                 )}
             </div>
         </div>

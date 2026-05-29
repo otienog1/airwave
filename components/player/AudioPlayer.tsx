@@ -16,6 +16,7 @@ interface AudioPlayerProps {
     onMuteToggle: () => void;
     isLoading: boolean;
     nowPlaying?: string | null;
+    liveListeners?: number;
 }
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -28,6 +29,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     onMuteToggle,
     isLoading,
     nowPlaying,
+    liveListeners = 0,
 }) => {
     const { minutesLeft, isActive: timerActive, start: startTimer, cancel: cancelTimer } =
         useSleepTimer(onTogglePlay);
@@ -57,7 +59,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
             <div className="max-w-7xl mx-auto px-4 py-3">
                 <div className="flex items-center gap-4">
-                    <StationInfo station={currentStation} isPlaying={isPlaying} nowPlaying={nowPlaying} />
+                    <StationInfo station={currentStation} isPlaying={isPlaying} nowPlaying={nowPlaying} liveListeners={liveListeners} />
 
                     <div className="flex items-center gap-3 shrink-0">
                         <PlayControl
