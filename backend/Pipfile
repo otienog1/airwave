@@ -4,24 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-sqlalchemy = "*"
-alembic = "*"
-email-validator = "*"
-requests = "*"
-bcrypt = "*"
-pyjwt = "*"
-werkzeug = "*"
 flask = "*"
-flask-sqlalchemy = "*"
 flask-cors = "*"
 flask-jwt-extended = "*"
-flask-migrate = "*"
 flask-limiter = "*"
+werkzeug = "*"
 python-dotenv = "*"
+pymongo = {extras = ["srv"], version = "*"}
+email-validator = "*"
 gunicorn = "*"
-psycopg2-binary = "*"
-redis = "*"
-celery = "*"
+bcrypt = "*"
 
 [dev-packages]
 pytest = "*"
@@ -32,6 +24,3 @@ python_version = "3.13"
 
 [scripts]
 test = "pytest"
-format = "black ."
-lint = "flake8"
-sort = "isort ."
