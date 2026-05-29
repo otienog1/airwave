@@ -1,48 +1,82 @@
-from .user import User
-from .analytics import Analytics, StationPlay
-from .favorites import Favorite
-
-__all__ = ['Station', 'User', 'Analytics', 'StationPlay', 'Favorite']
-
-# app/models/station.py
-from app import db
 from datetime import datetime
-from sqlalchemy import Index
+from app.db import get_stations_col, get_next_id
 
-class Station(db.Model):
-    __tablename__ = 'stations'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True)
-    description = db.Column(db.Text)
-    url = db.Column(db.String(500), nullable=False)
-    logo_url = db.Column(db.String(500))
-    website = db.Column(db.String(200))
-    genre = db.Column(db.String(50), nullable=False)
-    region = db.Column(db.String(50), nullable=False)
-    language = db.Column(db.String(30), default='English')
-    frequency = db.Column(db.String(20))  # FM frequency if applicable
-    is_active = db.Column(db.Boolean, default=True)
-    is_live = db.Column(db.Boolean, default=True)
-    current_listeners = db.Column(db.Integer, default=0)
-    total_plays = db.Column(db.Integer, default=0)
-    rating = db.Column(db.Float, default=0.0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Relationships
-    plays = db.relationship('StationPlay', backref='station', lazy='dynamic', cascade='all, delete-orphan')
-    favorites = db.relationship('Favorite', backref='station', lazy='dynamic', cascade='all, delete-orphan')
-    
-    # Indexes for better query performance
-    __table_args__ = (
-        Index('idx_station_genre', 'genre'),
-        Index('idx_station_region', 'region'),
-        Index('idx_station_active', 'is_active'),
-        Index('idx_station_created', 'created_at'),
-    )
-    
-    def to_dict(self, include_stats=False):
+
+class Station:
+    def __init__(self, doc: dict):
+        self._doc = doc
+
+    # ── Properties ────────────────────────────────────────────────────────────
+
+    @property
+    def id(self) -> int:
+        return self._doc['id']
+
+    @property
+    def name(self) -> str:
+        return self._doc['name']
+
+    @property
+    def description(self) -> str | None:
+        return self._doc.get('description')
+
+    @property
+    def url(self) -> str:
+        return self._doc['url']
+
+    @property
+    def logo_url(self) -> str | None:
+        return self._doc.get('logo_url')
+
+    @property
+    def website(self) -> str | None:
+        return self._doc.get('website')
+
+    @property
+    def genre(self) -> str:
+        return self._doc['genre']
+
+    @property
+    def region(self) -> str:
+        return self._doc['region']
+
+    @property
+    def language(self) -> str:
+        return self._doc.get('language', 'English')
+
+    @property
+    def frequency(self) -> str | None:
+        return self._doc.get('frequency')
+
+    @property
+    def is_active(self) -> bool:
+        return self._doc.get('is_active', True)
+
+    @property
+    def is_live(self) -> bool:
+        return self._doc.get('is_live', True)
+
+    @property
+    def current_listeners(self) -> int:
+        return self._doc.get('current_listeners', 0)
+
+    @property
+    def total_plays(self) -> int:
+        return self._doc.get('total_plays', 0)
+
+    @property
+    def rating(self) -> float:
+        return self._doc.get('rating', 0.0)
+
+    @property
+    def created_at(self) -> datetime:
+        return self._doc.get('created_at', datetime.utcnow())
+
+    @property
+    def updated_at(self) -> datetime:
+        return self._doc.get('updated_at', datetime.utcnow())
+
+    def to_dict(self, include_stats: bool = False) -> dict:
         data = {
             'id': self.id,
             'name': self.name,
@@ -57,37 +91,63 @@ class Station(db.Model):
             'is_active': self.is_active,
             'is_live': self.is_live,
             'created_at': self.created_at.isoformat(),
-            'updated_at': self.updated_at.isoformat()
+            'updated_at': self.updated_at.isoformat(),
         }
-        
         if include_stats:
             data.update({
                 'current_listeners': self.current_listeners,
                 'total_plays': self.total_plays,
                 'rating': self.rating,
-                'favorites_count': self.favorites.count()
             })
-            
         return data
-    
+
+    # ── Class-level MongoDB operations ────────────────────────────────────────
+
     @classmethod
-    def get_by_genre(cls, genre):
-        return cls.query.filter_by(genre=genre, is_active=True).all()
-    
+    def create(cls, name: str, url: str, genre: str, region: str, **kwargs) -> 'Station':
+        col = get_stations_col()
+        now = datetime.utcnow()
+        doc = {
+            'id': get_next_id('station'),
+            'name': name,
+            'description': kwargs.get('description', ''),
+            'url': url,
+            'logo_url': kwargs.get('logo_url'),
+            'website': kwargs.get('website'),
+            'genre': genre,
+            'region': region,
+            'language': kwargs.get('language', 'English'),
+            'frequency': kwargs.get('frequency'),
+            'is_active': kwargs.get('is_active', True),
+            'is_live': kwargs.get('is_live', True),
+            'current_listeners': 0,
+            'total_plays': 0,
+            'rating': 0.0,
+            'created_at': now,
+            'updated_at': now,
+        }
+        col.insert_one(doc)
+        return cls(doc)
+
     @classmethod
-    def get_by_region(cls, region):
-        return cls.query.filter_by(region=region, is_active=True).all()
-    
+    def find_by_id(cls, station_id: int) -> 'Station | None':
+        doc = get_stations_col().find_one({'id': int(station_id)})
+        return cls(doc) if doc else None
+
     @classmethod
-    def search(cls, query):
-        return cls.query.filter(
-            db.or_(
-                cls.name.ilike(f'%{query}%'),
-                cls.description.ilike(f'%{query}%')
-            ),
-            cls.is_active == True
-        ).all()
-    
-    def increment_play_count(self):
-        self.total_plays += 1
-        db.session.commit()
+    def find_by_name(cls, name: str) -> 'Station | None':
+        doc = get_stations_col().find_one({'name': name})
+        return cls(doc) if doc else None
+
+    @classmethod
+    def name_exists(cls, name: str) -> bool:
+        return get_stations_col().count_documents({'name': name}) > 0
+
+    def update(self, **fields) -> None:
+        fields['updated_at'] = datetime.utcnow()
+        get_stations_col().update_one({'id': self.id}, {'$set': fields})
+        self._doc.update(fields)
+
+    def increment_play_count(self) -> None:
+        get_stations_col().update_one({'id': self.id}, {'$inc': {'total_plays': 1}})
+        self._doc['total_plays'] = self._doc.get('total_plays', 0) + 1

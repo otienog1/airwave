@@ -1,41 +1,130 @@
-from app import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, create_refresh_token
+from app.db import get_users_col, get_next_id
 
-class User(db.Model):
-    __tablename__ = 'users'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)
-    is_active = db.Column(db.Boolean, default=True)
-    last_login = db.Column(db.DateTime)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    # Relationships
-    favorites = db.relationship('Favorite', backref='user', lazy='dynamic', cascade='all, delete-orphan')
-    plays = db.relationship('StationPlay', backref='user', lazy='dynamic', cascade='all, delete-orphan')
-    
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-    
-    def check_password(self, password):
+
+class User:
+    def __init__(self, doc: dict):
+        self._doc = doc
+
+    # ── Properties ────────────────────────────────────────────────────────────
+
+    @property
+    def id(self) -> int:
+        return self._doc['id']
+
+    @property
+    def email(self) -> str:
+        return self._doc['email']
+
+    @property
+    def username(self) -> str:
+        return self._doc['username']
+
+    @property
+    def password_hash(self) -> str:
+        return self._doc['password_hash']
+
+    @property
+    def is_admin(self) -> bool:
+        return self._doc.get('is_admin', False)
+
+    @property
+    def is_active(self) -> bool:
+        return self._doc.get('is_active', True)
+
+    @property
+    def last_login(self):
+        return self._doc.get('last_login')
+
+    @property
+    def created_at(self):
+        return self._doc.get('created_at', datetime.utcnow())
+
+    @property
+    def favorite_station_ids(self) -> list:
+        return self._doc.get('favorite_station_ids', [])
+
+    # ── Auth helpers ──────────────────────────────────────────────────────────
+
+    def check_password(self, password: str) -> bool:
         return check_password_hash(self.password_hash, password)
-    
+
     def generate_tokens(self):
         access_token = create_access_token(identity=str(self.id))
         refresh_token = create_refresh_token(identity=str(self.id))
         return access_token, refresh_token
-    
-    def to_dict(self):
+
+    def to_dict(self) -> dict:
         return {
             'id': self.id,
             'email': self.email,
             'username': self.username,
             'is_admin': self.is_admin,
             'last_login': self.last_login.isoformat() if self.last_login else None,
-            'created_at': self.created_at.isoformat()
+            'created_at': self.created_at.isoformat(),
         }
+
+    # ── Class-level MongoDB operations ────────────────────────────────────────
+
+    @classmethod
+    def create(cls, email: str, username: str, password: str, is_admin: bool = False) -> 'User':
+        col = get_users_col()
+        now = datetime.utcnow()
+        doc = {
+            'id': get_next_id('user'),
+            'email': email.lower().strip(),
+            'username': username.strip(),
+            'password_hash': generate_password_hash(password),
+            'is_admin': is_admin,
+            'is_active': True,
+            'favorite_station_ids': [],
+            'last_login': None,
+            'created_at': now,
+        }
+        col.insert_one(doc)
+        return cls(doc)
+
+    @classmethod
+    def find_by_email(cls, email: str) -> 'User | None':
+        doc = get_users_col().find_one({'email': email.lower().strip()})
+        return cls(doc) if doc else None
+
+    @classmethod
+    def find_by_id(cls, user_id: int) -> 'User | None':
+        doc = get_users_col().find_one({'id': int(user_id)})
+        return cls(doc) if doc else None
+
+    @classmethod
+    def find_by_username(cls, username: str) -> 'User | None':
+        doc = get_users_col().find_one({'username': username.strip()})
+        return cls(doc) if doc else None
+
+    @classmethod
+    def email_exists(cls, email: str) -> bool:
+        return get_users_col().count_documents({'email': email.lower().strip()}) > 0
+
+    @classmethod
+    def username_exists(cls, username: str) -> bool:
+        return get_users_col().count_documents({'username': username.strip()}) > 0
+
+    def update_last_login(self) -> None:
+        now = datetime.utcnow()
+        get_users_col().update_one({'id': self.id}, {'$set': {'last_login': now}})
+        self._doc['last_login'] = now
+
+    def add_favorite(self, station_id: int) -> None:
+        get_users_col().update_one(
+            {'id': self.id},
+            {'$addToSet': {'favorite_station_ids': station_id}},
+        )
+
+    def remove_favorite(self, station_id: int) -> None:
+        get_users_col().update_one(
+            {'id': self.id},
+            {'$pull': {'favorite_station_ids': station_id}},
+        )
+
+    def has_favorite(self, station_id: int) -> bool:
+        return station_id in self.favorite_station_ids
