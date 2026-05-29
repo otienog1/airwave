@@ -94,6 +94,7 @@ const ModernAirwave: React.FC = () => {
                 genres={genres}
                 regions={regions}
                 stationCount={filteredStations.length}
+                loading={stationsLoading}
             />
 
             {audioError && (

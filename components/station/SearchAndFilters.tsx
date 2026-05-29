@@ -11,6 +11,7 @@ interface SearchAndFiltersProps {
     genres: string[];
     regions: string[];
     stationCount: number;
+    loading?: boolean;
 }
 
 export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersProps>(({
@@ -23,6 +24,7 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
     genres,
     regions,
     stationCount,
+    loading,
 }, ref) => {
     return (
         <div className="mb-8 space-y-4">
@@ -36,7 +38,7 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                         Live Stations
                     </h2>
                     <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
-                        {stationCount} station{stationCount !== 1 ? 's' : ''} · Kenya&apos;s Best Radio
+                        {loading ? '…' : `${stationCount} station${stationCount !== 1 ? 's' : ''}`} · Kenya&apos;s Best Radio
                     </p>
                 </div>
 
