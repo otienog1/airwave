@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from sqlalchemy import text
 import os
 from datetime import timedelta
 
@@ -85,7 +86,21 @@ def create_app(config_name='development', test_config=None):
     # Health check endpoint
     @app.route('/api/health')
     def health_check():
-        return jsonify({'status': 'healthy', 'service': 'airwave-api'})
+        checks = {}
+
+        try:
+            db.session.execute(text('SELECT 1'))
+            checks['database'] = 'ok'
+        except Exception as e:
+            checks['database'] = f'error: {e}'
+
+        overall = 'healthy' if all(v == 'ok' for v in checks.values()) else 'degraded'
+        status_code = 200 if overall == 'healthy' else 503
+        return jsonify({
+            'status': overall,
+            'service': 'airwave-api',
+            'checks': checks,
+        }), status_code
     
     with app.app_context():
         db.create_all()
