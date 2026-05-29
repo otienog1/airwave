@@ -1,36 +1,33 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import (
-    jwt_required, get_jwt_identity, create_access_token, create_refresh_token,
+    jwt_required, get_jwt_identity,
     set_access_cookies, set_refresh_cookies, unset_jwt_cookies,
 )
 from app.models.user import User
-from app import db, limiter
+from app import limiter
 from datetime import datetime
 import re
 import logging
 
 auth_bp = Blueprint('auth', __name__)
 
-def validate_email(email):
-    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    return re.match(pattern, email) is not None
 
-def validate_password(password):
-    # At least 8 characters, one uppercase, one lowercase, one digit
-    if len(password) < 8:
-        return False
-    if not re.search(r'[A-Z]', password):
-        return False
-    if not re.search(r'[a-z]', password):
-        return False
-    if not re.search(r'\d', password):
-        return False
-    return True
+def validate_email(email: str) -> bool:
+    return bool(re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email))
+
+
+def validate_password(password: str) -> bool:
+    return (
+        len(password) >= 8
+        and bool(re.search(r'[A-Z]', password))
+        and bool(re.search(r'[a-z]', password))
+        and bool(re.search(r'\d', password))
+    )
+
 
 @auth_bp.route('/register', methods=['POST'])
 @limiter.limit("5 per minute")
 def register():
-    """Register a new user"""
     try:
         data = request.get_json()
         if not data:
@@ -47,37 +44,30 @@ def register():
         if len(username) < 3 or len(username) > 80:
             return jsonify({'error': 'Username must be between 3 and 80 characters'}), 400
         if not validate_password(password):
-            return jsonify({
-                'error': 'Password must be at least 8 characters with uppercase, lowercase, and digit'
-            }), 400
-        if User.query.filter_by(email=email).first():
+            return jsonify({'error': 'Password must be at least 8 characters with uppercase, lowercase, and digit'}), 400
+        if User.email_exists(email):
             return jsonify({'error': 'Email already registered'}), 409
-        if User.query.filter_by(username=username).first():
+        if User.username_exists(username):
             return jsonify({'error': 'Username already taken'}), 409
 
-        user = User(email=email, username=username)
-        user.set_password(password)
-        db.session.add(user)
-        db.session.commit()
-
+        user = User.create(email=email, username=username, password=password)
         access_token, refresh_token = user.generate_tokens()
+
         response = make_response(
-            jsonify({'message': 'User registered successfully', 'user': user.to_dict()}),
-            201,
+            jsonify({'message': 'User registered successfully', 'user': user.to_dict()}), 201
         )
         set_access_cookies(response, access_token)
         set_refresh_cookies(response, refresh_token)
         return response
 
     except Exception as e:
-        db.session.rollback()
-        logging.error(f"Error registering user: {str(e)}")
+        logging.error(f"Error registering user: {e}")
         return jsonify({'error': 'Registration failed'}), 500
+
 
 @auth_bp.route('/login', methods=['POST'])
 @limiter.limit("10 per minute")
 def login():
-    """Login user"""
     try:
         data = request.get_json()
         if not data:
@@ -89,35 +79,32 @@ def login():
         if not email or not password:
             return jsonify({'error': 'Email and password are required'}), 400
 
-        user = User.query.filter_by(email=email).first()
+        user = User.find_by_email(email)
         if not user or not user.check_password(password):
             return jsonify({'error': 'Invalid email or password'}), 401
         if not user.is_active:
             return jsonify({'error': 'Account is deactivated'}), 401
 
-        user.last_login = datetime.utcnow()
-        db.session.commit()
-
+        user.update_last_login()
         access_token, refresh_token = user.generate_tokens()
-        response = make_response(
-            jsonify({'message': 'Login successful', 'user': user.to_dict()})
-        )
+
+        response = make_response(jsonify({'message': 'Login successful', 'user': user.to_dict()}))
         set_access_cookies(response, access_token)
         set_refresh_cookies(response, refresh_token)
         return response
 
     except Exception as e:
-        logging.error(f"Error logging in user: {str(e)}")
+        logging.error(f"Error logging in user: {e}")
         return jsonify({'error': 'Login failed'}), 500
+
 
 @auth_bp.route('/refresh', methods=['POST'])
 @limiter.limit("30 per hour")
 @jwt_required(refresh=True)
 def refresh():
-    """Silently rotate access and refresh tokens using the refresh cookie."""
     try:
-        user_id = get_jwt_identity()
-        user = User.query.get(user_id)
+        user_id = int(get_jwt_identity())
+        user = User.find_by_id(user_id)
         if not user or not user.is_active:
             return jsonify({'error': 'Unauthorized'}), 401
 
@@ -128,27 +115,26 @@ def refresh():
         return response
 
     except Exception as e:
-        logging.error(f"Error refreshing token: {str(e)}")
+        logging.error(f"Error refreshing token: {e}")
         return jsonify({'error': 'Refresh failed'}), 500
 
 
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
-    """Clear access and refresh cookies."""
     response = make_response(jsonify({'ok': True}))
     unset_jwt_cookies(response)
     return response
 
+
 @auth_bp.route('/profile', methods=['GET'])
 @jwt_required()
 def get_profile():
-    """Get user profile"""
     try:
-        user_id = get_jwt_identity()
-        user = User.query.get_or_404(user_id)
-        
+        user_id = int(get_jwt_identity())
+        user = User.find_by_id(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
         return jsonify({'user': user.to_dict()})
-        
     except Exception as e:
-        logging.error(f"Error fetching profile: {str(e)}")
+        logging.error(f"Error fetching profile: {e}")
         return jsonify({'error': 'Failed to fetch profile'}), 500
