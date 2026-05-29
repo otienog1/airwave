@@ -1,211 +1,177 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models.station import Station, StationPlay, Favorite
-from app import db, limiter
-from sqlalchemy import func
+from app.models.station import Station
+from app.models.user import User
+from app.models.analytics import StationPlay
+from app.db import get_stations_col, get_station_plays_col
+from app import limiter
 import logging
+import re
 
 stations_bp = Blueprint('stations', __name__)
+
+
+def _build_filter(genre=None, region=None, search=None):
+    query = {'is_active': True}
+    if genre and genre.lower() != 'all':
+        query['genre'] = genre
+    if region and region.lower() != 'all':
+        query['region'] = region
+    if search:
+        pattern = re.compile(re.escape(search), re.IGNORECASE)
+        query['$or'] = [{'name': pattern}, {'description': pattern}]
+    return query
+
 
 @stations_bp.route('/', methods=['GET'])
 @limiter.limit("60 per minute")
 def get_stations():
-    """Get all active stations with optional filtering"""
     try:
-        # Query parameters
         genre = request.args.get('genre')
         region = request.args.get('region')
         search = request.args.get('search')
-        page = request.args.get('page', 1, type=int)
+        page = max(request.args.get('page', 1, type=int), 1)
         per_page = min(request.args.get('per_page', 20, type=int), 100)
         include_stats = request.args.get('include_stats', 'false').lower() == 'true'
-        
-        # Build query
-        query = Station.query.filter_by(is_active=True)
-        
-        if genre and genre.lower() != 'all':
-            query = query.filter_by(genre=genre)
-        
-        if region and region.lower() != 'all':
-            query = query.filter_by(region=region)
-        
-        if search:
-            query = query.filter(
-                db.or_(
-                    Station.name.ilike(f'%{search}%'),
-                    Station.description.ilike(f'%{search}%')
-                )
-            )
-        
-        # Order by popularity (total plays) and then by name
-        query = query.order_by(Station.total_plays.desc(), Station.name.asc())
-        
-        # Paginate
-        stations_page = query.paginate(
-            page=page, 
-            per_page=per_page, 
-            error_out=False
-        )
-        
-        stations_data = [station.to_dict(include_stats=include_stats)
-                        for station in stations_page.items]
 
-        response = make_response(jsonify({
+        col = get_stations_col()
+        query = _build_filter(genre, region, search)
+
+        total = col.count_documents(query)
+        cursor = (
+            col.find(query)
+            .sort([('total_plays', -1), ('name', 1)])
+            .skip((page - 1) * per_page)
+            .limit(per_page)
+        )
+
+        stations_data = [Station(doc).to_dict(include_stats=include_stats) for doc in cursor]
+        pages = max((total + per_page - 1) // per_page, 1)
+
+        resp = make_response(jsonify({
             'stations': stations_data,
             'pagination': {
                 'page': page,
                 'per_page': per_page,
-                'total': stations_page.total,
-                'pages': stations_page.pages,
-                'has_next': stations_page.has_next,
-                'has_prev': stations_page.has_prev
-            }
+                'total': total,
+                'pages': pages,
+                'has_next': page < pages,
+                'has_prev': page > 1,
+            },
         }))
-        response.headers['Cache-Control'] = 'public, max-age=30, stale-while-revalidate=60'
-        return response
-        
+        resp.headers['Cache-Control'] = 'public, max-age=30, stale-while-revalidate=60'
+        return resp
+
     except Exception as e:
-        logging.error(f"Error fetching stations: {str(e)}")
+        logging.error(f"Error fetching stations: {e}")
         return jsonify({'error': 'Failed to fetch stations'}), 500
+
 
 @stations_bp.route('/<int:station_id>', methods=['GET'])
 @limiter.limit("30 per minute")
 def get_station(station_id):
-    """Get a specific station by ID"""
     try:
-        station = Station.query.get_or_404(station_id)
-        
-        if not station.is_active:
+        station = Station.find_by_id(station_id)
+        if not station or not station.is_active:
             return jsonify({'error': 'Station not found'}), 404
-        
         return jsonify({'station': station.to_dict(include_stats=True)})
-        
     except Exception as e:
-        logging.error(f"Error fetching station {station_id}: {str(e)}")
+        logging.error(f"Error fetching station {station_id}: {e}")
         return jsonify({'error': 'Failed to fetch station'}), 500
+
 
 @stations_bp.route('/<int:station_id>/play', methods=['POST'])
 @jwt_required(optional=True)
 @limiter.limit("10 per minute")
 def play_station(station_id):
-    """Record a station play event"""
     try:
-        station = Station.query.get_or_404(station_id)
-        
-        if not station.is_active or not station.is_live:
+        station = Station.find_by_id(station_id)
+        if not station or not station.is_active or not station.is_live:
             return jsonify({'error': 'Station not available'}), 400
-        
-        # Get user if authenticated
-        user_id = get_jwt_identity()
-        
-        # Create play record
-        play = StationPlay(
+
+        user_id_str = get_jwt_identity()
+        user_id = int(user_id_str) if user_id_str else None
+
+        StationPlay.record(
             station_id=station_id,
             user_id=user_id,
-            ip_address=request.remote_addr,
-            user_agent=request.headers.get('User-Agent', '')[:500]
+            ip_address=request.remote_addr or '',
+            user_agent=request.headers.get('User-Agent', ''),
         )
-        
-        db.session.add(play)
-        
-        # Increment station play count
         station.increment_play_count()
-        
-        db.session.commit()
-        
-        return jsonify({
-            'message': 'Play recorded successfully',
-            'station': station.to_dict(include_stats=True)
-        })
-        
+
+        return jsonify({'message': 'Play recorded successfully', 'station': station.to_dict(include_stats=True)})
+
     except Exception as e:
-        db.session.rollback()
-        logging.error(f"Error recording play for station {station_id}: {str(e)}")
+        logging.error(f"Error recording play for station {station_id}: {e}")
         return jsonify({'error': 'Failed to record play'}), 500
+
 
 @stations_bp.route('/favorites', methods=['GET'])
 @jwt_required()
 def get_user_favorites():
-    """Get user's favorite stations"""
     try:
-        user_id = get_jwt_identity()
-        
-        favorites = db.session.query(Station).join(Favorite).filter(
-            Favorite.user_id == user_id,
-            Station.is_active == True
-        ).order_by(Favorite.created_at.desc()).all()
-        
-        return jsonify({
-            'favorites': [station.to_dict(include_stats=True) for station in favorites]
-        })
-        
+        user_id = int(get_jwt_identity())
+        user = User.find_by_id(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        col = get_stations_col()
+        docs = list(col.find({'id': {'$in': user.favorite_station_ids}, 'is_active': True}))
+        return jsonify({'favorites': [Station(doc).to_dict(include_stats=True) for doc in docs]})
+
     except Exception as e:
-        logging.error(f"Error fetching favorites: {str(e)}")
+        logging.error(f"Error fetching favorites: {e}")
         return jsonify({'error': 'Failed to fetch favorites'}), 500
+
 
 @stations_bp.route('/<int:station_id>/favorite', methods=['POST'])
 @jwt_required()
 @limiter.limit("20 per minute")
 def toggle_favorite(station_id):
-    """Add or remove station from favorites"""
     try:
-        user_id = get_jwt_identity()
-        station = Station.query.get_or_404(station_id)
-        
-        favorite = Favorite.query.filter_by(
-            user_id=user_id, 
-            station_id=station_id
-        ).first()
-        
-        if favorite:
-            # Remove from favorites
-            db.session.delete(favorite)
+        user_id = int(get_jwt_identity())
+        user = User.find_by_id(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        station = Station.find_by_id(station_id)
+        if not station:
+            return jsonify({'error': 'Station not found'}), 404
+
+        if user.has_favorite(station_id):
+            user.remove_favorite(station_id)
             is_favorited = False
             message = 'Station removed from favorites'
         else:
-            # Add to favorites
-            favorite = Favorite(user_id=user_id, station_id=station_id)
-            db.session.add(favorite)
+            user.add_favorite(station_id)
             is_favorited = True
             message = 'Station added to favorites'
-        
-        db.session.commit()
-        
-        return jsonify({
-            'message': message,
-            'is_favorited': is_favorited,
-            'station': station.to_dict()
-        })
-        
+
+        return jsonify({'message': message, 'is_favorited': is_favorited, 'station': station.to_dict()})
+
     except Exception as e:
-        db.session.rollback()
-        logging.error(f"Error toggling favorite for station {station_id}: {str(e)}")
+        logging.error(f"Error toggling favorite for station {station_id}: {e}")
         return jsonify({'error': 'Failed to update favorite'}), 500
+
 
 @stations_bp.route('/genres', methods=['GET'])
 @limiter.limit("30 per minute")
 def get_genres():
-    """Get all available genres"""
     try:
-        genres = db.session.query(Station.genre).filter_by(is_active=True).distinct().all()
-        genre_list = [genre[0] for genre in genres if genre[0]]
-        
-        return jsonify({'genres': sorted(genre_list)})
-        
+        genres = get_stations_col().distinct('genre', {'is_active': True})
+        return jsonify({'genres': sorted(g for g in genres if g)})
     except Exception as e:
-        logging.error(f"Error fetching genres: {str(e)}")
+        logging.error(f"Error fetching genres: {e}")
         return jsonify({'error': 'Failed to fetch genres'}), 500
+
 
 @stations_bp.route('/regions', methods=['GET'])
 @limiter.limit("30 per minute")
 def get_regions():
-    """Get all available regions"""
     try:
-        regions = db.session.query(Station.region).filter_by(is_active=True).distinct().all()
-        region_list = [region[0] for region in regions if region[0]]
-        
-        return jsonify({'regions': sorted(region_list)})
-        
+        regions = get_stations_col().distinct('region', {'is_active': True})
+        return jsonify({'regions': sorted(r for r in regions if r)})
     except Exception as e:
-        logging.error(f"Error fetching regions: {str(e)}")
+        logging.error(f"Error fetching regions: {e}")
         return jsonify({'error': 'Failed to fetch regions'}), 500
