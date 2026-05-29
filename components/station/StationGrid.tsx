@@ -1,6 +1,6 @@
 import React from 'react';
 import { StationCard } from '@/components/station/StationCard';
-import { Loader2, Radio, AlertCircle } from 'lucide-react';
+import { Radio, AlertCircle } from 'lucide-react';
 import type { Station } from '@/types/Station';
 
 interface StationGridProps {
@@ -32,19 +32,24 @@ export const StationGrid: React.FC<StationGridProps> = ({
 }) => {
     if (loading) {
         return (
-            <div className="flex items-center justify-center py-20">
-                <div className="text-center space-y-3">
-                    <Loader2
-                        className="w-8 h-8 mx-auto animate-spin"
-                        style={{ color: '#6366f1' }}
-                    />
-                    <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                        Loading stations...
-                    </p>
-                    <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                        Finding the best Kenyan radio for you
-                    </p>
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                    <div
+                        key={i}
+                        className="rounded-2xl p-4 animate-pulse"
+                        style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--color-border)' }}
+                    >
+                        <div className="flex items-start gap-3 mb-3">
+                            <div className="w-9 h-9 rounded-xl shrink-0" style={{ background: 'var(--color-overlay-hover)' }} />
+                            <div className="flex-1 space-y-2">
+                                <div className="h-3.5 rounded-md w-3/4" style={{ background: 'var(--color-overlay-hover)' }} />
+                                <div className="h-3 rounded-md w-1/2" style={{ background: 'var(--color-overlay-hover)' }} />
+                            </div>
+                        </div>
+                        <div className="h-3 rounded-md w-full mb-2" style={{ background: 'var(--color-overlay-hover)' }} />
+                        <div className="h-3 rounded-md w-2/3" style={{ background: 'var(--color-overlay-hover)' }} />
+                    </div>
+                ))}
             </div>
         );
     }
