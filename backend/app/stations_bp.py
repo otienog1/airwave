@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.station import Station, StationPlay, Favorite
 from app import db, limiter
@@ -47,10 +47,10 @@ def get_stations():
             error_out=False
         )
         
-        stations_data = [station.to_dict(include_stats=include_stats) 
+        stations_data = [station.to_dict(include_stats=include_stats)
                         for station in stations_page.items]
-        
-        return jsonify({
+
+        response = make_response(jsonify({
             'stations': stations_data,
             'pagination': {
                 'page': page,
@@ -60,7 +60,9 @@ def get_stations():
                 'has_next': stations_page.has_next,
                 'has_prev': stations_page.has_prev
             }
-        })
+        }))
+        response.headers['Cache-Control'] = 'public, max-age=30, stale-while-revalidate=60'
+        return response
         
     except Exception as e:
         logging.error(f"Error fetching stations: {str(e)}")
