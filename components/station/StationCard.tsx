@@ -26,6 +26,7 @@ interface StationCardProps {
     onFavorite: () => void;
     isFavorite: boolean;
     nowPlaying?: string | null;
+    liveListeners?: number;
 }
 
 export const StationCard: React.FC<StationCardProps> = ({
@@ -37,6 +38,7 @@ export const StationCard: React.FC<StationCardProps> = ({
     onFavorite,
     isFavorite,
     nowPlaying,
+    liveListeners = 0,
 }) => {
     const colors = (station.genre ? GENRE_COLORS[station.genre] : undefined) ?? DEFAULT_COLOR;
 
@@ -150,6 +152,19 @@ export const StationCard: React.FC<StationCardProps> = ({
                         </span>
                     )}
                 </div>
+
+                {/* Listener count badge */}
+                {liveListeners > 0 && (
+                    <div className="flex items-center gap-1 mb-2">
+                        <span
+                            className="w-1.5 h-1.5 rounded-full shrink-0"
+                            style={{ background: colors.accent, opacity: 0.7 }}
+                        />
+                        <span className="text-xs tabular-nums" style={{ color: colors.accent }}>
+                            {liveListeners.toLocaleString()} listening now
+                        </span>
+                    </div>
+                )}
 
                 {/* Play button */}
                 <PlayButton

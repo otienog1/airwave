@@ -15,6 +15,7 @@ interface StationGridProps {
     onFavorite: (stationId: number) => void;
     onRetry?: () => void;
     nowPlaying?: string | null;
+    listenerCounts?: Record<number, number>;
 }
 
 export const StationGrid: React.FC<StationGridProps> = ({
@@ -29,6 +30,7 @@ export const StationGrid: React.FC<StationGridProps> = ({
     onFavorite,
     onRetry,
     nowPlaying,
+    listenerCounts,
 }) => {
     if (loading) {
         return (
@@ -114,6 +116,7 @@ export const StationGrid: React.FC<StationGridProps> = ({
                         onFavorite={() => onFavorite(station.id)}
                         isFavorite={favorites.has(station.id)}
                         nowPlaying={isCurrent ? nowPlaying : null}
+                        liveListeners={listenerCounts?.[station.id] ?? 0}
                     />
                 );
             })}
