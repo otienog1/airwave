@@ -1,66 +1,76 @@
 import pytest
 from app import create_app, db as _db
 from app.models.user import User
-from werkzeug.test import EnvironBuilder
 
 
 class SimpleCookie:
-    """Simple cookie object for testing."""
+    """Simple cookie object matching http.cookiejar.Cookie interface."""
     def __init__(self, name, value):
         self.name = name
         self.value = value
 
 
-class CookieJar:
-    """Simple cookie jar for tracking cookies in tests."""
-    def __init__(self):
+class CookieJarProxy:
+    """Exposes Flask test client cookies as an iterable of SimpleCookie objects.
+
+    Tracks cookies from Set-Cookie headers in responses.
+    """
+    def __init__(self, client):
+        self.client = client
         self.cookies = {}
 
-    def __iter__(self):
-        """Allow iteration over cookie objects."""
-        return iter(self.cookies.values())
-
-    def set_cookie(self, name, value):
-        """Set a cookie in the jar."""
-        self.cookies[name] = SimpleCookie(name, value)
-
-    def clear(self, name):
-        """Clear a cookie from the jar."""
-        self.cookies[name] = SimpleCookie(name, '')
-
-
-class TestClientWrapper:
-    """Wrapper around Flask test client that tracks cookies."""
-    def __init__(self, client):
-        self._client = client
-        self.cookie_jar = CookieJar()
-
-    def _update_cookies_from_response(self, response):
-        """Extract cookies from Set-Cookie headers and store in jar."""
+    def update_from_response(self, response):
+        """Extract cookies from Set-Cookie headers and update storage."""
         for cookie_header in response.headers.getlist('Set-Cookie'):
             if '=' in cookie_header:
                 cookie_name, cookie_rest = cookie_header.split('=', 1)
                 cookie_value = cookie_rest.split(';')[0].strip()
                 if cookie_value:
-                    self.cookie_jar.set_cookie(cookie_name, cookie_value)
+                    self.cookies[cookie_name] = cookie_value
                 else:
                     # Empty cookie = clear cookie
-                    self.cookie_jar.clear(cookie_name)
+                    self.cookies[cookie_name] = ''
 
-    def post(self, *args, **kwargs):
-        response = self._client.post(*args, **kwargs)
-        self._update_cookies_from_response(response)
+    def __iter__(self):
+        """Iterate over cookies as SimpleCookie objects."""
+        for name, value in self.cookies.items():
+            yield SimpleCookie(name, value)
+
+
+class TestClientWithCookies:
+    """Wrapper around Flask test client that tracks Set-Cookie headers."""
+    def __init__(self, client, cookie_jar):
+        self._client = client
+        self.cookie_jar = cookie_jar
+
+    def _track_cookies(self, response):
+        """Update cookie_jar from response Set-Cookie headers."""
+        self.cookie_jar.update_from_response(response)
         return response
 
     def get(self, *args, **kwargs):
         response = self._client.get(*args, **kwargs)
-        self._update_cookies_from_response(response)
-        return response
+        return self._track_cookies(response)
+
+    def post(self, *args, **kwargs):
+        response = self._client.post(*args, **kwargs)
+        return self._track_cookies(response)
+
+    def put(self, *args, **kwargs):
+        response = self._client.put(*args, **kwargs)
+        return self._track_cookies(response)
+
+    def delete(self, *args, **kwargs):
+        response = self._client.delete(*args, **kwargs)
+        return self._track_cookies(response)
+
+    def patch(self, *args, **kwargs):
+        response = self._client.patch(*args, **kwargs)
+        return self._track_cookies(response)
 
     def options(self, *args, **kwargs):
         response = self._client.options(*args, **kwargs)
-        self._update_cookies_from_response(response)
-        return response
+        return self._track_cookies(response)
 
     def __getattr__(self, name):
         """Delegate other attributes to the wrapped client."""
@@ -72,8 +82,8 @@ def app():
     application = create_app(test_config={
         'TESTING': True,
         'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
-        'JWT_COOKIE_SECURE': False,      # allow http in tests
-        'RATELIMIT_ENABLED': False,       # disable rate limiting in tests
+        'JWT_COOKIE_SECURE': False,
+        'RATELIMIT_ENABLED': False,
         'RATELIMIT_STORAGE_URI': 'memory://',
     })
     with application.app_context():
@@ -84,10 +94,9 @@ def app():
 
 @pytest.fixture(scope='function')
 def client(app):
-    # use_cookies=True ensures cookies are maintained across requests
-    # Wrap it to expose cookie_jar for test access
     test_client = app.test_client(use_cookies=True)
-    return TestClientWrapper(test_client)
+    cookie_jar = CookieJarProxy(test_client)
+    return TestClientWithCookies(test_client, cookie_jar)
 
 
 @pytest.fixture(scope='function')
