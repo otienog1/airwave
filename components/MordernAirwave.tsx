@@ -13,6 +13,7 @@ import { SearchAndFilters } from '@/components/station/SearchAndFilters';
 import { ShortcutCheatsheet } from '@/components/ui/ShortcutCheatsheet';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useStations } from '@/hooks/useStations';
+import { useListeners } from '@/hooks/useListeners';
 import type { Station } from '@/types/Station';
 
 const ModernAirwave: React.FC = () => {
@@ -56,6 +57,12 @@ const ModernAirwave: React.FC = () => {
     const { title: nowPlaying } = useStreamMetadata(
         isPlaying && currentStation ? currentStation.id : null,
         currentStation
+    );
+
+    const listenerCounts = useListeners(
+        currentStation?.id ?? null,
+        currentStation?.name ?? null,
+        isPlaying
     );
 
     // Adapter: useKeyboardShortcuts expects (station: Station) but useFavorites gives (stationId: number)
@@ -132,6 +139,7 @@ const ModernAirwave: React.FC = () => {
                 onFavorite={toggleFavorite}  // raw (stationId: number) — adapter only needed for keyboard hook
                 onRetry={refetchStations}
                 nowPlaying={nowPlaying}
+                listenerCounts={listenerCounts}
             />
 
             <AudioPlayer
@@ -144,6 +152,7 @@ const ModernAirwave: React.FC = () => {
                 onMuteToggle={toggleMute}
                 isLoading={isLoading}
                 nowPlaying={nowPlaying}
+                liveListeners={currentStation ? (listenerCounts[currentStation.id] ?? 0) : 0}
             />
             <ShortcutCheatsheet
                 isOpen={isCheatsheetOpen}
