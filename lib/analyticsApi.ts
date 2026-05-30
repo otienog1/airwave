@@ -209,4 +209,22 @@ export function fetchAudience(days: number): Promise<AudienceResponse> {
   return get(`/analytics/audience?days=${days}`);
 }
 
+export interface TrendingNowStation {
+  id: number;
+  name: string;
+  genre: string | null;
+  live_listeners: number;
+  plays_today: number;
+  growth_pct?: number;
+}
+
+export interface TrendingNowResponse {
+  stations: TrendingNowStation[];
+  updated_at: string;
+}
+
+export function fetchTrendingNow(): Promise<TrendingNowResponse> {
+  return get('/analytics/trending-now');
+}
+
 export const PERIOD_HOURS: Record<number, number> = { 1: 24, 7: 168, 30: 720, 90: 2160 };
