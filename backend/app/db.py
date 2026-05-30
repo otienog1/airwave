@@ -62,3 +62,7 @@ def ensure_indexes() -> None:
     plays.create_index([('user_id', ASCENDING), ('played_at', DESCENDING)], name='play_user_time')
     plays.create_index([('played_at', ASCENDING)], name='play_time')
     plays.create_index([('ip_address', ASCENDING)], name='play_ip')
+
+    plays_broadcast = get_plays_col()
+    plays_broadcast.create_index([('detectedAt', ASCENDING)], name='plays_detected_time')
+    plays_broadcast.create_index([('stationId', ASCENDING), ('detectedAt', DESCENDING)], name='plays_station_time')
