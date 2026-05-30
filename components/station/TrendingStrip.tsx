@@ -87,7 +87,7 @@ export function TrendingStrip({ stations, currentStation, onPlay }: Props) {
               <p className="text-xs" style={{ color: '#22c55e' }}>
                 ● {fmt(t.live_listeners)} live
               </p>
-              {t.growth_pct !== undefined && (
+              {t.growth_pct !== undefined && t.growth_pct > 0 && (
                 <p className="text-xs" style={{ color: '#f59e0b' }}>
                   ↑ +{t.growth_pct.toFixed(0)}%
                 </p>
