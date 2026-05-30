@@ -61,10 +61,7 @@ export default function AnalyticsPage() {
 
   return (
     <Layout>
-      <div className="flex flex-col min-h-screen pb-24">
-        <LiveStatusBar />
-
-        <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 space-y-6">
+      <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 space-y-6 pb-24">
           {/* Header */}
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-3">
@@ -97,6 +94,8 @@ export default function AnalyticsPage() {
             <PeriodFilter current={period} />
           </div>
 
+          <LiveStatusBar />
+
           {/* Tab nav */}
           <div className="flex gap-1 overflow-x-auto" role="tablist">
             {TABS.map(t => (
@@ -128,7 +127,6 @@ export default function AnalyticsPage() {
             {tab === 'health'    && <HealthTab period={period} realtime={realtime} />}
           </div>
         </main>
-      </div>
     </Layout>
   );
 }

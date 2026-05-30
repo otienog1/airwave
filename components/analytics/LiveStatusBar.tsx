@@ -22,13 +22,13 @@ export function LiveStatusBar() {
 
   return (
     <div
-      className="flex items-center gap-4 px-5 py-2 text-xs overflow-x-auto shrink-0"
+      className="flex items-center gap-4 px-5 py-2.5 text-xs overflow-x-auto rounded-xl"
       style={{
         background:
           'linear-gradient(90deg, rgba(99,102,241,0.08) 0%, rgba(139,92,246,0.04) 100%)',
-        borderBottom: '1px solid var(--color-border)',
+        border: '1px solid var(--color-border)',
         color: 'var(--color-text-secondary)',
-        minHeight: 36,
+        minHeight: 40,
       }}
     >
       <span className="flex items-center gap-1.5 shrink-0">
