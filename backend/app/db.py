@@ -27,6 +27,9 @@ def get_users_col() -> Collection:
 def get_station_plays_col() -> Collection:
     return get_db()['stationPlays']
 
+def get_plays_col() -> Collection:
+    return get_db()['plays']
+
 def get_counters_col() -> Collection:
     return get_db()['counters']
 
