@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useTheme } from 'next-themes';
 import type { Station } from '@/types/Station';
 
 export interface ShortcutDef {
@@ -22,9 +21,6 @@ interface UseKeyboardShortcutsOptions {
   toggleFavorite: (station: Station) => void;
   setSearchTerm: (term: string) => void;
   searchInputRef: React.RefObject<HTMLInputElement>;
-  isCheatsheetOpen: boolean;
-  onToggleCheatsheet: () => void;
-  onCloseCheatsheet: () => void;
 }
 
 function isInputFocused(): boolean {
@@ -49,19 +45,15 @@ export const SHORTCUTS: ShortcutDef[] = [
 ];
 
 export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions): ShortcutDef[] {
-  const { theme, setTheme } = useTheme();
   const {
     togglePlay, toggleMute, handleVolumeChange, volume,
     playStation, filteredStations, currentStation, favorites, toggleFavorite,
     setSearchTerm, searchInputRef,
-    isCheatsheetOpen, onToggleCheatsheet, onCloseCheatsheet,
   } = options;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Escape: priority — cheatsheet > search clear
       if (e.key === 'Escape') {
-        if (isCheatsheetOpen) { onCloseCheatsheet(); return; }
         if (searchInputRef.current && document.activeElement === searchInputRef.current) {
           setSearchTerm('');
           searchInputRef.current.blur();
@@ -151,15 +143,6 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions): Shor
         case 'F':
           if (currentStation) toggleFavorite(currentStation);
           break;
-
-        case 't':
-        case 'T':
-          setTheme(theme === 'light' ? 'dark' : 'light');
-          break;
-
-        case '?':
-          onToggleCheatsheet();
-          break;
       }
     };
 
@@ -169,8 +152,6 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions): Shor
     togglePlay, toggleMute, handleVolumeChange, volume,
     playStation, filteredStations, currentStation, favorites, toggleFavorite,
     setSearchTerm, searchInputRef,
-    isCheatsheetOpen, onToggleCheatsheet, onCloseCheatsheet,
-    theme, setTheme,
   ]);
 
   return SHORTCUTS;

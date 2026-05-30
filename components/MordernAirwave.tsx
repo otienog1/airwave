@@ -1,30 +1,24 @@
 'use client';
 
-import React, { useRef, useState, useCallback } from 'react';
-import { useAudioPlayer } from '@/hooks/useAudioPlayer';
+import React, { useRef, useCallback, useMemo } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { Heart } from 'lucide-react';
 import { useStationFilter } from '@/hooks/useStationFilter';
 import { useFavorites } from '@/hooks/useFavorites';
 import { HeartBurst } from '@/components/ui/HeartBurst';
-import { useStreamMetadata } from '@/hooks/useStreamMetadata';
 import { useAuth } from '@/context/AuthContext';
-import { AudioPlayer } from '@/components/player';
+import { usePlayer } from '@/context/PlayerContext';
 import { StationGrid } from '@/components/station/StationGrid';
 import { SearchAndFilters } from '@/components/station/SearchAndFilters';
-import { ShortcutCheatsheet } from '@/components/ui/ShortcutCheatsheet';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useStations } from '@/hooks/useStations';
-import { useListeners } from '@/hooks/useListeners';
 import type { Station } from '@/types/Station';
 
 const ModernAirwave: React.FC = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const showFavoritesOnly = searchParams.get('view') === 'favorites';
     const { isAuthenticated } = useAuth();
-
-    const { stations, loading: stationsLoading, error: stationsError, refetch: refetchStations } = useStations({ autoFetch: true });
-
-    const searchInputRef = useRef<HTMLInputElement>(null);
-    const [isCheatsheetOpen, setIsCheatsheetOpen] = useState(false);
-    const closeCheatsheet = useCallback(() => setIsCheatsheetOpen(false), []);
-    const toggleCheatsheet = useCallback(() => setIsCheatsheetOpen(prev => !prev), []);
 
     const {
         currentStation,
@@ -38,7 +32,13 @@ const ModernAirwave: React.FC = () => {
         handleVolumeChange,
         toggleMute,
         clearError,
-    } = useAudioPlayer();
+        nowPlaying,
+        listenerCounts,
+    } = usePlayer();
+
+    const { stations, loading: stationsLoading, error: stationsError, refetch: refetchStations } = useStations({ autoFetch: true });
+
+    const searchInputRef = useRef<HTMLInputElement>(null);
 
     const {
         filteredStations,
@@ -54,15 +54,9 @@ const ModernAirwave: React.FC = () => {
 
     const { favorites, toggleFavorite, showHeart } = useFavorites(isAuthenticated);
 
-    const { title: nowPlaying } = useStreamMetadata(
-        isPlaying && currentStation ? currentStation.id : null,
-        currentStation
-    );
-
-    const listenerCounts = useListeners(
-        currentStation?.id ?? null,
-        currentStation?.name ?? null,
-        isPlaying
+    const displayedStations = useMemo(
+        () => showFavoritesOnly ? filteredStations.filter(s => favorites.has(s.id)) : filteredStations,
+        [showFavoritesOnly, filteredStations, favorites]
     );
 
     // Adapter: useKeyboardShortcuts expects (station: Station) but useFavorites gives (stationId: number)
@@ -71,7 +65,7 @@ const ModernAirwave: React.FC = () => {
         [toggleFavorite]
     );
 
-    const shortcuts = useKeyboardShortcuts({
+    useKeyboardShortcuts({
         togglePlay,
         toggleMute,
         handleVolumeChange,
@@ -79,17 +73,16 @@ const ModernAirwave: React.FC = () => {
         playStation,
         filteredStations,
         currentStation,
+        favorites,
         toggleFavorite: toggleFavoriteByStation,
         setSearchTerm,
         searchInputRef,
-        isCheatsheetOpen,
-        onToggleCheatsheet: toggleCheatsheet,
-        onCloseCheatsheet: closeCheatsheet,
     });
 
     return (
         <>
             {showHeart && <HeartBurst />}
+
             <SearchAndFilters
                 ref={searchInputRef}
                 searchTerm={searchTerm}
@@ -100,9 +93,31 @@ const ModernAirwave: React.FC = () => {
                 onRegionChange={setSelectedRegion}
                 genres={genres}
                 regions={regions}
-                stationCount={filteredStations.length}
+                stationCount={displayedStations.length}
                 loading={stationsLoading}
             />
+
+            {showFavoritesOnly && (
+                <div
+                    className="mb-5 rounded-xl px-4 py-3 flex items-center gap-3"
+                    style={{
+                        background: 'rgba(248,113,113,0.08)',
+                        border: '1px solid rgba(248,113,113,0.2)',
+                    }}
+                >
+                    <Heart className="w-4 h-4 fill-current shrink-0" style={{ color: '#f87171' }} />
+                    <span className="text-sm font-medium" style={{ color: '#f87171' }}>
+                        My Favorites &mdash; {displayedStations.length} station{displayedStations.length !== 1 ? 's' : ''}
+                    </span>
+                    <button
+                        onClick={() => router.push('/')}
+                        className="ml-auto text-xs opacity-70 hover:opacity-100 transition-opacity"
+                        style={{ color: '#f87171' }}
+                    >
+                        View all
+                    </button>
+                </div>
+            )}
 
             {audioError && (
                 <div
@@ -128,7 +143,7 @@ const ModernAirwave: React.FC = () => {
             )}
 
             <StationGrid
-                stations={filteredStations}
+                stations={displayedStations}
                 loading={stationsLoading}
                 error={stationsError}
                 currentStation={currentStation}
@@ -136,28 +151,10 @@ const ModernAirwave: React.FC = () => {
                 isAudioLoading={isLoading}
                 favorites={favorites}
                 onPlay={playStation}
-                onFavorite={toggleFavorite}  // raw (stationId: number) — adapter only needed for keyboard hook
+                onFavorite={toggleFavorite}
                 onRetry={refetchStations}
                 nowPlaying={nowPlaying}
                 listenerCounts={listenerCounts}
-            />
-
-            <AudioPlayer
-                currentStation={currentStation}
-                isPlaying={isPlaying}
-                volume={volume}
-                isMuted={isMuted}
-                onTogglePlay={togglePlay}
-                onVolumeChange={handleVolumeChange}
-                onMuteToggle={toggleMute}
-                isLoading={isLoading}
-                nowPlaying={nowPlaying}
-                liveListeners={currentStation ? (listenerCounts[currentStation.id] ?? 0) : 0}
-            />
-            <ShortcutCheatsheet
-                isOpen={isCheatsheetOpen}
-                onClose={closeCheatsheet}
-                shortcuts={shortcuts}
             />
         </>
     );
