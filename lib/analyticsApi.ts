@@ -175,4 +175,38 @@ export function fetchTrending(hours: number, limit: number): Promise<TrendingRes
     .then(r => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); });
 }
 
+export interface AudienceTimeBucket {
+  bucket: string;
+  listeners: number;
+}
+
+export interface AudienceStation {
+  station_id: number;
+  station_name: string;
+  avg_listeners: number;
+}
+
+export interface AudienceSong {
+  title: string;
+  artist: string | null;
+  avg_listeners: number;
+  count: number;
+  best_station: string | null;
+}
+
+export interface AudienceResponse {
+  peak_listeners: number;
+  avg_listeners: number;
+  total_detections: number;
+  app_engagement_rate: number;
+  time_series: AudienceTimeBucket[];
+  top_stations: AudienceStation[];
+  top_songs: AudienceSong[];
+  period: { start_date: string; end_date: string; days: number };
+}
+
+export function fetchAudience(days: number): Promise<AudienceResponse> {
+  return get(`/analytics/audience?days=${days}`);
+}
+
 export const PERIOD_HOURS: Record<number, number> = { 1: 24, 7: 168, 30: 720, 90: 2160 };
