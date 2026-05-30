@@ -561,5 +561,99 @@ def get_audience_stats():
         return jsonify({'error': 'Failed to fetch audience statistics'}), 500
 
 
+@analytics_bp.route('/trending-now', methods=['GET'])
+@limiter.limit("60 per minute")
+def get_trending_now():
+    try:
+        now = datetime.utcnow()
+        thirty_min_ago = now - timedelta(minutes=30)
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        yesterday_start = today_start - timedelta(days=1)
+
+        plays_col = get_plays_col()
+        station_plays_col = get_station_plays_col()
+        stations_col = get_stations_col()
+
+        # Live listeners: max listeners per station in last 30 min (plays collection)
+        live_agg = list(plays_col.aggregate([
+            {'$match': {'detectedAt': {'$gte': thirty_min_ago}}},
+            {'$group': {'_id': '$stationId', 'live_listeners': {'$max': '$listeners'}}},
+        ]))
+        live_map = {r['_id']: int(r['live_listeners'] or 0) for r in live_agg}
+
+        # Plays today per station (stationPlays collection)
+        today_agg = list(station_plays_col.aggregate([
+            {'$match': {'played_at': {'$gte': today_start, '$lt': now}}},
+            {'$group': {'_id': '$station_id', 'plays_today': {'$sum': 1}}},
+        ]))
+        today_map = {r['_id']: r['plays_today'] for r in today_agg}
+
+        # Plays yesterday per station
+        yesterday_agg = list(station_plays_col.aggregate([
+            {'$match': {'played_at': {'$gte': yesterday_start, '$lt': today_start}}},
+            {'$group': {'_id': '$station_id', 'plays_yesterday': {'$sum': 1}}},
+        ]))
+        yesterday_map = {r['_id']: r['plays_yesterday'] for r in yesterday_agg}
+
+        all_ids = set(live_map) | set(today_map)
+        if not all_ids:
+            return jsonify({'stations': [], 'updated_at': now.strftime('%Y-%m-%dT%H:%M:%SZ')})
+
+        max_listeners = max((live_map.get(sid, 0) for sid in all_ids), default=1) or 1
+        max_plays = max((today_map.get(sid, 0) for sid in all_ids), default=1) or 1
+
+        scored = []
+        for sid in all_ids:
+            listeners = live_map.get(sid, 0)
+            plays_today = today_map.get(sid, 0)
+            plays_yesterday = yesterday_map.get(sid, 0)
+
+            listener_norm = listeners / max_listeners
+            plays_norm = plays_today / max_plays
+
+            if plays_yesterday > 0:
+                growth_pct = (plays_today - plays_yesterday) / plays_yesterday * 100
+                growth_norm = min(growth_pct / 100, 1.0)
+            else:
+                growth_pct = None
+                growth_norm = 0.0
+
+            score = 0.5 * listener_norm + 0.3 * growth_norm + 0.2 * plays_norm
+            scored.append({
+                'id': sid,
+                'live_listeners': listeners,
+                'plays_today': plays_today,
+                'growth_pct': growth_pct,
+                'score': score,
+            })
+
+        scored.sort(key=lambda x: x['score'], reverse=True)
+
+        result = []
+        for row in scored[:5]:
+            station = stations_col.find_one({'id': row['id'], 'is_active': True}, {'name': 1, 'genre': 1})
+            if not station:
+                continue
+            entry = {
+                'id': row['id'],
+                'name': station['name'],
+                'genre': station.get('genre'),
+                'live_listeners': row['live_listeners'],
+                'plays_today': row['plays_today'],
+            }
+            if row['growth_pct'] is not None:
+                entry['growth_pct'] = round(row['growth_pct'], 1)
+            result.append(entry)
+
+        return jsonify({
+            'stations': result,
+            'updated_at': now.strftime('%Y-%m-%dT%H:%M:%SZ'),
+        })
+
+    except Exception as e:
+        logging.error(f"Error fetching trending now: {e}")
+        return jsonify({'error': 'Failed to fetch trending stations'}), 500
+
+
 def register_analytics_commands(app):
     pass
