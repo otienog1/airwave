@@ -572,7 +572,6 @@ def get_trending_now():
 
         plays_col = get_plays_col()
         station_plays_col = get_station_plays_col()
-        stations_col = get_stations_col()
 
         # Live listeners: max listeners per station in last 30 min (plays collection)
         live_agg = list(plays_col.aggregate([
@@ -599,6 +598,7 @@ def get_trending_now():
         if not all_ids:
             return jsonify({'stations': [], 'updated_at': now.strftime('%Y-%m-%dT%H:%M:%SZ')})
 
+        stations_col = get_stations_col()
         max_listeners = max((live_map.get(sid, 0) for sid in all_ids), default=1) or 1
         max_plays = max((today_map.get(sid, 0) for sid in all_ids), default=1) or 1
 
@@ -613,7 +613,7 @@ def get_trending_now():
 
             if plays_yesterday > 0:
                 growth_pct = (plays_today - plays_yesterday) / plays_yesterday * 100
-                growth_norm = min(growth_pct / 100, 1.0)
+                growth_norm = max(0.0, min(growth_pct / 100, 1.0))
             else:
                 growth_pct = None
                 growth_norm = 0.0

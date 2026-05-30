@@ -97,3 +97,30 @@ def test_trending_now_omits_growth_when_no_yesterday(client):
         data = response.get_json()
         assert len(data['stations']) == 1
         assert 'growth_pct' not in data['stations'][0]
+
+
+def test_trending_now_negative_growth(client):
+    """Station with declining plays still appears; growth_pct is negative; score stays non-negative."""
+    live_data = [{'_id': 1, 'live_listeners': 500}]
+    today_data = [{'_id': 1, 'plays_today': 10}]
+    yesterday_data = [{'_id': 1, 'plays_yesterday': 200}]
+    station_docs = {1: {'name': 'Declining FM', 'genre': 'News'}}
+
+    with patch('app.analytics_bp.get_plays_col') as mock_plays, \
+         patch('app.analytics_bp.get_station_plays_col') as mock_sp, \
+         patch('app.analytics_bp.get_stations_col') as mock_stations:
+
+        mock_plays.return_value.aggregate.return_value = iter(live_data)
+        mock_sp.return_value.aggregate.side_effect = [iter(today_data), iter(yesterday_data)]
+        mock_stations.return_value.find_one.side_effect = lambda q, proj=None: (
+            station_docs[q['id']] if q.get('id') in station_docs else None
+        )
+
+        response = client.get('/api/analytics/trending-now')
+        assert response.status_code == 200
+        data = response.get_json()
+        assert len(data['stations']) == 1
+        station = data['stations'][0]
+        assert station['id'] == 1
+        assert station['growth_pct'] < 0
+        assert station['live_listeners'] == 500
