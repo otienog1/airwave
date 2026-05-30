@@ -12,12 +12,14 @@ import { StationsTab } from '@/components/analytics/tabs/StationsTab';
 import { SongsTab } from '@/components/analytics/tabs/SongsTab';
 import { GenresTab } from '@/components/analytics/tabs/GenresTab';
 import { HealthTab } from '@/components/analytics/tabs/HealthTab';
+import { AudienceTab } from '@/components/analytics/tabs/AudienceTab';
 import { fetchRealTime, type RealTimeResponse } from '@/lib/analyticsApi';
 
-type Tab = 'overview' | 'stations' | 'songs' | 'genres' | 'health';
+type Tab = 'overview' | 'audience' | 'stations' | 'songs' | 'genres' | 'health';
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'overview',  label: 'Overview' },
+  { id: 'audience',  label: 'Audience' },
   { id: 'stations',  label: 'Stations' },
   { id: 'songs',     label: 'Songs & Artists' },
   { id: 'genres',    label: 'Genres & Regions' },
@@ -121,6 +123,7 @@ export default function AnalyticsPage() {
           {/* Tab content */}
           <div role="tabpanel">
             {tab === 'overview'  && <OverviewTab period={period} realtime={realtime} />}
+            {tab === 'audience'  && <AudienceTab period={period} />}
             {tab === 'stations'  && <StationsTab period={period} realtime={realtime} />}
             {tab === 'songs'     && <SongsTab period={period} />}
             {tab === 'genres'    && <GenresTab period={period} />}
