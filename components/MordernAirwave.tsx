@@ -150,6 +150,13 @@ const ModernAirwave: React.FC = () => {
                 </div>
             )}
 
+            <p
+                className="text-xs font-semibold mb-3 uppercase"
+                style={{ color: 'var(--color-text-muted)', letterSpacing: '0.06em' }}
+            >
+                📻 All Stations
+            </p>
+
             <StationGrid
                 stations={displayedStations}
                 loading={stationsLoading}
