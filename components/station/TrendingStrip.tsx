@@ -36,7 +36,7 @@ export function TrendingStrip({ stations, currentStation, onPlay }: Props) {
         <div className="h-4 w-24 rounded mb-2 animate-pulse" style={{ background: 'var(--color-surface-raised)' }} />
         <div className="flex gap-3 overflow-x-auto pb-1">
           {[0, 1, 2].map(i => (
-            <div key={i} className="shrink-0" style={{ width: 164 }}>
+            <div key={i} className="flex-1">
               <SkeletonCard height={88} />
             </div>
           ))}
@@ -55,7 +55,7 @@ export function TrendingStrip({ stations, currentStation, onPlay }: Props) {
       >
         🔥 Trending Now
       </p>
-      <div className="flex gap-3 overflow-x-auto pb-1">
+      <div className="flex gap-3">
         {trending.map(t => {
           const station = stations.find(s => s.id === t.id);
           const isActive = currentStation?.id === t.id;
@@ -64,9 +64,8 @@ export function TrendingStrip({ stations, currentStation, onPlay }: Props) {
               key={t.id}
               onClick={() => station && onPlay(station)}
               disabled={!station}
-              className="shrink-0 rounded-xl px-3 py-2.5 text-left transition-colors duration-150"
+              className="flex-1 min-w-0 rounded-xl px-3 py-2.5 text-left transition-colors duration-150"
               style={{
-                width: 164,
                 background: isActive ? 'rgba(99,102,241,0.15)' : 'var(--color-surface-raised)',
                 border: `1px solid ${isActive ? 'rgba(99,102,241,0.5)' : 'var(--color-border)'}`,
                 cursor: station ? 'pointer' : 'default',
