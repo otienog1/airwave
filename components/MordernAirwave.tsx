@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { usePlayer } from '@/context/PlayerContext';
 import { StationGrid } from '@/components/station/StationGrid';
 import { SearchAndFilters } from '@/components/station/SearchAndFilters';
+import { TrendingStrip } from '@/components/station/TrendingStrip';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useStations } from '@/hooks/useStations';
 import type { Station } from '@/types/Station';
@@ -82,6 +83,12 @@ const ModernAirwave: React.FC = () => {
     return (
         <>
             {showHeart && <HeartBurst />}
+
+            <TrendingStrip
+                stations={stations}
+                currentStation={currentStation}
+                onPlay={playStation}
+            />
 
             <SearchAndFilters
                 ref={searchInputRef}
