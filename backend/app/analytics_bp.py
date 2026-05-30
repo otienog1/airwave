@@ -630,7 +630,9 @@ def get_trending_now():
         scored.sort(key=lambda x: x['score'], reverse=True)
 
         result = []
-        for row in scored[:5]:
+        for row in scored[:10]:
+            if len(result) >= 5:
+                break
             station = stations_col.find_one({'id': row['id'], 'is_active': True}, {'name': 1, 'genre': 1})
             if not station:
                 continue
