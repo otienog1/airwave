@@ -2,7 +2,6 @@ import React from 'react';
 import { Header } from './Header';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { PersistentAudioPlayer } from '@/components/player/PersistentAudioPlayer';
-import { GlobalShortcuts } from '@/components/GlobalShortcuts';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -15,7 +14,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Header />
                 {children}
                 <PersistentAudioPlayer />
-                <GlobalShortcuts />
             </div>
         </TooltipProvider>
     );

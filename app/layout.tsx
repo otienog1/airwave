@@ -1,9 +1,11 @@
 import { AuthProvider } from '@/context/AuthContext';
+import { PlayerProvider } from '@/context/PlayerContext';
 import { ThemeProvider } from 'next-themes';
 import type { Metadata, Viewport } from "next";
 import { Inter } from 'next/font/google';
 import "./globals.css";
 import { Toaster } from '@/components/ui/sonner';
+import { GlobalShortcuts } from '@/components/GlobalShortcuts';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -19,6 +21,9 @@ export const metadata: Metadata = {
         capable: true,
         statusBarStyle: 'black-translucent',
         title: 'AirWave',
+    },
+    other: {
+        'mobile-web-app-capable': 'yes',
     },
 };
 
@@ -36,8 +41,11 @@ export default function RootLayout({
             <body className={inter.className}>
                 <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange={false}>
                     <AuthProvider>
-                        {children}
-                        <Toaster position="bottom-right" />
+                        <PlayerProvider>
+                            <GlobalShortcuts />
+                            {children}
+                            <Toaster position="bottom-right" />
+                        </PlayerProvider>
                     </AuthProvider>
                 </ThemeProvider>
             </body>

@@ -12,9 +12,13 @@ function isInputFocused(): boolean {
 
 export function GlobalShortcuts() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [isCheatsheetOpen, setIsCheatsheetOpen] = useState(false);
 
+  useEffect(() => { setMounted(true); }, []);
+
   useEffect(() => {
+    if (!mounted) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (isCheatsheetOpen) { setIsCheatsheetOpen(false); return; }
@@ -33,7 +37,7 @@ export function GlobalShortcuts() {
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [theme, setTheme, isCheatsheetOpen]);
+  }, [mounted, theme, setTheme, isCheatsheetOpen]);
 
   return (
     <ShortcutCheatsheet
