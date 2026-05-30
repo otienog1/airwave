@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, type ReactNode } from 'react';
 import { Search, X } from 'lucide-react';
 
 interface SearchAndFiltersProps {
@@ -12,7 +12,50 @@ interface SearchAndFiltersProps {
     regions: string[];
     stationCount: number;
     loading?: boolean;
+    trendingSlot?: ReactNode;
 }
+
+const PillRow = ({
+    items,
+    selected,
+    onSelect,
+    ariaLabel,
+    small,
+}: {
+    items: string[];
+    selected: string;
+    onSelect: (v: string) => void;
+    ariaLabel: string;
+    small?: boolean;
+}) => (
+    <div
+        className="relative"
+        style={{
+            maskImage: 'linear-gradient(to right, black 88%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, black 88%, transparent 100%)',
+        }}
+    >
+        <div
+            className="flex gap-2 overflow-x-auto scrollbar-hide pb-0.5"
+            role="group"
+            aria-label={ariaLabel}
+        >
+            {items.map((item) => (
+                <button
+                    key={item}
+                    onClick={() => onSelect(item)}
+                    className={`filter-pill shrink-0${selected === item ? ' active' : ''}`}
+                    style={small ? { fontSize: '0.75rem', padding: '0.3rem 0.75rem' } : undefined}
+                    aria-pressed={selected === item}
+                >
+                    {item}
+                </button>
+            ))}
+            {/* spacer so last pill clears the fade */}
+            <span className="shrink-0 w-8" aria-hidden />
+        </div>
+    </div>
+);
 
 export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersProps>(({
     searchTerm,
@@ -25,32 +68,83 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
     regions,
     stationCount,
     loading,
+    trendingSlot,
 }, ref) => {
+    const showRegions = regions.length > 2;
+
     return (
-        <div className="mb-8 space-y-4">
-            {/* Title row + search */}
-            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                <div>
-                    <h2
-                        className="text-2xl font-bold tracking-tight"
-                        style={{ color: 'var(--color-text-primary)' }}
-                    >
-                        Live Stations
-                    </h2>
-                    <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
-                        {loading ? '…' : `${stationCount} station${stationCount !== 1 ? 's' : ''}`} · Kenya&apos;s Best Radio
-                    </p>
+        <div className="mb-6">
+
+            {/* ── Desktop layout (sm+) ──────────────────────────────── */}
+            <div className="hidden sm:block space-y-4">
+                <div className="flex items-center justify-between gap-4">
+                    <div>
+                        <h2 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+                            Live Stations
+                        </h2>
+                        <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
+                            {loading ? '…' : `${stationCount} station${stationCount !== 1 ? 's' : ''}`} · Kenya&apos;s Best Radio
+                        </p>
+                    </div>
+
+                    <div className="relative w-72 shrink-0">
+                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: 'var(--color-text-muted)' }} />
+                        <input
+                            ref={ref}
+                            type="text"
+                            placeholder="Search stations..."
+                            value={searchTerm}
+                            onChange={(e) => onSearchChange(e.target.value)}
+                            className="input-field"
+                            style={{ paddingLeft: '2.5rem', paddingRight: searchTerm ? '2.5rem' : '1rem' }}
+                            aria-label="Search stations"
+                        />
+                        {searchTerm && (
+                            <button
+                                onClick={() => onSearchChange('')}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center"
+                                style={{ color: 'var(--color-text-muted)' }}
+                                aria-label="Clear search"
+                            >
+                                <X className="w-3.5 h-3.5" />
+                            </button>
+                        )}
+                    </div>
                 </div>
 
-                {/* Search input */}
-                <div className="relative w-full sm:w-72 shrink-0">
-                    <Search
-                        className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
-                        style={{ color: 'var(--color-text-muted)' }}
-                    />
+                {trendingSlot}
+
+                <div className="flex items-start gap-4">
+                    <PillRow items={genres} selected={selectedGenre} onSelect={onGenreChange} ariaLabel="Filter by genre" />
+                    {showRegions && (
+                        <PillRow items={regions} selected={selectedRegion} onSelect={onRegionChange} ariaLabel="Filter by region" small />
+                    )}
+                </div>
+            </div>
+
+            {/* ── Mobile layout (< sm) ──────────────────────────────── */}
+            <div className="flex flex-col gap-3 sm:hidden">
+
+                {/* Title row */}
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h2 className="text-lg font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+                            Live Stations
+                        </h2>
+                        <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
+                            {loading ? '…' : `${stationCount} station${stationCount !== 1 ? 's' : ''}`} · Kenya&apos;s Best Radio
+                        </p>
+                    </div>
+                </div>
+
+                {trendingSlot}
+
+                {/* Search */}
+                <div className="relative">
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: 'var(--color-text-muted)' }} />
                     <input
                         ref={ref}
-                        type="text"
+                        type="search"
                         placeholder="Search stations..."
                         value={searchTerm}
                         onChange={(e) => onSearchChange(e.target.value)}
@@ -61,7 +155,7 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                     {searchTerm && (
                         <button
                             onClick={() => onSearchChange('')}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center transition-colors hover:bg-white/10"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center"
                             style={{ color: 'var(--color-text-muted)' }}
                             aria-label="Clear search"
                         >
@@ -69,39 +163,16 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                         </button>
                     )}
                 </div>
-            </div>
 
-            {/* Filter row: genre pills on the left, region pills on the right */}
-            <div className="flex items-start gap-4">
-                <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-0.5 flex-1" role="group" aria-label="Filter by genre">
-                    {genres.map((genre) => (
-                        <button
-                            key={genre}
-                            onClick={() => onGenreChange(genre)}
-                            className={`filter-pill${selectedGenre === genre ? ' active' : ''}`}
-                            aria-pressed={selectedGenre === genre}
-                        >
-                            {genre}
-                        </button>
-                    ))}
-                </div>
+                {/* Genre pills */}
+                <PillRow items={genres} selected={selectedGenre} onSelect={onGenreChange} ariaLabel="Filter by genre" />
 
-                {regions.length > 2 && (
-                    <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-0.5 shrink-0 justify-end" role="group" aria-label="Filter by region">
-                        {regions.map((region) => (
-                            <button
-                                key={region}
-                                onClick={() => onRegionChange(region)}
-                                className={`filter-pill${selectedRegion === region ? ' active' : ''}`}
-                                style={{ fontSize: '0.75rem' }}
-                                aria-pressed={selectedRegion === region}
-                            >
-                                {region}
-                            </button>
-                        ))}
-                    </div>
+                {/* Region pills */}
+                {showRegions && (
+                    <PillRow items={regions} selected={selectedRegion} onSelect={onRegionChange} ariaLabel="Filter by region" small />
                 )}
             </div>
+
         </div>
     );
 });

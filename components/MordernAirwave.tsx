@@ -84,12 +84,6 @@ const ModernAirwave: React.FC = () => {
         <>
             {showHeart && <HeartBurst />}
 
-            <TrendingStrip
-                stations={stations}
-                currentStation={currentStation}
-                onPlay={playStation}
-            />
-
             <SearchAndFilters
                 ref={searchInputRef}
                 searchTerm={searchTerm}
@@ -102,6 +96,13 @@ const ModernAirwave: React.FC = () => {
                 regions={regions}
                 stationCount={displayedStations.length}
                 loading={stationsLoading}
+                trendingSlot={
+                    <TrendingStrip
+                        stations={stations}
+                        currentStation={currentStation}
+                        onPlay={playStation}
+                    />
+                }
             />
 
             {showFavoritesOnly && (
