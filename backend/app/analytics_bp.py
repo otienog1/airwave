@@ -495,7 +495,7 @@ def get_audience_stats():
             {'$match': plays_match},
             {'$group': {
                 '_id': {'$dateToString': {'format': fmt, 'date': '$detectedAt'}},
-                'listeners': {'$sum': '$listeners'},
+                'listeners': {'$avg': '$listeners'},
             }},
             {'$sort': {'_id': 1}},
         ]))
@@ -536,7 +536,7 @@ def get_audience_stats():
         top_songs = []
         for r in top_songs_agg:
             entries = r.get('station_entries', [])
-            best = max(entries, key=lambda x: x.get('listeners', 0), default={})
+            best = max(entries, key=lambda x: x.get('listeners') or 0, default={})
             top_songs.append({
                 'title': r['_id']['title'],
                 'artist': r['_id'].get('artist'),

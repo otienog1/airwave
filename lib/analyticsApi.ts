@@ -181,7 +181,7 @@ export interface AudienceTimeBucket {
 }
 
 export interface AudienceStation {
-  station_id: number;
+  station_id: number | string;
   station_name: string;
   avg_listeners: number;
 }
