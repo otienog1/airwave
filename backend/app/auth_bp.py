@@ -145,7 +145,9 @@ def forgot_password():
         token = user.set_reset_token()
         frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000').split(',')[0].strip()
         reset_url = f"{frontend_url}/reset-password?token={token}"
-        send_password_reset_email(email, reset_url)
+        sent = send_password_reset_email(email, reset_url)
+        if not sent:
+            logging.error(f"Email delivery failed for {email} — check SMTP config and Flask logs")
 
         return jsonify({'message': 'Reset link sent! Check your inbox.'})
 

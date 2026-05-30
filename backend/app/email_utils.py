@@ -12,6 +12,8 @@ def send_password_reset_email(to_email: str, reset_url: str) -> bool:
     smtp_pass = os.environ.get('SMTP_PASS', '')
     smtp_from = os.environ.get('SMTP_FROM', smtp_user) or 'noreply@airwave.ke'
 
+    logging.info(f"[email] host={smtp_host!r} port={smtp_port} user={smtp_user!r} from={smtp_from!r}")
+
     if not smtp_host or not smtp_user:
         logging.warning(
             f"[password-reset] SMTP not configured — reset link for {to_email}:\n  {reset_url}"
@@ -99,5 +101,5 @@ def send_password_reset_email(to_email: str, reset_url: str) -> bool:
         return True
 
     except Exception as e:
-        logging.error(f"Failed to send reset email to {to_email}: {e}")
+        logging.error(f"Failed to send reset email to {to_email}: {type(e).__name__}: {e}")
         return False
