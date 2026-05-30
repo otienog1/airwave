@@ -207,7 +207,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(p => !p)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 z-10 cursor-pointer"
                                 style={{ color: 'var(--color-text-muted)' }}
                             >
                                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
