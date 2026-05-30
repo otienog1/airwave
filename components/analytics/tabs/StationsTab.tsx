@@ -40,10 +40,12 @@ export function StationsTab({ period, realtime }: Props) {
   }, [period]);
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') closeDetail(); };
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && detail) closeDetail();
+    };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, []);
+  }, [detail]);
 
   useEffect(() => {
     if (detail) modalRef.current?.focus();
