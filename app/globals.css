@@ -414,6 +414,38 @@
 }
 
 
+/* ─── Scrollbar ──────────────────────────────────────────────── */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.25) transparent;
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: rgba(99, 102, 241, 0.25);
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.55);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 /* ─── Utilities ──────────────────────────────────────────────── */
 @layer utilities {
   .text-balance { text-wrap: balance; }

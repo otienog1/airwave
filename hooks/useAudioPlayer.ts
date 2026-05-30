@@ -26,6 +26,7 @@ export function useAudioPlayer(options: UseAudioPlayerOptions = {}) {
 
   const reconnectAttemptsRef = useRef(0);
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const playRecordedRef = useRef(false);
   const MAX_RECONNECT = 5;
 
   // Keep refs in sync with state/props
@@ -60,7 +61,8 @@ export function useAudioPlayer(options: UseAudioPlayerOptions = {}) {
     const handlePlaying = () => {
       setIsPlaying(true);
       setIsLoading(false);
-      if (currentStationRef.current) {
+      if (currentStationRef.current && !playRecordedRef.current) {
+        playRecordedRef.current = true;
         optionsRef.current.onPlay?.(currentStationRef.current);
       }
     };
@@ -159,7 +161,8 @@ export function useAudioPlayer(options: UseAudioPlayerOptions = {}) {
     playPromiseRef.current = null;
     audio.pause();
 
-    // Reset reconnect state for new station
+    // Reset per-station state for the new station
+    playRecordedRef.current = false;
     reconnectAttemptsRef.current = 0;
     if (reconnectTimerRef.current) {
       clearTimeout(reconnectTimerRef.current);

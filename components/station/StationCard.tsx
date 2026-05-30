@@ -153,19 +153,6 @@ export const StationCard: React.FC<StationCardProps> = ({
                     )}
                 </div>
 
-                {/* Listener count badge */}
-                {liveListeners > 0 && (
-                    <div className="flex items-center gap-1 mb-2">
-                        <span
-                            className="w-1.5 h-1.5 rounded-full shrink-0"
-                            style={{ background: colors.accent, opacity: 0.7 }}
-                        />
-                        <span className="text-xs tabular-nums" style={{ color: colors.accent }}>
-                            {liveListeners.toLocaleString()} listening now
-                        </span>
-                    </div>
-                )}
-
                 {/* Play button */}
                 <PlayButton
                     isPlaying={isPlaying}

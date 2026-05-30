@@ -29,6 +29,26 @@ const SMART_POLL_BUFFER_MS = 2_000;
 const SMART_POLL_MIN_MS   = 2_000;
 const SMART_POLL_MAX_MS   = 10 * 60 * 1000;
 
+const OPEN_PLAY_KEY = 'airwave_open_play';
+
+interface StoredPlay { playId: string; title: string; stationId: number }
+
+function getStoredPlay(): StoredPlay | null {
+  try {
+    if (typeof sessionStorage === 'undefined') return null;
+    const raw = sessionStorage.getItem(OPEN_PLAY_KEY);
+    return raw ? JSON.parse(raw) as StoredPlay : null;
+  } catch { return null; }
+}
+
+function saveStoredPlay(playId: string, title: string, stationId: number): void {
+  try { sessionStorage.setItem(OPEN_PLAY_KEY, JSON.stringify({ playId, title, stationId })); } catch {}
+}
+
+function clearStoredPlay(): void {
+  try { sessionStorage.removeItem(OPEN_PLAY_KEY); } catch {}
+}
+
 function parseDurationString(duration: string): number | null {
   const parts = duration.split(':');
   if (parts.length !== 2) return null;
@@ -67,7 +87,10 @@ async function postPlayEvent(station: Station, meta: StreamMetadata): Promise<st
           song:            meta.song,
           duration:        meta.duration,
           durationSeconds: meta.durationSeconds,
+          startTime:       meta.startTime,
           category:        meta.category,
+          genre:           meta.genre,
+          samplerate:      meta.samplerate,
           source:          meta.source,
           bitrate:         meta.bitrate,
           listeners:       meta.listeners,
@@ -120,6 +143,7 @@ export function useStreamMetadata(
     if (openPlayIdRef.current) {
       await patchClosePlay(openPlayIdRef.current);
       openPlayIdRef.current = null;
+      clearStoredPlay();
     }
   }, []);
 
@@ -127,6 +151,10 @@ export function useStreamMetadata(
     try {
       const res      = await fetch(`/api/stream-metadata?id=${id}`);
       const data: StreamMetadata = await res.json();
+
+      // Station switched while this fetch was in-flight — discard stale results
+      if (stationIdRef.current !== id) return;
+
       const fullMeta = { ...EMPTY_META, ...data, loading: false };
 
       setMeta(fullMeta);
@@ -145,10 +173,28 @@ export function useStreamMetadata(
 
       const currentStation = stationRef.current;
       if (data.title && data.title !== prevTitleRef.current && currentStation) {
-        await closeOpenPlay();
-        prevTitleRef.current = data.title;
-        const playId = await postPlayEvent(currentStation, fullMeta);
-        openPlayIdRef.current = playId;
+        // Check for resume after page reload (openPlayIdRef is null after reload)
+        const stored = !openPlayIdRef.current ? getStoredPlay() : null;
+        const isResume = stored?.stationId === id && stored?.title === data.title;
+
+        if (isResume) {
+          // Same song still playing — reattach to the existing play document
+          openPlayIdRef.current = stored!.playId;
+          prevTitleRef.current = data.title;
+        } else {
+          // Song changed during reload or this is a genuine new song —
+          // restore stored playId (if any) so closeOpenPlay can patch it
+          if (stored?.stationId === id) {
+            openPlayIdRef.current = stored.playId;
+          }
+          await closeOpenPlay();
+          // Guard again after the async closeOpenPlay — station could have changed
+          if (stationIdRef.current !== id) return;
+          prevTitleRef.current = data.title;
+          const playId = await postPlayEvent(currentStation, fullMeta);
+          openPlayIdRef.current = playId;
+          if (playId) saveStoredPlay(playId, data.title, id);
+        }
       }
 
       if (currentStation) {
@@ -166,13 +212,12 @@ export function useStreamMetadata(
     } catch {
       setMeta(prev => ({ ...prev, loading: false }));
       const currentStation = stationRef.current;
-      if (currentStation) {
-        fetch('/api/analytics/snapshot', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ station: currentStation, isOnline: false, lastMetaSource: null, listeners: null }),
-        }).catch(() => {});
-      }
+      if (stationIdRef.current !== id || !currentStation) return;
+      fetch('/api/analytics/snapshot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ station: currentStation, isOnline: false, lastMetaSource: null, listeners: null }),
+      }).catch(() => {});
     }
   }, [closeOpenPlay, cancelSmartPoll]);
 
@@ -203,6 +248,22 @@ export function useStreamMetadata(
       cancelSmartPoll();
     };
   }, [closeOpenPlay, cancelSmartPoll]);
+
+  // Close the open play when the user reloads or navigates away
+  useEffect(() => {
+    const handleUnload = () => {
+      if (openPlayIdRef.current) {
+        fetch('/api/analytics/play-event', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ playId: openPlayIdRef.current }),
+          keepalive: true,
+        }).catch(() => {});
+      }
+    };
+    window.addEventListener('beforeunload', handleUnload);
+    return () => window.removeEventListener('beforeunload', handleUnload);
+  }, []);
 
   return meta;
 }

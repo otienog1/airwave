@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+import secrets
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, create_refresh_token
 from app.db import get_users_col, get_next_id
@@ -128,3 +129,29 @@ class User:
 
     def has_favorite(self, station_id: int) -> bool:
         return station_id in self.favorite_station_ids
+
+    def set_reset_token(self) -> str:
+        token = secrets.token_urlsafe(32)
+        expires = datetime.utcnow() + timedelta(hours=1)
+        get_users_col().update_one(
+            {'id': self.id},
+            {'$set': {'reset_token': token, 'reset_token_expires': expires}},
+        )
+        return token
+
+    def update_password(self, new_password: str) -> None:
+        get_users_col().update_one(
+            {'id': self.id},
+            {
+                '$set': {'password_hash': generate_password_hash(new_password)},
+                '$unset': {'reset_token': '', 'reset_token_expires': ''},
+            },
+        )
+
+    @classmethod
+    def find_by_reset_token(cls, token: str) -> 'User | None':
+        doc = get_users_col().find_one({
+            'reset_token': token,
+            'reset_token_expires': {'$gt': datetime.utcnow()},
+        })
+        return cls(doc) if doc else None

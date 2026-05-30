@@ -4,6 +4,17 @@ import React, { useRef, useEffect } from 'react';
 import { StationAvatar } from '@/components/station/StationAvatar';
 import { Station } from '../../types/Station';
 
+const GENRE_COLORS: Record<string, string> = {
+    Pop:          '#ec4899',
+    Soul:         '#f59e0b',
+    'Hip Hop':    '#7c3aed',
+    Urban:        '#4f46e5',
+    Contemporary: '#059669',
+    Talk:         '#3b82f6',
+    News:         '#1d4ed8',
+    Dance:        '#0891b2',
+};
+
 interface StationInfoProps {
     station: Station;
     isPlaying?: boolean;
@@ -12,6 +23,7 @@ interface StationInfoProps {
 }
 
 export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, nowPlaying, liveListeners = 0 }) => {
+    const accentColor = (station.genre ? GENRE_COLORS[station.genre] : undefined) ?? '#6366f1';
     const containerRef = useRef<HTMLDivElement>(null);
     const spanRef      = useRef<HTMLSpanElement>(null);
 
@@ -74,9 +86,15 @@ export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, no
                     </div>
                 )}
                 {liveListeners > 0 && (
-                    <p className="text-xs mt-0.5 tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
-                        {liveListeners.toLocaleString()} listening now
-                    </p>
+                    <div className="flex items-center gap-1 mt-0.5">
+                        <span
+                            className="w-1.5 h-1.5 rounded-full shrink-0"
+                            style={{ background: accentColor, opacity: 0.8 }}
+                        />
+                        <span className="text-xs tabular-nums" style={{ color: accentColor }}>
+                            {liveListeners.toLocaleString()} listening now
+                        </span>
+                    </div>
                 )}
             </div>
         </div>

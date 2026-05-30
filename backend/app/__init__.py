@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import os
 from datetime import timedelta
 
-load_dotenv()
+load_dotenv(override=True)
 
 jwt = JWTManager()
 limiter = Limiter(
@@ -17,6 +17,7 @@ limiter = Limiter(
 
 def create_app(config_name='development', test_config=None):
     app = Flask(__name__)
+    app.url_map.strict_slashes = False
 
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'jwt-secret-change-in-production')
@@ -37,9 +38,14 @@ def create_app(config_name='development', test_config=None):
     jwt.init_app(app)
     limiter.init_app(app)
 
+    allowed_origins = [
+        o.strip()
+        for o in os.environ.get('FRONTEND_URL', 'http://localhost:3000').split(',')
+        if o.strip()
+    ]
     CORS(
         app,
-        origins=[os.environ.get('FRONTEND_URL', 'http://localhost:3000')],
+        origins=allowed_origins,
         supports_credentials=True,
         allow_headers=['Content-Type'],
     )

@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Radio, User, LogOut, Settings, Heart, ChevronDown } from 'lucide-react';
 
 export const Header: React.FC = () => {
+    const router = useRouter();
     const { user, logout, isAuthenticated, loading } = useAuth();
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
@@ -26,7 +28,7 @@ export const Header: React.FC = () => {
                     <div className="flex items-center justify-between h-16">
 
                         {/* Logo */}
-                        <div className="flex items-center gap-3">
+                        <button onClick={() => router.push('/')} className="flex items-center gap-3">
                             <div
                                 className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
                                 style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' }}
@@ -47,7 +49,7 @@ export const Header: React.FC = () => {
                                     Kenya&apos;s Radio
                                 </div>
                             </div>
-                        </div>
+                        </button>
 
                         {/* Right side */}
                         <div className="flex items-center gap-2">
@@ -118,6 +120,7 @@ export const Header: React.FC = () => {
 
                                                 <div className="py-1">
                                                     <button
+                                                        onClick={() => { router.push('/?view=favorites'); setShowUserMenu(false); }}
                                                         className="w-full text-left px-4 py-2.5 flex items-center gap-2.5 text-sm transition-colors"
                                                         style={{ color: 'var(--color-text-secondary)' }}
                                                         onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-overlay-hover)')}
@@ -129,6 +132,7 @@ export const Header: React.FC = () => {
 
                                                     {user?.is_admin && (
                                                         <button
+                                                            onClick={() => { router.push('/admin'); setShowUserMenu(false); }}
                                                             className="w-full text-left px-4 py-2.5 flex items-center gap-2.5 text-sm transition-colors"
                                                             style={{ color: 'var(--color-text-secondary)' }}
                                                             onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-overlay-hover)')}

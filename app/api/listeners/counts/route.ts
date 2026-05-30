@@ -5,8 +5,10 @@ export async function GET() {
   try {
     const sessions = await getListenerSessionsCollection();
 
+    const cutoff = new Date(Date.now() - 60_000);
+
     const agg = await sessions.aggregate<{ _id: number; count: number }>([
-      { $match: { endedAt: null } },
+      { $match: { endedAt: null, lastHeartbeat: { $gte: cutoff } } },
       { $group: { _id: '$stationId', count: { $sum: 1 } } },
     ]).toArray();
 

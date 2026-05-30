@@ -1,0 +1,334 @@
+<style>
+  body { background: #0f1117; color: #e2e8f0; font-family: 'Inter', system-ui, sans-serif; }
+  h2 { color: #e2e8f0; font-size: 1.4rem; margin-bottom: 0.25rem; }
+  .subtitle { color: #94a3b8; font-size: 0.95rem; margin-bottom: 1.5rem; }
+
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+
+  .card {
+    background: #161b27;
+    border: 2px solid #1e293b;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+    overflow: hidden;
+  }
+  .card:hover { border-color: #6366f1; transform: translateY(-2px); }
+  .card.selected { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
+
+  .card-label {
+    padding: 1rem 1rem 0.5rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .card-label .letter {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #6366f1; color: white;
+    font-size: 0.75rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .card-label h3 { font-size: 1rem; font-weight: 600; color: #e2e8f0; margin: 0; }
+
+  .card-desc { padding: 0 1rem 0.75rem; font-size: 0.8rem; color: #64748b; line-height: 1.4; }
+
+  /* ── Mockup inside card ── */
+  .mockup-wrap {
+    margin: 0 0.75rem 0.75rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+    background: #0b0e18;
+  }
+
+  /* shared mini elements */
+  .m-topbar {
+    background: #111827; height: 28px;
+    display: flex; align-items: center; padding: 0 8px; gap: 6px;
+    border-bottom: 1px solid #1e293b;
+  }
+  .m-topbar .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .m-topbar span { font-size: 9px; color: #475569; margin-left: auto; }
+
+  .m-kpi-row { display: flex; gap: 4px; padding: 6px; }
+  .m-kpi {
+    flex: 1; background: #161b27; border: 1px solid #1e293b;
+    border-radius: 5px; padding: 5px 6px;
+  }
+  .m-kpi .k-label { font-size: 7px; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; }
+  .m-kpi .k-val { font-size: 11px; font-weight: 700; color: #e2e8f0; margin-top: 1px; }
+  .m-kpi .k-sub { font-size: 7px; color: #22c55e; margin-top: 1px; }
+
+  .m-chart-row { display: flex; gap: 4px; padding: 0 6px 6px; }
+  .m-chart-main { flex: 2; background: #161b27; border: 1px solid #1e293b; border-radius: 5px; padding: 6px; min-height: 60px; }
+  .m-chart-side { flex: 1; background: #161b27; border: 1px solid #1e293b; border-radius: 5px; padding: 6px; }
+  .m-chart-label { font-size: 7px; color: #475569; margin-bottom: 4px; }
+
+  /* mini bar chart */
+  .mini-bars { display: flex; align-items: flex-end; gap: 2px; height: 36px; }
+  .mini-bar { flex: 1; border-radius: 2px 2px 0 0; background: #6366f1; opacity: 0.7; }
+
+  /* mini line */
+  .mini-line svg { width: 100%; height: 36px; }
+
+  /* mini donut */
+  .mini-donut { display: flex; justify-content: center; align-items: center; height: 44px; }
+  .mini-donut svg { width: 44px; height: 44px; }
+
+  /* mini table */
+  .m-table { padding: 0 6px 6px; }
+  .m-row { display: flex; justify-content: space-between; padding: 2px 4px; font-size: 7px; border-radius: 3px; }
+  .m-row:nth-child(odd) { background: #1e293b22; }
+  .m-row .r-name { color: #94a3b8; }
+  .m-row .r-val { color: #6366f1; font-weight: 600; }
+
+  /* layout B - live bar */
+  .m-live-bar {
+    background: #0c1628; border-bottom: 1px solid #1e3a8a;
+    padding: 4px 8px; display: flex; align-items: center; gap: 8px;
+  }
+  .m-live-dot { width: 5px; height: 5px; border-radius: 50%; background: #22c55e; }
+  .m-live-text { font-size: 7px; color: #22c55e; font-weight: 600; }
+  .m-live-stat { font-size: 7px; color: #475569; margin-left: auto; }
+
+  /* layout C - sidebar */
+  .m-sidebar-layout { display: flex; min-height: 120px; }
+  .m-sidebar {
+    width: 52px; background: #111827; border-right: 1px solid #1e293b;
+    padding: 6px 0; display: flex; flex-direction: column; gap: 2px;
+  }
+  .m-nav-item {
+    padding: 4px 6px; font-size: 7px; color: #475569; cursor: pointer;
+    border-left: 2px solid transparent; transition: all 0.15s;
+  }
+  .m-nav-item.active { color: #6366f1; border-left-color: #6366f1; background: #1e293b22; }
+  .m-main { flex: 1; padding: 6px; }
+
+  /* pros */
+  .pros-list { margin: 0 1rem 1rem; padding: 0; list-style: none; }
+  .pros-list li { font-size: 0.75rem; color: #94a3b8; padding: 2px 0 2px 14px; position: relative; }
+  .pros-list li::before { content: '✓'; position: absolute; left: 0; color: #22c55e; font-size: 0.7rem; }
+</style>
+
+<h2>Dashboard Layout</h2>
+<p class="subtitle">Pick the layout that best matches how you want to use the analytics. Click a card to select.</p>
+
+<div class="cards">
+
+  <!-- Option A: Classic Grid -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-label">
+      <div class="letter">A</div>
+      <h3>Overview Grid</h3>
+    </div>
+    <p class="card-desc">KPI cards up top, charts below. Everything on one scrollable page — overview at a glance.</p>
+    <div class="mockup-wrap">
+      <div class="m-topbar">
+        <div class="dot" style="background:#ef4444"></div>
+        <div class="dot" style="background:#f59e0b"></div>
+        <div class="dot" style="background:#22c55e"></div>
+        <span>Analytics · Overview</span>
+      </div>
+      <!-- KPI row -->
+      <div class="m-kpi-row">
+        <div class="m-kpi">
+          <div class="k-label">Listeners</div>
+          <div class="k-val">1,284</div>
+          <div class="k-sub">▲ 12%</div>
+        </div>
+        <div class="m-kpi">
+          <div class="k-label">Plays Today</div>
+          <div class="k-val">3,401</div>
+          <div class="k-sub">▲ 8%</div>
+        </div>
+        <div class="m-kpi">
+          <div class="k-label">Live Now</div>
+          <div class="k-val">247</div>
+          <div class="k-sub" style="color:#6366f1">● active</div>
+        </div>
+        <div class="m-kpi">
+          <div class="k-label">Uptime</div>
+          <div class="k-val">98.4%</div>
+          <div class="k-sub">▲ 0.2%</div>
+        </div>
+      </div>
+      <!-- Chart row -->
+      <div class="m-chart-row">
+        <div class="m-chart-main">
+          <div class="m-chart-label">Plays This Week</div>
+          <div class="mini-line">
+            <svg viewBox="0 0 100 36" preserveAspectRatio="none">
+              <polyline points="0,30 14,22 28,26 42,14 56,18 70,8 84,12 100,6"
+                fill="none" stroke="#6366f1" stroke-width="1.5" stroke-linejoin="round"/>
+              <polyline points="0,30 14,22 28,26 42,14 56,18 70,8 84,12 100,6 100,36 0,36"
+                fill="url(#grad)" stroke="none"/>
+              <defs>
+                <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#6366f1" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+        <div class="m-chart-side">
+          <div class="m-chart-label">By Genre</div>
+          <div class="mini-donut">
+            <svg viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r="14" fill="none" stroke="#6366f1" stroke-width="6" stroke-dasharray="44 44" stroke-dashoffset="-22" transform="rotate(-90 22 22)"/>
+              <circle cx="22" cy="22" r="14" fill="none" stroke="#8b5cf6" stroke-width="6" stroke-dasharray="22 66" stroke-dashoffset="-66" transform="rotate(-90 22 22)"/>
+              <circle cx="22" cy="22" r="14" fill="none" stroke="#d97706" stroke-width="6" stroke-dasharray="14 74" stroke-dashoffset="-88" transform="rotate(-90 22 22)"/>
+              <circle cx="22" cy="22" r="8" fill="#0b0e18"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <!-- Table row -->
+      <div class="m-table">
+        <div class="m-chart-label" style="padding:0 4px 3px">Top Stations</div>
+        <div class="m-row"><span class="r-name">Classic 105</span><span class="r-val">1,284</span></div>
+        <div class="m-row"><span class="r-name">Radio Maisha</span><span class="r-val">987</span></div>
+        <div class="m-row"><span class="r-name">Capital FM</span><span class="r-val">761</span></div>
+      </div>
+    </div>
+    <ul class="pros-list">
+      <li>Full picture at a glance</li>
+      <li>Best for weekly check-ins</li>
+      <li>No navigation needed</li>
+    </ul>
+  </div>
+
+  <!-- Option B: Real-time First -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-label">
+      <div class="letter">B</div>
+      <h3>Live Monitor</h3>
+    </div>
+    <p class="card-desc">Persistent live status bar at top, then historical data below. Built for real-time awareness.</p>
+    <div class="mockup-wrap">
+      <div class="m-topbar">
+        <div class="dot" style="background:#ef4444"></div>
+        <div class="dot" style="background:#f59e0b"></div>
+        <div class="dot" style="background:#22c55e"></div>
+        <span>Analytics · Live</span>
+      </div>
+      <!-- Live bar -->
+      <div class="m-live-bar">
+        <div class="m-live-dot"></div>
+        <div class="m-live-text">247 listening now</div>
+        <div class="m-live-stat">18 stations live · updated 5s ago</div>
+      </div>
+      <!-- KPI row -->
+      <div class="m-kpi-row">
+        <div class="m-kpi" style="border-color:#22c55e33">
+          <div class="k-label">Active Now</div>
+          <div class="k-val" style="color:#22c55e">247</div>
+          <div class="k-sub" style="color:#22c55e">● live</div>
+        </div>
+        <div class="m-kpi">
+          <div class="k-label">Today</div>
+          <div class="k-val">3,401</div>
+          <div class="k-sub">plays</div>
+        </div>
+        <div class="m-kpi">
+          <div class="k-label">Peak Hour</div>
+          <div class="k-val">7–8 PM</div>
+          <div class="k-sub" style="color:#d97706">▲ peak</div>
+        </div>
+      </div>
+      <!-- Big live chart -->
+      <div style="padding:0 6px 4px">
+        <div class="m-chart-main" style="min-height:70px">
+          <div class="m-chart-label">Live Listeners · Last 24h</div>
+          <div class="mini-line">
+            <svg viewBox="0 0 100 50" preserveAspectRatio="none">
+              <polyline points="0,42 8,40 16,38 24,30 32,35 40,20 48,15 56,22 64,10 72,18 80,8 88,12 96,6 100,4"
+                fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linejoin="round"/>
+              <polyline points="0,42 8,40 16,38 24,30 32,35 40,20 48,15 56,22 64,10 72,18 80,8 88,12 96,6 100,4 100,50 0,50"
+                fill="url(#ggrad)" stroke="none"/>
+              <defs>
+                <linearGradient id="ggrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#22c55e" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <!-- Station live list -->
+      <div class="m-table">
+        <div class="m-chart-label" style="padding:0 4px 3px">Stations Live Now</div>
+        <div class="m-row"><span class="r-name">● Classic 105</span><span class="r-val">89 listeners</span></div>
+        <div class="m-row"><span class="r-name">● Capital FM</span><span class="r-val">67 listeners</span></div>
+        <div class="m-row"><span class="r-name">● Radio Maisha</span><span class="r-val">54 listeners</span></div>
+      </div>
+    </div>
+    <ul class="pros-list">
+      <li>Immediate situational awareness</li>
+      <li>Great for active monitoring</li>
+      <li>Historical data still accessible</li>
+    </ul>
+  </div>
+
+  <!-- Option C: Tabbed Sections -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-label">
+      <div class="letter">C</div>
+      <h3>Tabbed Sections</h3>
+    </div>
+    <p class="card-desc">Sidebar nav between sections: Overview, Stations, Songs, Genres, Health. Deeper per-section focus.</p>
+    <div class="mockup-wrap">
+      <div class="m-topbar">
+        <div class="dot" style="background:#ef4444"></div>
+        <div class="dot" style="background:#f59e0b"></div>
+        <div class="dot" style="background:#22c55e"></div>
+        <span>Analytics</span>
+      </div>
+      <div class="m-sidebar-layout">
+        <div class="m-sidebar">
+          <div class="m-nav-item active">Overview</div>
+          <div class="m-nav-item">Stations</div>
+          <div class="m-nav-item">Songs</div>
+          <div class="m-nav-item">Genres</div>
+          <div class="m-nav-item">Health</div>
+        </div>
+        <div class="m-main">
+          <div class="m-kpi-row" style="padding:0 0 4px">
+            <div class="m-kpi">
+              <div class="k-label">Total Plays</div>
+              <div class="k-val">24.3K</div>
+              <div class="k-sub">▲ 12%</div>
+            </div>
+            <div class="m-kpi">
+              <div class="k-label">Listeners</div>
+              <div class="k-val">1,284</div>
+              <div class="k-sub">▲ 8%</div>
+            </div>
+          </div>
+          <div class="m-chart-main" style="margin-bottom:4px">
+            <div class="m-chart-label">Plays over time</div>
+            <div class="mini-bars">
+              <div class="mini-bar" style="height:30%"></div>
+              <div class="mini-bar" style="height:55%"></div>
+              <div class="mini-bar" style="height:45%"></div>
+              <div class="mini-bar" style="height:70%"></div>
+              <div class="mini-bar" style="height:60%"></div>
+              <div class="mini-bar" style="height:85%"></div>
+              <div class="mini-bar" style="height:75%"></div>
+            </div>
+          </div>
+          <div class="m-table" style="padding:0">
+            <div class="m-row"><span class="r-name">Classic 105</span><span class="r-val">1,284</span></div>
+            <div class="m-row"><span class="r-name">Capital FM</span><span class="r-val">987</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ul class="pros-list">
+      <li>Deep-dive into each section</li>
+      <li>Clean — one topic at a time</li>
+      <li>Scales to more metrics later</li>
+    </ul>
+  </div>
+
+</div>

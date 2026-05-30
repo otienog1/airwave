@@ -1,0 +1,90 @@
+<h2>How should trending be displayed?</h2>
+<p class="subtitle">All three signals shown — live listeners, growth spike, plays today. Pick the layout that fits best.</p>
+
+<div class="options">
+  <div class="option" data-choice="strip" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Trending Strip</h3>
+      <p>A horizontal "🔥 Trending Now" row above the main grid — 3–5 cards showing station name, live listeners, and a growth badge. Scrollable on mobile.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">Trending Now</div>
+        <div class="mockup-body" style="display:flex;gap:8px;overflow:hidden;padding:8px 0">
+          <div style="min-width:140px;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:10px;font-size:0.72rem">
+            <div style="font-weight:600;margin-bottom:4px">Capital FM</div>
+            <div style="color:#22c55e">● 1,240 live</div>
+            <div style="color:#f59e0b;margin-top:2px">↑ +38% today</div>
+            <div style="color:#94a3b8;margin-top:2px">2.1k plays</div>
+          </div>
+          <div style="min-width:140px;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.15);border-radius:10px;padding:10px;font-size:0.72rem">
+            <div style="font-weight:600;margin-bottom:4px">Kiss FM</div>
+            <div style="color:#22c55e">● 980 live</div>
+            <div style="color:#f59e0b;margin-top:2px">↑ +21% today</div>
+            <div style="color:#94a3b8;margin-top:2px">1.8k plays</div>
+          </div>
+          <div style="min-width:140px;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.15);border-radius:10px;padding:10px;font-size:0.72rem">
+            <div style="font-weight:600;margin-bottom:4px">Radio Jambo</div>
+            <div style="color:#22c55e">● 870 live</div>
+            <div style="color:#f59e0b;margin-top:2px">↑ +15% today</div>
+            <div style="color:#94a3b8;margin-top:2px">1.5k plays</div>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;opacity:0.6">Clean separation from the main grid · quick to scan · works great on mobile</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="badges" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Badges on Existing Cards</h3>
+      <p>Keep the grid as-is. Add live listener count, a 🔥 trending badge, and a small growth indicator directly on each station card. No separate section needed.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">Station Grid (existing)</div>
+        <div class="mockup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 0">
+          <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:10px;font-size:0.72rem;position:relative">
+            <div style="position:absolute;top:8px;right:8px;background:rgba(245,158,11,0.15);color:#f59e0b;border-radius:20px;padding:2px 7px;font-size:0.65rem;font-weight:700">🔥 TRENDING</div>
+            <div style="font-weight:600;margin-bottom:6px;margin-right:60px">Capital FM</div>
+            <div style="color:#22c55e;font-size:0.68rem">● 1,240 live · ↑ +38%</div>
+          </div>
+          <div style="background:rgba(30,41,59,0.6);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px;font-size:0.72rem">
+            <div style="font-weight:600;margin-bottom:6px">Citizen Radio</div>
+            <div style="color:#64748b;font-size:0.68rem">● 120 live</div>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;opacity:0.6">No layout changes · dense info · badge catches the eye · can feel noisy</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="section" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Dedicated Trending Section</h3>
+      <p>A collapsible "🔥 Trending Today" section above the grid with a richer table: rank, station, live count, growth %, and today's plays — all sortable.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">🔥 Trending Today <span style="float:right;opacity:0.4;font-size:0.75rem">▼ collapse</span></div>
+        <div class="mockup-body" style="font-size:0.72rem">
+          <div style="display:grid;grid-template-columns:24px 1fr 80px 70px 60px;gap:4px;color:#64748b;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:0.65rem;text-transform:uppercase">
+            <span>#</span><span>Station</span><span>Live</span><span>Growth</span><span>Plays</span>
+          </div>
+          <div style="display:grid;grid-template-columns:24px 1fr 80px 70px 60px;gap:4px;padding:6px 0;align-items:center">
+            <span style="color:#f59e0b;font-weight:700">1</span>
+            <span style="font-weight:600">Capital FM</span>
+            <span style="color:#22c55e">1,240</span>
+            <span style="color:#f59e0b">↑ +38%</span>
+            <span style="color:#94a3b8">2.1k</span>
+          </div>
+          <div style="display:grid;grid-template-columns:24px 1fr 80px 70px 60px;gap:4px;padding:6px 0;align-items:center;border-top:1px solid rgba(255,255,255,0.04)">
+            <span style="color:#94a3b8">2</span>
+            <span>Kiss FM</span>
+            <span style="color:#22c55e">980</span>
+            <span style="color:#f59e0b">↑ +21%</span>
+            <span style="color:#94a3b8">1.8k</span>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;opacity:0.6">Most information dense · feels like a leaderboard · great for power users</p>
+    </div>
+  </div>
+</div>

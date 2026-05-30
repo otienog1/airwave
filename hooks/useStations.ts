@@ -5,6 +5,11 @@ const CACHE_TTL_MS = 60_000;
 let cachedStations: Station[] | null = null;
 let cacheExpiresAt = 0;
 
+export function clearStationsCache() {
+  cachedStations = null;
+  cacheExpiresAt = 0;
+}
+
 export interface UseStationsParams {
   genre?: string;
   region?: string;
@@ -14,7 +19,7 @@ export interface UseStationsParams {
 
 export function useStations(params: UseStationsParams = {}) {
   const [stations, setStations] = useState<Station[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(params.autoFetch !== false);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<any>(null);
 

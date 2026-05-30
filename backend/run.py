@@ -1,3 +1,4 @@
+import os
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -55,5 +56,6 @@ if __name__ == '__main__':
     print("Seeding data...")
     seed_stations()
     seed_admin()
-    print("Starting server on http://0.0.0.0:5001")
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    port = int(os.environ.get('PORT', 5002))
+    print(f"Starting server on http://0.0.0.0:{port}")
+    app.run(debug=True, host='0.0.0.0', port=port, use_reloader=False)

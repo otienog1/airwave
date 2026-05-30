@@ -95,6 +95,20 @@ class ApiService {
     return this.request<{ user: User }>('/auth/profile');
   }
 
+  async forgotPassword(email: string): Promise<ApiResponse<{ message: string }>> {
+    return this.request<{ message: string }>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  }
+
+  async resetPassword(token: string, password: string): Promise<ApiResponse<{ message: string }>> {
+    return this.request<{ message: string }>('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, password }),
+    });
+  }
+
   async logout(): Promise<void> {
     // Plain fetch: logout doesn't require auth so no refresh retry needed
     await fetch(`${this.baseUrl}/auth/logout`, {
@@ -152,6 +166,30 @@ class ApiService {
 
   async getRegions(): Promise<ApiResponse<{ regions: string[] }>> {
     return this.request<{ regions: string[] }>('/stations/regions');
+  }
+
+  async getAllStations(): Promise<ApiResponse<{ stations: Station[] }>> {
+    return this.request<{ stations: Station[] }>('/admin/stations');
+  }
+
+  async createStation(data: Partial<Station>): Promise<ApiResponse<{ station: Station }>> {
+    return this.request<{ station: Station }>('/admin/stations', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateStation(id: number, data: Partial<Station>): Promise<ApiResponse<{ station: Station }>> {
+    return this.request<{ station: Station }>(`/admin/stations/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteStation(id: number): Promise<ApiResponse<{ message: string }>> {
+    return this.request<{ message: string }>(`/admin/stations/${id}`, {
+      method: 'DELETE',
+    });
   }
 }
 

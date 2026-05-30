@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 const LS_KEY = 'airwave_session_id';
-const HEARTBEAT_MS = 30_000;
-const COUNTS_POLL_MS = 30_000;
+const HEARTBEAT_MS = 20_000;
+const COUNTS_POLL_MS = 15_000;
 
 function getOrCreateSessionId(): string {
   if (typeof window === 'undefined') return '';
-  let id = localStorage.getItem(LS_KEY);
+  let id = sessionStorage.getItem(LS_KEY);
   if (!id) {
     id = crypto.randomUUID();
-    localStorage.setItem(LS_KEY, id);
+    sessionStorage.setItem(LS_KEY, id);
   }
   return id;
 }
@@ -29,10 +29,9 @@ async function apiPost(path: string, body: object): Promise<void> {
 export function useListeners(
   currentStationId: number | null,
   currentStationName: string | null,
-  isPlaying: boolean
 ): Record<number, number> {
   const [listenerCounts, setListenerCounts] = useState<Record<number, number>>({});
-  const sessionId = useRef<string>('');
+  const sessionId      = useRef<string>('');
   const heartbeatTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const countsTimer    = useRef<ReturnType<typeof setInterval> | null>(null);
   const prevStationId  = useRef<number | null>(null);
@@ -43,7 +42,7 @@ export function useListeners(
 
   const fetchCounts = useCallback(async () => {
     try {
-      const res = await fetch('/api/listeners/counts');
+      const res  = await fetch('/api/listeners/counts');
       const data = await res.json() as { counts: Record<number, number> };
       setListenerCounts(data.counts ?? {});
     } catch {
@@ -67,36 +66,45 @@ export function useListeners(
     }, HEARTBEAT_MS);
   }, [stopHeartbeat]);
 
+  // Track based on currentStationId only — not isPlaying.
+  // isPlaying is false during buffering/loading, which caused spurious
+  // leave events every time the stream rebuffered. A user is a listener
+  // from the moment they select a station.
   useEffect(() => {
     if (!sessionId.current) return;
 
     const sid = sessionId.current;
-    const stationChanged = currentStationId !== prevStationId.current;
 
-    if (!isPlaying || currentStationId === null) {
+    if (currentStationId === null) {
       if (prevStationId.current !== null) {
-        apiPost('/api/listeners/leave', { sessionId: sid });
+        apiPost('/api/listeners/leave', { sessionId: sid }).then(fetchCounts);
       }
       stopHeartbeat();
       prevStationId.current = null;
       return;
     }
 
-    if (stationChanged) {
-      if (prevStationId.current !== null) {
-        apiPost('/api/listeners/leave', { sessionId: sid });
-      }
-      prevStationId.current = currentStationId;
+    const stationChanged = currentStationId !== prevStationId.current;
+    if (!stationChanged) return;
+
+    const leavePromise = prevStationId.current !== null
+      ? apiPost('/api/listeners/leave', { sessionId: sid })
+      : Promise.resolve();
+
+    prevStationId.current = currentStationId;
+
+    leavePromise.then(() =>
       apiPost('/api/listeners/join', {
         sessionId: sid,
         stationId: currentStationId,
         stationName: currentStationName ?? '',
-      });
-      startHeartbeat();
-      fetchCounts();
-    }
-  }, [isPlaying, currentStationId, currentStationName, startHeartbeat, stopHeartbeat, fetchCounts]);
+      }).then(fetchCounts)
+    );
 
+    startHeartbeat();
+  }, [currentStationId, currentStationName, startHeartbeat, stopHeartbeat, fetchCounts]);
+
+  // Poll counts on an interval
   useEffect(() => {
     fetchCounts();
     countsTimer.current = setInterval(fetchCounts, COUNTS_POLL_MS);
@@ -105,12 +113,25 @@ export function useListeners(
     };
   }, [fetchCounts]);
 
+  // Leave on page unload
   useEffect(() => {
+    const sendLeaveBeacon = () => {
+      if (sessionId.current && prevStationId.current !== null) {
+        navigator.sendBeacon(
+          '/api/listeners/leave',
+          new Blob([JSON.stringify({ sessionId: sessionId.current })], { type: 'application/json' })
+        );
+      }
+    };
+    window.addEventListener('beforeunload', sendLeaveBeacon);
+    window.addEventListener('pagehide', sendLeaveBeacon);
     return () => {
       stopHeartbeat();
       if (sessionId.current && prevStationId.current !== null) {
         apiPost('/api/listeners/leave', { sessionId: sessionId.current });
       }
+      window.removeEventListener('beforeunload', sendLeaveBeacon);
+      window.removeEventListener('pagehide', sendLeaveBeacon);
     };
   }, [stopHeartbeat]);
 

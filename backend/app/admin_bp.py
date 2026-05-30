@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.station import Station
 from app.models.user import User
+from app.db import get_stations_col
 from functools import wraps
 import logging
 
@@ -20,9 +21,18 @@ def admin_required(f):
     return decorated
 
 
-@admin_bp.route('/stations', methods=['POST'])
+@admin_bp.route('/stations', methods=['GET', 'POST'])
 @admin_required
-def create_station():
+def stations_collection():
+    if request.method == 'GET':
+        try:
+            docs = list(get_stations_col().find().sort([('total_plays', -1), ('name', 1)]))
+            return jsonify({'stations': [Station(doc).to_dict(include_stats=True) for doc in docs]})
+        except Exception as e:
+            logging.error(f"Error listing stations: {e}")
+            return jsonify({'error': 'Failed to fetch stations'}), 500
+
+    # POST — create
     try:
         data = request.get_json()
         for field in ['name', 'url', 'genre', 'region']:
@@ -50,9 +60,20 @@ def create_station():
         return jsonify({'error': 'Failed to create station'}), 500
 
 
-@admin_bp.route('/stations/<int:station_id>', methods=['PUT'])
+@admin_bp.route('/stations/<int:station_id>', methods=['PUT', 'DELETE'])
 @admin_required
-def update_station(station_id):
+def station_detail(station_id):
+    if request.method == 'DELETE':
+        try:
+            result = get_stations_col().delete_one({'id': station_id})
+            if result.deleted_count == 0:
+                return jsonify({'error': 'Station not found'}), 404
+            return jsonify({'message': 'Station deleted successfully'})
+        except Exception as e:
+            logging.error(f"Error deleting station {station_id}: {e}")
+            return jsonify({'error': 'Failed to delete station'}), 500
+
+    # PUT — update
     try:
         station = Station.find_by_id(station_id)
         if not station:

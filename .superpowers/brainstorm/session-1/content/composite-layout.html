@@ -1,0 +1,472 @@
+<style>
+  body { background: #0f1117; color: #e2e8f0; font-family: 'Inter', system-ui, sans-serif; }
+  h2 { color: #e2e8f0; font-size: 1.3rem; margin-bottom: 0.2rem; }
+  .subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.25rem; }
+
+  .mockup-outer {
+    border: 2px solid #1e293b;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #0b0e18;
+    max-width: 900px;
+    margin: 0 auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+
+  /* Browser chrome */
+  .browser-bar {
+    background: #161b27;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #1e293b;
+  }
+  .browser-bar .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .url-bar {
+    flex: 1;
+    background: #0f1117;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: #475569;
+    margin-left: 8px;
+  }
+
+  /* Page header */
+  .page-header {
+    background: #111827;
+    border-bottom: 1px solid #1e293b;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .page-header .breadcrumb {
+    font-size: 11px;
+    color: #475569;
+  }
+  .page-header .breadcrumb span {
+    color: #e2e8f0;
+    font-weight: 600;
+  }
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .period-btn {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 10px;
+    color: #94a3b8;
+    cursor: pointer;
+  }
+  .period-btn.active {
+    background: #6366f122;
+    border-color: #6366f1;
+    color: #818cf8;
+  }
+
+  /* LAYER 1: Live status bar */
+  .live-bar {
+    background: linear-gradient(135deg, #052e16 0%, #0b1628 100%);
+    border-bottom: 1px solid #166534;
+    padding: 7px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .live-pulse {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 6px #22c55e;
+    animation: pulse 1.5s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+  .live-text { font-size: 11px; font-weight: 700; color: #22c55e; }
+  .live-divider { width: 1px; height: 14px; background: #166534; }
+  .live-stat { font-size: 10px; color: #4ade80; }
+  .live-stat span { font-weight: 600; }
+  .live-refresh { margin-left: auto; font-size: 9px; color: #166534; }
+
+  /* LAYER 2: Tab nav */
+  .tab-nav {
+    background: #111827;
+    border-bottom: 1px solid #1e293b;
+    padding: 0 20px;
+    display: flex;
+    gap: 0;
+  }
+  .tab {
+    padding: 9px 16px;
+    font-size: 11px;
+    color: #475569;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 500;
+    transition: color 0.15s;
+  }
+  .tab.active {
+    color: #818cf8;
+    border-bottom-color: #6366f1;
+  }
+  .tab:hover { color: #94a3b8; }
+
+  /* LAYER 3: Tab content - Overview Grid */
+  .tab-content { padding: 16px 20px; }
+
+  /* KPI cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .kpi-card {
+    background: #161b27;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .kpi-card.highlight { border-color: #6366f133; background: #1a1d2e; }
+  .kpi-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: #475569; margin-bottom: 4px; }
+  .kpi-value { font-size: 20px; font-weight: 700; color: #e2e8f0; line-height: 1; }
+  .kpi-change { font-size: 9px; margin-top: 4px; }
+  .kpi-change.up { color: #22c55e; }
+  .kpi-change.live { color: #818cf8; }
+  .kpi-change.warn { color: #f59e0b; }
+
+  /* Charts row */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .chart-card {
+    background: #161b27;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .chart-title {
+    font-size: 10px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  /* Line chart */
+  .line-chart svg { width: 100%; height: 80px; display: block; }
+
+  /* Donut */
+  .donut-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .donut-wrap svg { width: 70px; height: 70px; }
+  .donut-legend { width: 100%; }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    color: #64748b;
+    margin-bottom: 3px;
+  }
+  .legend-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Bottom row */
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* Bar chart */
+  .bar-group { display: flex; flex-direction: column; gap: 5px; }
+  .bar-item { display: flex; align-items: center; gap: 6px; }
+  .bar-label { font-size: 9px; color: #64748b; width: 70px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-track { flex: 1; height: 6px; background: #1e293b; border-radius: 3px; }
+  .bar-fill { height: 6px; border-radius: 3px; background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+  .bar-val { font-size: 9px; color: #475569; width: 30px; text-align: right; flex-shrink: 0; }
+
+  /* Table */
+  .mini-table { width: 100%; }
+  .mini-table-head {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    padding: 4px 6px;
+    font-size: 8px;
+    color: #334155;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #1e293b;
+    margin-bottom: 4px;
+  }
+  .mini-table-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    padding: 4px 6px;
+    font-size: 9px;
+    border-radius: 4px;
+    align-items: center;
+    gap: 8px;
+  }
+  .mini-table-row:nth-child(odd) { background: #1e293b18; }
+  .mini-table-row .t-name { color: #94a3b8; }
+  .mini-table-row .t-plays { color: #6366f1; font-weight: 600; font-size: 10px; }
+  .mini-table-row .t-dur { color: #475569; }
+  .t-badge {
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 8px;
+    font-weight: 600;
+  }
+
+  /* Labels section */
+  .section-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #334155;
+    margin-bottom: 8px;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #1e293b;
+  }
+</style>
+
+<h2>Combined Dashboard — How it all fits together</h2>
+<p class="subtitle">Live bar + tab navigation + overview grid, all in one page. This is how your analytics dashboard will look.</p>
+
+<div class="mockup-outer">
+  <!-- Browser chrome -->
+  <div class="browser-bar">
+    <div class="dot" style="background:#ef4444"></div>
+    <div class="dot" style="background:#f59e0b"></div>
+    <div class="dot" style="background:#22c55e"></div>
+    <div class="url-bar">localhost:3000/admin/analytics</div>
+  </div>
+
+  <!-- Page header with period filters -->
+  <div class="page-header">
+    <div class="breadcrumb">Admin / <span>Analytics</span></div>
+    <div class="header-actions">
+      <div class="period-btn">Today</div>
+      <div class="period-btn active">7 days</div>
+      <div class="period-btn">30 days</div>
+      <div class="period-btn">90 days</div>
+    </div>
+  </div>
+
+  <!-- LAYER 1: Live status bar -->
+  <div class="live-bar">
+    <div class="live-pulse"></div>
+    <div class="live-text">247 listening now</div>
+    <div class="live-divider"></div>
+    <div class="live-stat"><span>18</span> stations live</div>
+    <div class="live-divider"></div>
+    <div class="live-stat"><span>3,401</span> plays today</div>
+    <div class="live-divider"></div>
+    <div class="live-stat"><span>Classic 105</span> leading · 89 listeners</div>
+    <div class="live-refresh">↻ updates every 15s</div>
+  </div>
+
+  <!-- LAYER 2: Tab nav -->
+  <div class="tab-nav">
+    <div class="tab active">Overview</div>
+    <div class="tab">Stations</div>
+    <div class="tab">Songs &amp; Artists</div>
+    <div class="tab">Genres &amp; Regions</div>
+    <div class="tab">Station Health</div>
+  </div>
+
+  <!-- LAYER 3: Tab content -->
+  <div class="tab-content">
+
+    <!-- KPI cards -->
+    <div class="section-label">Key Metrics · 7 days</div>
+    <div class="kpi-grid">
+      <div class="kpi-card highlight">
+        <div class="kpi-label">Live Listeners</div>
+        <div class="kpi-value" style="color:#818cf8">247</div>
+        <div class="kpi-change live">● active right now</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Total Plays</div>
+        <div class="kpi-value">24.3K</div>
+        <div class="kpi-change up">▲ 12% vs last week</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Unique Listeners</div>
+        <div class="kpi-value">1,284</div>
+        <div class="kpi-change up">▲ 8% vs last week</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg. Session</div>
+        <div class="kpi-value">18m</div>
+        <div class="kpi-change warn">▼ 2m vs last week</div>
+      </div>
+    </div>
+
+    <!-- Charts row -->
+    <div class="section-label">Trends</div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Plays over time</div>
+        <div class="line-chart">
+          <svg viewBox="0 0 300 80" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#6366f1" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <!-- Grid lines -->
+            <line x1="0" y1="20" x2="300" y2="20" stroke="#1e293b" stroke-width="0.5"/>
+            <line x1="0" y1="40" x2="300" y2="40" stroke="#1e293b" stroke-width="0.5"/>
+            <line x1="0" y1="60" x2="300" y2="60" stroke="#1e293b" stroke-width="0.5"/>
+            <!-- Line -->
+            <polyline points="0,65 43,55 86,60 129,35 172,45 215,20 258,28 300,15"
+              fill="none" stroke="#6366f1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+            <polyline points="0,65 43,55 86,60 129,35 172,45 215,20 258,28 300,15 300,80 0,80"
+              fill="url(#lg1)" stroke="none"/>
+            <!-- Data points -->
+            <circle cx="215" cy="20" r="3" fill="#6366f1"/>
+            <circle cx="300" cy="15" r="3" fill="#6366f1"/>
+            <!-- Axis labels -->
+            <text x="0" y="78" font-size="7" fill="#334155">Mon</text>
+            <text x="43" y="78" font-size="7" fill="#334155">Tue</text>
+            <text x="86" y="78" font-size="7" fill="#334155">Wed</text>
+            <text x="129" y="78" font-size="7" fill="#334155">Thu</text>
+            <text x="172" y="78" font-size="7" fill="#334155">Fri</text>
+            <text x="215" y="78" font-size="7" fill="#6366f1" font-weight="600">Sat</text>
+            <text x="258" y="78" font-size="7" fill="#334155">Sun</text>
+          </svg>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">By Genre</div>
+        <div class="donut-wrap">
+          <svg viewBox="0 0 70 70">
+            <circle cx="35" cy="35" r="26" fill="none" stroke="#6366f1" stroke-width="10"
+              stroke-dasharray="65 98" stroke-dashoffset="-16" transform="rotate(-90 35 35)"/>
+            <circle cx="35" cy="35" r="26" fill="none" stroke="#8b5cf6" stroke-width="10"
+              stroke-dasharray="35 128" stroke-dashoffset="-81" transform="rotate(-90 35 35)"/>
+            <circle cx="35" cy="35" r="26" fill="none" stroke="#d97706" stroke-width="10"
+              stroke-dasharray="22 141" stroke-dashoffset="-116" transform="rotate(-90 35 35)"/>
+            <circle cx="35" cy="35" r="26" fill="none" stroke="#334155" stroke-width="10"
+              stroke-dasharray="41 122" stroke-dashoffset="-138" transform="rotate(-90 35 35)"/>
+            <circle cx="35" cy="35" r="20" fill="#0b0e18"/>
+            <text x="35" y="32" text-anchor="middle" font-size="9" fill="#e2e8f0" font-weight="700">24.3K</text>
+            <text x="35" y="42" text-anchor="middle" font-size="6" fill="#475569">plays</text>
+          </svg>
+          <div class="donut-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#6366f1"></div>Pop / Top 40 · 40%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>Gospel · 22%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>News / Talk · 14%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#334155"></div>Other · 24%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom row -->
+    <div class="section-label">Stations &amp; Songs</div>
+    <div class="bottom-row">
+      <div class="chart-card">
+        <div class="chart-title">Top Stations by Plays</div>
+        <div class="bar-group">
+          <div class="bar-item">
+            <div class="bar-label">Classic 105</div>
+            <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+            <div class="bar-val">8,234</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Radio Maisha</div>
+            <div class="bar-track"><div class="bar-fill" style="width:72%"></div></div>
+            <div class="bar-val">6,701</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Capital FM</div>
+            <div class="bar-track"><div class="bar-fill" style="width:58%"></div></div>
+            <div class="bar-val">5,340</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Citizen Radio</div>
+            <div class="bar-track"><div class="bar-fill" style="width:41%"></div></div>
+            <div class="bar-val">3,780</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Hot 96</div>
+            <div class="bar-track"><div class="bar-fill" style="width:28%"></div></div>
+            <div class="bar-val">2,601</div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Trending Songs · 24h</div>
+        <div class="mini-table-head">
+          <div>Song / Artist</div>
+          <div>Plays</div>
+          <div>Avg Duration</div>
+        </div>
+        <div class="mini-table-row">
+          <div class="t-name">Tattoo — Jordin Sparks</div>
+          <div class="t-plays">284</div>
+          <div class="t-dur">3m 42s</div>
+        </div>
+        <div class="mini-table-row">
+          <div class="t-name">Nakupenda — Sauti Sol</div>
+          <div class="t-plays">261</div>
+          <div class="t-dur">4m 01s</div>
+        </div>
+        <div class="mini-table-row">
+          <div class="t-name">Ninahitaji — Weusi</div>
+          <div class="t-plays">198</div>
+          <div class="t-dur">3m 55s</div>
+        </div>
+        <div class="mini-table-row">
+          <div class="t-name">Wamlambez — Sailors</div>
+          <div class="t-plays">187</div>
+          <div class="t-dur">2m 48s</div>
+        </div>
+        <div class="mini-table-row">
+          <div class="t-name">Sura Yako — Sauti Sol</div>
+          <div class="t-plays">165</div>
+          <div class="t-dur">3m 22s</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-content -->
+</div><!-- /mockup-outer -->
+
+<p style="text-align:center; font-size:0.8rem; color:#334155; margin-top:1rem;">
+  The live bar auto-refreshes every 15s. Period filter (7d shown) applies to all charts except the live bar.
+  Does this layout feel right? Let me know in the terminal if you'd like any changes.
+</p>

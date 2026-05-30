@@ -4,8 +4,10 @@ from flask_jwt_extended import (
     set_access_cookies, set_refresh_cookies, unset_jwt_cookies,
 )
 from app.models.user import User
+from app.email_utils import send_password_reset_email
 from app import limiter
 from datetime import datetime
+import os
 import re
 import logging
 
@@ -124,6 +126,57 @@ def logout():
     response = make_response(jsonify({'ok': True}))
     unset_jwt_cookies(response)
     return response
+
+
+@auth_bp.route('/forgot-password', methods=['POST'])
+@limiter.limit("5 per hour")
+def forgot_password():
+    try:
+        data = request.get_json() or {}
+        email = data.get('email', '').strip().lower()
+
+        if not email or not validate_email(email):
+            return jsonify({'error': 'Valid email address required'}), 400
+
+        user = User.find_by_email(email)
+        if not user or not user.is_active:
+            return jsonify({'error': 'No account found with that email address'}), 404
+
+        token = user.set_reset_token()
+        frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000').split(',')[0].strip()
+        reset_url = f"{frontend_url}/reset-password?token={token}"
+        send_password_reset_email(email, reset_url)
+
+        return jsonify({'message': 'Reset link sent! Check your inbox.'})
+
+    except Exception as e:
+        logging.error(f"Error in forgot_password: {e}")
+        return jsonify({'error': 'Something went wrong'}), 500
+
+
+@auth_bp.route('/reset-password', methods=['POST'])
+@limiter.limit("10 per hour")
+def reset_password():
+    try:
+        data = request.get_json() or {}
+        token    = data.get('token', '').strip()
+        password = data.get('password', '')
+
+        if not token:
+            return jsonify({'error': 'Reset token is required'}), 400
+        if not validate_password(password):
+            return jsonify({'error': 'Password must be at least 8 characters with uppercase, lowercase, and digit'}), 400
+
+        user = User.find_by_reset_token(token)
+        if not user:
+            return jsonify({'error': 'Invalid or expired reset link'}), 400
+
+        user.update_password(password)
+        return jsonify({'message': 'Password updated successfully'})
+
+    except Exception as e:
+        logging.error(f"Error in reset_password: {e}")
+        return jsonify({'error': 'Something went wrong'}), 500
 
 
 @auth_bp.route('/profile', methods=['GET'])
