@@ -167,7 +167,7 @@ export function AudienceTab({ period }: Props) {
             <tbody>
               {sortedSongs.map((song, i) => (
                 <tr
-                  key={`${song.title}-${song.artist}`}
+                  key={`${song.title}-${song.artist ?? 'unknown'}-${i}`}
                   style={{ borderTop: '1px solid var(--color-border)' }}
                 >
                   <td className="py-1.5 pr-2 tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
@@ -189,7 +189,7 @@ export function AudienceTab({ period }: Props) {
                   <td className="py-1.5 text-right tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
                     {song.count}
                   </td>
-                  <td className="py-1.5 text-right" style={{ color: '#6366f1' }}>
+                  <td className="py-1.5 text-right" style={{ color: 'var(--color-text-secondary)' }}>
                     {song.best_station ?? '—'}
                   </td>
                 </tr>
