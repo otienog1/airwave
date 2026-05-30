@@ -6,8 +6,8 @@ import { apiService, User } from '@/lib/api';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, username: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<string | null>;
+  register: (email: string, username: string, password: string) => Promise<string | null>;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
@@ -37,22 +37,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<string | null> => {
     const response = await apiService.login(email, password);
     if (response.data) {
       setUser(response.data.user);
-      return true;
+      return null;
     }
-    return false;
+    return response.error || 'Login failed';
   };
 
-  const register = async (email: string, username: string, password: string): Promise<boolean> => {
+  const register = async (email: string, username: string, password: string): Promise<string | null> => {
     const response = await apiService.register(email, username, password);
     if (response.data) {
       setUser(response.data.user);
-      return true;
+      return null;
     }
-    return false;
+    return response.error || 'Registration failed';
   };
 
   const logout = async () => {

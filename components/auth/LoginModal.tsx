@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { apiService } from '@/lib/api';
 import { Modal } from '@/components/ui/Modal';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { Mail, Lock, User, Eye, EyeOff, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, ArrowLeft, CheckCircle2, Check } from 'lucide-react';
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -56,15 +56,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
         setError('');
         setIsSubmitting(true);
         try {
-            const success = mode === 'login'
+            const err = mode === 'login'
                 ? await login(formData.email, formData.password)
                 : await register(formData.email, formData.username, formData.password);
 
-            if (success) {
+            if (!err) {
                 onClose();
                 reset();
             } else {
-                setError(mode === 'login' ? 'Invalid email or password' : 'Registration failed');
+                setError(err);
             }
         } catch {
             setError('An unexpected error occurred');
@@ -213,6 +213,23 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                         </div>
+                        {mode === 'register' && formData.password.length > 0 && (
+                            <div className="mt-2 grid grid-cols-2 gap-1">
+                                {[
+                                    { label: '8+ characters', ok: formData.password.length >= 8 },
+                                    { label: 'Uppercase letter', ok: /[A-Z]/.test(formData.password) },
+                                    { label: 'Lowercase letter', ok: /[a-z]/.test(formData.password) },
+                                    { label: 'Number', ok: /\d/.test(formData.password) },
+                                ].map(({ label, ok }) => (
+                                    <div key={label} className="flex items-center gap-1">
+                                        <Check className="w-3 h-3 shrink-0" style={{ color: ok ? '#4ade80' : 'var(--color-text-muted)', opacity: ok ? 1 : 0.4 }} />
+                                        <span className="text-xs" style={{ color: ok ? '#4ade80' : 'var(--color-text-muted)', opacity: ok ? 1 : 0.6 }}>
+                                            {label}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 )}
 
