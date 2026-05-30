@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Layout } from '@/components/layout/Layout';
 import { apiService } from '@/lib/api';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle, Check } from 'lucide-react';
 
 const inputStyle = {
     background: 'var(--color-surface)',
@@ -66,16 +66,24 @@ function ResetPasswordForm() {
         );
     }
 
+    const requirements = [
+        { label: '8+ characters',   ok: password.length >= 8 },
+        { label: 'Uppercase letter', ok: /[A-Z]/.test(password) },
+        { label: 'Lowercase letter', ok: /[a-z]/.test(password) },
+        { label: 'Number',           ok: /\d/.test(password) },
+    ];
+    const passwordValid = requirements.every(r => r.ok);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
 
-        if (password !== confirm) {
-            setError('Passwords do not match');
+        if (!passwordValid) {
+            setError('Password does not meet all requirements below');
             return;
         }
-        if (password.length < 8) {
-            setError('Password must be at least 8 characters');
+        if (password !== confirm) {
+            setError('Passwords do not match');
             return;
         }
 
@@ -116,6 +124,18 @@ function ResetPasswordForm() {
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                 </div>
+                {password.length > 0 && (
+                    <div className="mt-2 grid grid-cols-2 gap-1">
+                        {requirements.map(({ label, ok }) => (
+                            <div key={label} className="flex items-center gap-1">
+                                <Check className="w-3 h-3 shrink-0" style={{ color: ok ? '#4ade80' : 'var(--color-text-muted)', opacity: ok ? 1 : 0.4 }} />
+                                <span className="text-xs" style={{ color: ok ? '#4ade80' : 'var(--color-text-muted)', opacity: ok ? 1 : 0.6 }}>
+                                    {label}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Confirm password */}
@@ -138,6 +158,14 @@ function ResetPasswordForm() {
                         {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                 </div>
+                {confirm.length > 0 && (
+                    <div className="flex items-center gap-1 mt-1.5">
+                        <Check className="w-3 h-3 shrink-0" style={{ color: password === confirm ? '#4ade80' : 'var(--color-text-muted)', opacity: password === confirm ? 1 : 0.4 }} />
+                        <span className="text-xs" style={{ color: password === confirm ? '#4ade80' : 'var(--color-text-muted)', opacity: password === confirm ? 1 : 0.6 }}>
+                            Passwords match
+                        </span>
+                    </div>
+                )}
             </div>
 
             {/* Error */}
