@@ -516,7 +516,7 @@ def get_audience_stats():
             {
                 'station_id': r['_id'],
                 'station_name': r['station_name'],
-                'avg_listeners': round(float(r['avg_listeners']), 1),
+                'avg_listeners': round(float(r['avg_listeners'] or 0), 1),
             }
             for r in top_stations_agg
         ]
@@ -540,7 +540,7 @@ def get_audience_stats():
             top_songs.append({
                 'title': r['_id']['title'],
                 'artist': r['_id'].get('artist'),
-                'avg_listeners': round(float(r['avg_listeners']), 1),
+                'avg_listeners': round(float(r['avg_listeners'] or 0), 1),
                 'count': r['count'],
                 'best_station': best.get('station'),
             })
