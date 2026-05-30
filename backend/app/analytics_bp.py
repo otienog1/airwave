@@ -336,6 +336,21 @@ def get_station_stats(station_id):
         ]))
         hourly_data = [{'hour': r['_id'], 'plays': r['plays']} for r in hourly_agg]
 
+        heatmap_agg = list(plays_col.aggregate([
+            {'$match': match},
+            {'$group': {
+                '_id': {
+                    'hour': {'$hour': '$played_at'},
+                    'day': {'$subtract': [{'$dayOfWeek': '$played_at'}, 1]},
+                },
+                'plays': {'$sum': 1},
+            }},
+        ]))
+        heatmap_data = [
+            {'hour': r['_id']['hour'], 'day': r['_id']['day'], 'count': r['plays']}
+            for r in heatmap_agg
+        ]
+
         return jsonify({
             'station': {'id': station.id, 'name': station.name, 'genre': station.genre, 'region': station.region},
             'stats': {
@@ -348,6 +363,7 @@ def get_station_stats(station_id):
             },
             'daily_stats': daily_data,
             'hourly_distribution': hourly_data,
+            'heatmap_data': heatmap_data,
             'period': {'start_date': start.date().isoformat(), 'end_date': end.date().isoformat(), 'days': days},
         })
 

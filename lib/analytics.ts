@@ -15,7 +15,10 @@ export interface TrackInfo {
   song: string | null;
   duration: string | null;
   durationSeconds: number | null;
+  startTime: string | null;
   category: string | null;
+  genre: string | null;
+  samplerate: number | null;
   source: 'zetta' | 'icecast' | 'icy' | null;
   bitrate: number | null;
   listeners: number | null;
@@ -35,7 +38,10 @@ export async function insertPlay(station: Station, track: TrackInfo): Promise<st
     song: track.song,
     duration: track.duration,
     durationSeconds: track.durationSeconds,
+    startTime: track.startTime,
     category: track.category,
+    genre: track.genre,
+    samplerate: track.samplerate,
     source: track.source,
     bitrate: track.bitrate,
     listeners: track.listeners,
@@ -91,6 +97,7 @@ export interface TrendingEntry {
   title: string;
   artist: string | null;
   playCount: number;
+  avgDuration: number | null;
   stations: string[];
   lastSeen: Date;
 }
@@ -105,10 +112,12 @@ export async function getTrending(hours: number = 24, limit: number = 10): Promi
     {
       $group: {
         _id: '$title',
-        artist:    { $first: '$artist' },
-        playCount: { $sum: 1 },
-        stations:  { $addToSet: '$stationName' },
-        lastSeen:  { $max: '$detectedAt' },
+        artist:      { $first: '$artist' },
+        playCount:   { $sum: 1 },
+        totalDur:    { $sum: { $ifNull: ['$playDuration', 0] } },
+        completedCt: { $sum: { $cond: [{ $gt: ['$playDuration', 0] }, 1, 0] } },
+        stations:    { $addToSet: '$stationName' },
+        lastSeen:    { $max: '$detectedAt' },
       },
     },
     { $sort: { playCount: -1 } },
@@ -116,11 +125,18 @@ export async function getTrending(hours: number = 24, limit: number = 10): Promi
     {
       $project: {
         _id: 0,
-        title:     '$_id',
-        artist:    1,
-        playCount: 1,
-        stations:  1,
-        lastSeen:  1,
+        title:       '$_id',
+        artist:      1,
+        playCount:   1,
+        avgDuration: {
+          $cond: [
+            { $gt: ['$completedCt', 0] },
+            { $divide: ['$totalDur', '$completedCt'] },
+            null,
+          ],
+        },
+        stations:    1,
+        lastSeen:    1,
       },
     },
   ]).toArray();
