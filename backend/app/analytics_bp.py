@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.user import User
-from app.db import get_stations_col, get_station_plays_col, get_users_col
+from app.db import get_stations_col, get_station_plays_col, get_users_col, get_plays_col
 from app import limiter
 from datetime import datetime, timedelta
 from functools import wraps
@@ -452,6 +452,113 @@ def record_snapshot():
     except Exception as e:
         logging.error(f"Error recording snapshot: {e}")
         return jsonify({'error': 'Failed to record snapshot'}), 500
+
+
+@analytics_bp.route('/audience', methods=['GET'])
+@admin_required
+@limiter.limit("30 per minute")
+def get_audience_stats():
+    try:
+        days = request.args.get('days', 7, type=int)
+        start, end = _date_range(days)
+        plays_col = get_plays_col()
+        plays_match = {'detectedAt': {'$gte': start, '$lte': end}}
+
+        # KPI aggregation
+        kpi_agg = list(plays_col.aggregate([
+            {'$match': plays_match},
+            {'$group': {
+                '_id': None,
+                'peak_listeners': {'$max': '$listeners'},
+                'avg_listeners': {'$avg': '$listeners'},
+                'total_detections': {'$sum': 1},
+                'total_listener_sum': {'$sum': '$listeners'},
+            }},
+        ]))
+        kpi = kpi_agg[0] if kpi_agg else {}
+        peak_listeners = int(kpi.get('peak_listeners') or 0)
+        avg_listeners = round(float(kpi.get('avg_listeners') or 0), 1)
+        total_detections = int(kpi.get('total_detections') or 0)
+        total_listener_sum = int(kpi.get('total_listener_sum') or 0)
+
+        # App engagement rate: stationPlays clicks ÷ total stream listeners × 100
+        station_plays_col = get_station_plays_col()
+        app_plays_count = station_plays_col.count_documents({'played_at': {'$gte': start, '$lte': end}})
+        app_engagement_rate = round(app_plays_count / total_listener_sum * 100, 2) if total_listener_sum > 0 else 0.0
+
+        # Time series — hour buckets for 1d, day buckets otherwise
+        if days <= 1:
+            fmt = '%Y-%m-%dT%H:00:00Z'
+        else:
+            fmt = '%Y-%m-%d'
+        ts_agg = list(plays_col.aggregate([
+            {'$match': plays_match},
+            {'$group': {
+                '_id': {'$dateToString': {'format': fmt, 'date': '$detectedAt'}},
+                'listeners': {'$sum': '$listeners'},
+            }},
+            {'$sort': {'_id': 1}},
+        ]))
+        time_series = [{'bucket': r['_id'], 'listeners': r['listeners']} for r in ts_agg]
+
+        # Top stations by avg stream listeners
+        top_stations_agg = list(plays_col.aggregate([
+            {'$match': plays_match},
+            {'$group': {
+                '_id': '$stationId',
+                'station_name': {'$first': '$stationName'},
+                'avg_listeners': {'$avg': '$listeners'},
+            }},
+            {'$sort': {'avg_listeners': -1}},
+            {'$limit': 10},
+        ]))
+        top_stations = [
+            {
+                'station_id': r['_id'],
+                'station_name': r['station_name'],
+                'avg_listeners': round(float(r['avg_listeners']), 1),
+            }
+            for r in top_stations_agg
+        ]
+
+        # Top songs by avg stream listeners
+        top_songs_agg = list(plays_col.aggregate([
+            {'$match': plays_match},
+            {'$group': {
+                '_id': {'title': '$title', 'artist': '$artist'},
+                'avg_listeners': {'$avg': '$listeners'},
+                'count': {'$sum': 1},
+                'station_entries': {'$push': {'station': '$stationName', 'listeners': '$listeners'}},
+            }},
+            {'$sort': {'avg_listeners': -1}},
+            {'$limit': 20},
+        ]))
+        top_songs = []
+        for r in top_songs_agg:
+            entries = r.get('station_entries', [])
+            best = max(entries, key=lambda x: x.get('listeners', 0), default={})
+            top_songs.append({
+                'title': r['_id']['title'],
+                'artist': r['_id'].get('artist'),
+                'avg_listeners': round(float(r['avg_listeners']), 1),
+                'count': r['count'],
+                'best_station': best.get('station'),
+            })
+
+        return jsonify({
+            'peak_listeners': peak_listeners,
+            'avg_listeners': avg_listeners,
+            'total_detections': total_detections,
+            'app_engagement_rate': app_engagement_rate,
+            'time_series': time_series,
+            'top_stations': top_stations,
+            'top_songs': top_songs,
+            'period': {'start_date': start.date().isoformat(), 'end_date': end.date().isoformat(), 'days': days},
+        })
+
+    except Exception as e:
+        logging.error(f"Error fetching audience stats: {e}")
+        return jsonify({'error': 'Failed to fetch audience statistics'}), 500
 
 
 def register_analytics_commands(app):
