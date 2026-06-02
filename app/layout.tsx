@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next';
 import { AuthProvider } from '@/context/AuthContext';
 import { PlayerProvider } from '@/context/PlayerContext';
 import { ThemeProvider } from 'next-themes';
@@ -47,6 +48,7 @@ export default function RootLayout({
                                 <GlobalShortcuts />
                                 {children}
                                 <Toaster position="bottom-right" />
+                                <Analytics />
                             </PlayerProvider>
                         </AuthProvider>
                     </GoogleProvider>
