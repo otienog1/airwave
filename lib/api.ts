@@ -1,6 +1,6 @@
 import type { Station } from '@/types/Station';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 
 export type { Station } from '@/types/Station';
 
@@ -27,7 +27,7 @@ async function fetchWithRefresh(
   if (res.status !== 401) return res;
 
   // Attempt silent token refresh
-  const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh`, {
+  const refreshRes = await fetch(`/api/auth/refresh`, {
     method: 'POST',
     credentials: 'include',
   });
@@ -132,7 +132,7 @@ class ApiService {
 
   async logout(): Promise<void> {
     // Plain fetch: logout doesn't require auth so no refresh retry needed
-    await fetch(`${this.baseUrl}/auth/logout`, {
+    await fetch(`/api/auth/logout`, {
       method: 'POST',
       credentials: 'include',
     });
