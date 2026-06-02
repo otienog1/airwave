@@ -1,6 +1,11 @@
 import type { Station } from '@/types/Station';
 
-const API_BASE_URL = '/api';
+// Client-side: use relative path so requests go through the Next.js proxy (no CORS).
+// Server-side (API routes): use absolute URL to reach the Flask backend directly.
+const API_BASE_URL =
+  typeof window === 'undefined'
+    ? (process.env.NEXT_PUBLIC_API_URL || 'https://api.airwave.qzz.io/api')
+    : '/api';
 
 export type { Station } from '@/types/Station';
 
@@ -26,20 +31,20 @@ async function fetchWithRefresh(
   const res = await fetch(input, { ...init, credentials: 'include' });
   if (res.status !== 401) return res;
 
-  // Attempt silent token refresh
+  // Token refresh is only meaningful client-side (cookies live in the browser).
+  // Server-side API routes have no session cookies, so skip refresh entirely.
+  if (typeof window === 'undefined') return res;
+
   const refreshRes = await fetch(`/api/auth/refresh`, {
     method: 'POST',
     credentials: 'include',
   });
 
   if (!refreshRes.ok) {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('auth:expired'));
-    }
-    return res; // return original 401 to caller
+    window.dispatchEvent(new Event('auth:expired'));
+    return res;
   }
 
-  // Retry original request once with new access cookie
   return fetch(input, { ...init, credentials: 'include' });
 }
 
