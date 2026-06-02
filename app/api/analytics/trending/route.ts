@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTrending } from '@/lib/analytics';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/analytics/trending?hours=24&limit=10
  * Returns top songs by play count across all stations in the last N hours.

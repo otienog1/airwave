@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, BarChart2 } from 'lucide-react';
@@ -29,6 +29,14 @@ const TABS: { id: Tab; label: string }[] = [
 const VALID_PERIODS = [1, 7, 30, 90];
 
 export default function AnalyticsPage() {
+  return (
+    <Suspense>
+      <AnalyticsPageInner />
+    </Suspense>
+  );
+}
+
+function AnalyticsPageInner() {
   const router = useRouter();
   const params = useSearchParams();
   const { user, loading } = useAuth();
