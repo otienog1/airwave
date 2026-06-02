@@ -272,17 +272,7 @@
   100% { transform: translateX(-50%); }
 }
 
-@keyframes heart-burst {
-  0%   { transform: scale(0);   opacity: 0; }
-  25%  { transform: scale(1.4); opacity: 1; }
-  55%  { transform: scale(1.0); opacity: 1; }
-  100% { transform: scale(1.0); opacity: 0; }
-}
 
-@keyframes now-playing-enter {
-  from { transform: translateY(4px); opacity: 0; }
-  to   { transform: translateY(0);   opacity: 1; }
-}
 
 @keyframes music-note-float {
   0%, 100% { transform: translateY(0);    }
@@ -391,10 +381,6 @@
 }
 
 /* ─── Now Playing Animation ──────────────────────────────────── */
-.now-playing-text {
-  animation: now-playing-enter 220ms ease-out forwards;
-}
-
 .music-note-icon {
   display: inline-block;
   animation: music-note-float 2.5s ease-in-out infinite;

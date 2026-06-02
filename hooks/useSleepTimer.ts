@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 export function useSleepTimer(onExpire: () => void) {
-  const [minutesLeft, setMinutesLeft] = useState<number | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const secondsRef = useRef<number>(0);
   const onExpireRef = useRef(onExpire);
@@ -13,18 +13,17 @@ export function useSleepTimer(onExpire: () => void) {
   const start = useCallback((minutes: number) => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     secondsRef.current = minutes * 60;
-    setMinutesLeft(minutes);
+    setSecondsLeft(secondsRef.current);
 
     intervalRef.current = setInterval(() => {
       secondsRef.current -= 1;
-      const minsLeft = Math.ceil(secondsRef.current / 60);
-      setMinutesLeft(minsLeft > 0 ? minsLeft : 0);
-
       if (secondsRef.current <= 0) {
         clearInterval(intervalRef.current!);
         intervalRef.current = null;
-        setMinutesLeft(null);
+        setSecondsLeft(null);
         onExpireRef.current();
+      } else {
+        setSecondsLeft(secondsRef.current);
       }
     }, 1000);
   }, []);
@@ -32,7 +31,7 @@ export function useSleepTimer(onExpire: () => void) {
   const cancel = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = null;
-    setMinutesLeft(null);
+    setSecondsLeft(null);
   }, []);
 
   useEffect(
@@ -42,5 +41,5 @@ export function useSleepTimer(onExpire: () => void) {
     []
   );
 
-  return { minutesLeft, isActive: minutesLeft !== null, start, cancel };
+  return { secondsLeft, isActive: secondsLeft !== null, start, cancel };
 }

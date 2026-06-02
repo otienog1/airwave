@@ -14,6 +14,7 @@ export const PersistentAudioPlayer: React.FC = () => {
         nowPlaying,
         listenerCounts,
         togglePlay,
+        stopPlayback,
         handleVolumeChange,
         toggleMute,
     } = usePlayer();
@@ -25,6 +26,7 @@ export const PersistentAudioPlayer: React.FC = () => {
             volume={volume}
             isMuted={isMuted}
             onTogglePlay={togglePlay}
+            onStopPlayback={stopPlayback}
             onVolumeChange={handleVolumeChange}
             onMuteToggle={toggleMute}
             isLoading={isLoading}

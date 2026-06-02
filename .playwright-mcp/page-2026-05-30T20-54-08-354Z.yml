@@ -1,0 +1,30 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - button "AirWave Kenya's Radio" [ref=e6] [cursor=pointer]:
+        - img [ref=e8]
+        - generic [ref=e14]:
+          - generic [ref=e15]: AirWave
+          - generic [ref=e16]: Kenya's Radio
+    - main [ref=e20]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - heading "Set a new password" [level=1] [ref=e24]
+          - paragraph [ref=e25]: Must be at least 8 characters with uppercase, lowercase, and a digit.
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: New Password
+            - generic [ref=e30]:
+              - img
+              - textbox "At least 8 characters" [ref=e31]
+              - button [ref=e32] [cursor=pointer]:
+                - img [ref=e33]
+          - generic [ref=e36]:
+            - generic [ref=e37]: Confirm Password
+            - generic [ref=e38]:
+              - img
+              - textbox "Repeat your password" [ref=e39]
+              - button [ref=e40] [cursor=pointer]:
+                - img [ref=e41]
+          - button "Set New Password" [ref=e44] [cursor=pointer]
+  - region "Notifications alt+T"

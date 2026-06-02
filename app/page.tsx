@@ -5,7 +5,7 @@ import ModernAirwave from '@/components/MordernAirwave';
 export default function Home() {
     return (
         <Layout>
-            <main className="max-w-7xl mx-auto px-4 py-8 pb-24">
+            <main className="max-w-7xl mx-auto px-4 pt-5 pb-24 sm:pt-8">
                 <Suspense fallback={null}>
                     <ModernAirwave />
                 </Suspense>

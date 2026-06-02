@@ -5,35 +5,42 @@ import { Timer, X } from 'lucide-react';
 
 const PRESET_MINUTES = [15, 30, 60, 90];
 
+function formatCountdown(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
 interface SleepTimerProps {
-  minutesLeft: number | null;
+  secondsLeft: number | null;
   isActive: boolean;
   onStart: (minutes: number) => void;
   onCancel: () => void;
 }
 
 export const SleepTimer: React.FC<SleepTimerProps> = ({
-  minutesLeft,
+  secondsLeft,
   isActive,
   onStart,
   onCancel,
 }) => {
   const [open, setOpen] = useState(false);
+  const display = secondsLeft !== null ? formatCountdown(secondsLeft) : null;
 
   return (
     <div className="relative hidden sm:block">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+        className="h-8 w-14 rounded-lg flex items-center justify-center transition-colors shrink-0"
         style={{
           color: isActive ? 'var(--color-accent)' : 'var(--color-text-muted)',
           background: isActive ? 'rgba(99,102,241,0.1)' : 'transparent',
         }}
-        aria-label={isActive ? `Sleep timer: ${minutesLeft} min remaining` : 'Set sleep timer'}
-        title={isActive ? `Stops in ${minutesLeft} min` : 'Set sleep timer'}
+        aria-label={isActive ? `Sleep timer: ${display} remaining` : 'Set sleep timer'}
+        title={isActive ? `Stops in ${display}` : 'Set sleep timer'}
       >
         {isActive ? (
-          <span className="text-xs font-bold tabular-nums">{minutesLeft}m</span>
+          <span className="text-xs font-bold tabular-nums">{display}</span>
         ) : (
           <Timer className="w-4 h-4" />
         )}

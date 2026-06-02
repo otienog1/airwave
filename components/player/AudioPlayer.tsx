@@ -12,6 +12,7 @@ interface AudioPlayerProps {
     volume: number;
     isMuted: boolean;
     onTogglePlay: () => void;
+    onStopPlayback: () => void;
     onVolumeChange: (volume: number) => void;
     onMuteToggle: () => void;
     isLoading: boolean;
@@ -25,14 +26,15 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     volume,
     isMuted,
     onTogglePlay,
+    onStopPlayback,
     onVolumeChange,
     onMuteToggle,
     isLoading,
     nowPlaying,
     liveListeners = 0,
 }) => {
-    const { minutesLeft, isActive: timerActive, start: startTimer, cancel: cancelTimer } =
-        useSleepTimer(onTogglePlay);
+    const { secondsLeft, isActive: timerActive, start: startTimer, cancel: cancelTimer } =
+        useSleepTimer(onStopPlayback);
 
     if (!currentStation) return null;
 
@@ -74,7 +76,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                             onMuteToggle={onMuteToggle}
                         />
                         <SleepTimer
-                            minutesLeft={minutesLeft}
+                            secondsLeft={secondsLeft}
                             isActive={timerActive}
                             onStart={startTimer}
                             onCancel={cancelTimer}

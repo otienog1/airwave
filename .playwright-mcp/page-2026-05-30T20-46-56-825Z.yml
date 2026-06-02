@@ -1,0 +1,22 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - button "AirWave Kenya's Radio" [ref=e6] [cursor=pointer]:
+        - img [ref=e8]
+        - generic [ref=e14]:
+          - generic [ref=e15]: AirWave
+          - generic [ref=e16]: Kenya's Radio
+    - main [ref=e20]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]:
+            - heading "Live Stations" [level=2] [ref=e25]
+            - paragraph [ref=e26]: … · Kenya's Best Radio
+          - generic [ref=e27]:
+            - img
+            - textbox "Search stations" [ref=e28]:
+              - /placeholder: Search stations...
+        - group "Filter by genre" [ref=e40]:
+          - button "All" [pressed] [ref=e41] [cursor=pointer]
+      - paragraph [ref=e43]: 📻 All Stations
+  - region "Notifications alt+T"

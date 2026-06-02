@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
 import { StationAvatar } from '@/components/station/StationAvatar';
 import { Station } from '../../types/Station';
 
@@ -27,12 +28,23 @@ export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, no
     const containerRef = useRef<HTMLDivElement>(null);
     const spanRef      = useRef<HTMLSpanElement>(null);
 
+    // Resize container to fit text (marquee width calculation)
     useEffect(() => {
         if (!containerRef.current || !spanRef.current) return;
         const spanW   = spanRef.current.offsetWidth;
         const parentW = containerRef.current.parentElement?.offsetWidth ?? spanW;
         const isSmallAndOverflow = window.innerWidth < 640 && spanW > window.innerWidth * 0.8;
         containerRef.current.style.width = isSmallAndOverflow ? `${parentW}px` : `${Math.min(spanW, parentW)}px`;
+    }, [nowPlaying]);
+
+    // Animate in on each new song
+    useEffect(() => {
+        if (!containerRef.current || !nowPlaying) return;
+        gsap.fromTo(
+            containerRef.current,
+            { opacity: 0, y: 4 },
+            { opacity: 1, y: 0, duration: 0.22, ease: 'power2.out' }
+        );
     }, [nowPlaying]);
 
     return (
@@ -73,7 +85,7 @@ export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, no
                     <div
                         key={nowPlaying}
                         ref={containerRef}
-                        className="mt-0.5 overflow-hidden now-playing-text now-playing-container"
+                        className="mt-0.5 overflow-hidden now-playing-container"
                     >
                         <div className="now-playing-track">
                             <span ref={spanRef} className="text-xs pr-10" style={{ color: 'var(--color-accent)' }}>

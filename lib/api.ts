@@ -109,6 +109,27 @@ class ApiService {
     });
   }
 
+  async googleAuth(accessToken: string): Promise<ApiResponse<{ user: User; message: string }>> {
+    return this.request<{ user: User; message: string }>('/auth/google', {
+      method: 'POST',
+      body: JSON.stringify({ access_token: accessToken }),
+    });
+  }
+
+  async updateProfile(username: string, email: string): Promise<ApiResponse<{ user: User; message: string }>> {
+    return this.request<{ user: User; message: string }>('/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify({ username, email }),
+    });
+  }
+
+  async changePassword(currentPassword: string, newPassword: string): Promise<ApiResponse<{ message: string }>> {
+    return this.request<{ message: string }>('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+    });
+  }
+
   async logout(): Promise<void> {
     // Plain fetch: logout doesn't require auth so no refresh retry needed
     await fetch(`${this.baseUrl}/auth/logout`, {

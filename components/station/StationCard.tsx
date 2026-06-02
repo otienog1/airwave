@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+import React, { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
 import { Station } from '../../types/Station';
 import { Heart } from 'lucide-react';
 import { PlayButton } from './PlayButton';
@@ -41,9 +43,18 @@ export const StationCard: React.FC<StationCardProps> = ({
     liveListeners = 0,
 }) => {
     const colors = (station.genre ? GENRE_COLORS[station.genre] : undefined) ?? DEFAULT_COLOR;
-
     const genre = station.genre ?? null;
     const frequency = station.frequency ?? null;
+    const nowPlayingRef = useRef<HTMLSpanElement>(null);
+
+    useEffect(() => {
+        if (!nowPlayingRef.current || !nowPlaying) return;
+        gsap.fromTo(
+            nowPlayingRef.current,
+            { opacity: 0, y: 4 },
+            { opacity: 1, y: 0, duration: 0.22, ease: 'power2.out' }
+        );
+    }, [nowPlaying]);
 
     return (
         <div
@@ -134,7 +145,7 @@ export const StationCard: React.FC<StationCardProps> = ({
                     {nowPlaying && (
                         <>
                             <span className="text-xs shrink-0" style={{ color: 'var(--color-text-muted)' }}>·</span>
-                            <span className="flex-1 min-w-0 overflow-hidden">
+                            <span ref={nowPlayingRef} className="flex-1 min-w-0 overflow-hidden">
                                 <span
                                     className="flex whitespace-nowrap"
                                     style={{ width: 'max-content', animation: 'marquee-scroll 12s linear infinite' }}

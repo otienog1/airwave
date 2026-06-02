@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, ReactNode } from 'react';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useStreamMetadata } from '@/hooks/useStreamMetadata';
 import { useListeners } from '@/hooks/useListeners';
@@ -16,6 +16,7 @@ interface PlayerContextValue {
     error: string | null;
     playStation: (station: Station) => Promise<void>;
     togglePlay: () => Promise<void>;
+    stopPlayback: () => Promise<void>;
     handleVolumeChange: (volume: number) => void;
     toggleMute: () => void;
     clearError: () => void;
@@ -41,6 +42,16 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         player.currentStation?.id ?? null,
         player.currentStation?.name ?? null,
     );
+
+    useEffect(() => {
+        const station = player.currentStation;
+        if (!station) {
+            document.title = 'MBR';
+            return;
+        }
+        const song = nowPlaying ? `${nowPlaying} — ` : '';
+        document.title = `${song}${station.name} | MBR`;
+    }, [player.currentStation, player.isPlaying, nowPlaying]);
 
     return (
         <PlayerContext.Provider value={{ ...player, nowPlaying: nowPlaying ?? null, listenerCounts }}>

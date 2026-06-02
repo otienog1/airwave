@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google';
 import "./globals.css";
 import { Toaster } from '@/components/ui/sonner';
 import { GlobalShortcuts } from '@/components/GlobalShortcuts';
+import { GoogleProvider } from '@/components/providers/GoogleProvider';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -40,13 +41,15 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body className={inter.className}>
                 <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange={false}>
-                    <AuthProvider>
-                        <PlayerProvider>
-                            <GlobalShortcuts />
-                            {children}
-                            <Toaster position="bottom-right" />
-                        </PlayerProvider>
-                    </AuthProvider>
+                    <GoogleProvider>
+                        <AuthProvider>
+                            <PlayerProvider>
+                                <GlobalShortcuts />
+                                {children}
+                                <Toaster position="bottom-right" />
+                            </PlayerProvider>
+                        </AuthProvider>
+                    </GoogleProvider>
                 </ThemeProvider>
             </body>
         </html>

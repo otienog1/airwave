@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
+    "@gsap/react": "^2.1.2",
+    "@react-oauth/google": "^0.13.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "gsap": "^3.15.0",
     "lucide-react": "^1.16.0",
     "media-chrome": "^4.1.0",
     "mongodb": "^7.2.0",

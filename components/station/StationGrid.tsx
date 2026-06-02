@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+import React, { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
 import { StationCard } from '@/components/station/StationCard';
 import { Radio, AlertCircle } from 'lucide-react';
 import type { Station } from '@/types/Station';
@@ -32,24 +34,42 @@ export const StationGrid: React.FC<StationGridProps> = ({
     nowPlaying,
     listenerCounts,
 }) => {
+    const gridRef = useRef<HTMLDivElement>(null);
+    const hasAnimated = useRef(false);
+
+    useEffect(() => {
+        if (!gridRef.current || stations.length === 0 || hasAnimated.current) return;
+        hasAnimated.current = true;
+        const cards = Array.from(gridRef.current.children);
+        gsap.fromTo(
+            cards,
+            { opacity: 0, y: 16 },
+            { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', stagger: 0.04, clearProps: 'transform' }
+        );
+    }, [stations]);
+
     if (loading) {
         return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {Array.from({ length: 6 }).map((_, i) => (
                     <div
                         key={i}
                         className="rounded-2xl p-4 animate-pulse"
                         style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--color-border)' }}
                     >
-                        <div className="flex items-start gap-3 mb-3">
+                        {/* Top row: avatar + name/desc + heart */}
+                        <div className="flex items-center gap-3 mb-3">
                             <div className="w-9 h-9 rounded-xl shrink-0" style={{ background: 'var(--color-overlay-hover)' }} />
                             <div className="flex-1 space-y-2">
                                 <div className="h-3.5 rounded-md w-3/4" style={{ background: 'var(--color-overlay-hover)' }} />
                                 <div className="h-3 rounded-md w-1/2" style={{ background: 'var(--color-overlay-hover)' }} />
                             </div>
+                            <div className="w-4 h-4 rounded-full shrink-0" style={{ background: 'var(--color-overlay-hover)' }} />
                         </div>
-                        <div className="h-3 rounded-md w-full mb-2" style={{ background: 'var(--color-overlay-hover)' }} />
-                        <div className="h-3 rounded-md w-2/3" style={{ background: 'var(--color-overlay-hover)' }} />
+                        {/* Meta row: LIVE · genre */}
+                        <div className="h-3 rounded-md w-2/3 mb-3" style={{ background: 'var(--color-overlay-hover)' }} />
+                        {/* Play button */}
+                        <div className="h-10 rounded-lg w-full" style={{ background: 'var(--color-overlay-hover)' }} />
                     </div>
                 ))}
             </div>
@@ -102,7 +122,7 @@ export const StationGrid: React.FC<StationGridProps> = ({
     }
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {stations.map((station) => {
                 const isCurrent = currentStation?.id === station.id;
                 return (

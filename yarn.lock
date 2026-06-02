@@ -1349,6 +1349,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gsap/react@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@gsap/react@npm:2.1.2"
+  peerDependencies:
+    gsap: ^3.12.5
+    react: ">=17"
+  checksum: 10c0/d0285391cfd7cef8125e6ddf81a063121bdb92ddf633d76c6144d8b93e3b7f7d837ec75f1fda8fd33d7efac0ad4c1aad89647e81446e9363012ada7db9f67daf
+  languageName: node
+  linkType: hard
+
 "@hono/node-server@npm:^1.19.9":
   version: 1.19.14
   resolution: "@hono/node-server@npm:1.19.14"
@@ -1859,6 +1869,16 @@ __metadata:
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
   checksum: 10c0/5bd7576bb1b38a47a7fc7b51ac9f38748e772beebc56200450c4a817d712232b8f1d3ef70532c80840243c657d491cf6a6be1e3a214cff907645819fdc34aadd
+  languageName: node
+  linkType: hard
+
+"@react-oauth/google@npm:^0.13.5":
+  version: 0.13.5
+  resolution: "@react-oauth/google@npm:0.13.5"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 10c0/e3d6e40a2e65e5233c2aaa90b3e36398c6ef940d0d15963e0d2cd89e074da380093588f91f1ee4e4bc90f07244a584cdb705746eb4645208b637574f45d492e8
   languageName: node
   linkType: hard
 
@@ -2407,6 +2427,8 @@ __metadata:
   resolution: "airwave@workspace:."
   dependencies:
     "@base-ui/react": "npm:^1.5.0"
+    "@gsap/react": "npm:^2.1.2"
+    "@react-oauth/google": "npm:^0.13.5"
     "@types/next-pwa": "npm:^5"
     "@types/node": "npm:^20"
     "@types/react": "npm:^18"
@@ -2415,6 +2437,7 @@ __metadata:
     clsx: "npm:^2.1.1"
     eslint: "npm:^8"
     eslint-config-next: "npm:14.2.5"
+    gsap: "npm:^3.15.0"
     lucide-react: "npm:^1.16.0"
     media-chrome: "npm:^4.1.0"
     mongodb: "npm:^7.2.0"
@@ -5302,6 +5325,13 @@ __metadata:
   version: 16.14.0
   resolution: "graphql@npm:16.14.0"
   checksum: 10c0/baaa368fcfeb7bf2cdf94b9f31bf916e97eaa9e7e82148a7046f31cbd49b760b38190f22393b024cbdd9ca0f4f46287515de0136b6a0cc164074b36ad7b50618
+  languageName: node
+  linkType: hard
+
+"gsap@npm:^3.15.0":
+  version: 3.15.0
+  resolution: "gsap@npm:3.15.0"
+  checksum: 10c0/5d86de72cb0bd6b20502c34c329a83a7d679979731bb465164407b7a5225aa61d612beee740eea36258622897c116cd2ca35320d530b7cf68bad62522361fcf7
   languageName: node
   linkType: hard
 

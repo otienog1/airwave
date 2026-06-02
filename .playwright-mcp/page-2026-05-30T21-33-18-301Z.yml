@@ -1,0 +1,359 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - button "Nu'Radio" [ref=e6] [cursor=pointer]:
+          - img [ref=e8]
+          - generic [ref=e15]: Nu'Radio
+        - generic [ref=e16]:
+          - button "Switch to light mode" [ref=e95] [cursor=pointer]:
+            - img [ref=e96]
+          - button "Sign In" [ref=e102] [cursor=pointer]
+    - main [ref=e19]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - heading "Live Stations" [level=2] [ref=e24]
+            - paragraph [ref=e25]: 18 stations · Kenya's Best Radio
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - img
+              - textbox "Search stations" [ref=e28]:
+                - /placeholder: Search stations...
+            - button "Toggle filters" [expanded] [active] [ref=e29] [cursor=pointer]:
+              - img [ref=e30]
+              - text: Filters
+        - generic [ref=e31]:
+          - paragraph [ref=e103]: 🔥 Trending Now
+          - generic [ref=e33]:
+            - button "KISS 100 26 plays" [ref=e104] [cursor=pointer]:
+              - paragraph [ref=e105]: KISS 100
+              - paragraph [ref=e106]: 26 plays
+            - button "Classic 105 13 plays" [ref=e107] [cursor=pointer]:
+              - paragraph [ref=e108]: Classic 105
+              - paragraph [ref=e109]: 13 plays
+            - button "Capital FM 6 plays" [ref=e110] [cursor=pointer]:
+              - paragraph [ref=e111]: Capital FM
+              - paragraph [ref=e112]: 6 plays
+            - button "Radio Citizen 4 plays" [ref=e113] [cursor=pointer]:
+              - paragraph [ref=e114]: Radio Citizen
+              - paragraph [ref=e115]: 4 plays
+            - button "Homeboyz Radio 2 plays" [ref=e116] [cursor=pointer]:
+              - paragraph [ref=e117]: Homeboyz Radio
+              - paragraph [ref=e118]: 2 plays
+            - button "Radio Maisha 2 plays" [ref=e119] [cursor=pointer]:
+              - paragraph [ref=e120]: Radio Maisha
+              - paragraph [ref=e121]: 2 plays
+            - button "Mulembe FM 2 plays" [ref=e122] [cursor=pointer]:
+              - paragraph [ref=e123]: Mulembe FM
+              - paragraph [ref=e124]: 2 plays
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - paragraph [ref=e42]: Genre
+            - generic [ref=e43]:
+              - button "All" [pressed] [ref=e44] [cursor=pointer]
+              - button "Hip Hop" [ref=e125] [cursor=pointer]
+              - button "Pop" [ref=e126] [cursor=pointer]
+              - button "Contemporary" [ref=e127] [cursor=pointer]
+              - button "Soul" [ref=e128] [cursor=pointer]
+              - button "News" [ref=e129] [cursor=pointer]
+              - button "Urban" [ref=e130] [cursor=pointer]
+              - button "Talk" [ref=e131] [cursor=pointer]
+              - button "Dance" [ref=e132] [cursor=pointer]
+          - generic [ref=e133]:
+            - paragraph [ref=e134]: Region
+            - generic [ref=e135]:
+              - button "All" [pressed] [ref=e136] [cursor=pointer]
+              - button "Nairobi" [ref=e137] [cursor=pointer]
+              - button "Nakuru" [ref=e138] [cursor=pointer]
+      - paragraph [ref=e45]: 📻 All Stations
+      - generic [ref=e46]:
+        - generic [ref=e140]:
+          - generic [ref=e141]:
+            - generic [ref=e144]: K1
+            - generic [ref=e145]:
+              - heading "KISS 100" [level=3] [ref=e146]
+              - paragraph [ref=e147]: Tha Beat of Nairobi
+            - button "Add to favorites" [ref=e148] [cursor=pointer]:
+              - img [ref=e149]
+          - generic [ref=e151]:
+            - generic [ref=e153]: LIVE
+            - generic [ref=e154]: ·
+            - generic [ref=e155]: Hip Hop
+            - generic [ref=e156]: 100.3 FM
+          - button "Listen Now" [ref=e157] [cursor=pointer]:
+            - img [ref=e158]
+            - text: Listen Now
+        - generic [ref=e161]:
+          - generic [ref=e162]:
+            - generic [ref=e165]: CF
+            - generic [ref=e166]:
+              - heading "Capital FM" [level=3] [ref=e167]
+              - paragraph [ref=e168]: Kenya's No. 1 Hit Music Station
+            - button "Add to favorites" [ref=e169] [cursor=pointer]:
+              - img [ref=e170]
+          - generic [ref=e172]:
+            - generic [ref=e174]: LIVE
+            - generic [ref=e175]: ·
+            - generic [ref=e176]: Pop
+            - generic [ref=e177]: 98.4 FM
+          - button "Listen Now" [ref=e178] [cursor=pointer]:
+            - img [ref=e179]
+            - text: Listen Now
+        - generic [ref=e182]:
+          - generic [ref=e183]:
+            - generic [ref=e186]: RM
+            - generic [ref=e187]:
+              - heading "Radio Maisha" [level=3] [ref=e188]
+              - paragraph [ref=e189]: Maisha ni Yetu
+            - button "Add to favorites" [ref=e190] [cursor=pointer]:
+              - img [ref=e191]
+          - generic [ref=e193]:
+            - generic [ref=e195]: LIVE
+            - generic [ref=e196]: ·
+            - generic [ref=e197]: Contemporary
+            - generic [ref=e198]: 102.7 FM
+          - button "Listen Now" [ref=e199] [cursor=pointer]:
+            - img [ref=e200]
+            - text: Listen Now
+        - generic [ref=e203]:
+          - generic [ref=e204]:
+            - generic [ref=e207]: C1
+            - generic [ref=e208]:
+              - heading "Classic 105" [level=3] [ref=e209]
+              - paragraph [ref=e210]: No.1 for Soul and Great Hits
+            - button "Add to favorites" [ref=e211] [cursor=pointer]:
+              - img [ref=e212]
+          - generic [ref=e214]:
+            - generic [ref=e216]: LIVE
+            - generic [ref=e217]: ·
+            - generic [ref=e218]: Soul
+            - generic [ref=e219]: 105.2 FM
+          - button "Listen Now" [ref=e220] [cursor=pointer]:
+            - img [ref=e221]
+            - text: Listen Now
+        - generic [ref=e224]:
+          - generic [ref=e225]:
+            - generic [ref=e228]: RC
+            - generic [ref=e229]:
+              - heading "Radio Citizen" [level=3] [ref=e230]
+              - paragraph [ref=e231]: Citizen Radio - Mzalendo
+            - button "Add to favorites" [ref=e232] [cursor=pointer]:
+              - img [ref=e233]
+          - generic [ref=e235]:
+            - generic [ref=e237]: LIVE
+            - generic [ref=e238]: ·
+            - generic [ref=e239]: News
+            - generic [ref=e240]: 106.7 FM
+          - button "Listen Now" [ref=e241] [cursor=pointer]:
+            - img [ref=e242]
+            - text: Listen Now
+        - generic [ref=e245]:
+          - generic [ref=e246]:
+            - generic [ref=e249]: HR
+            - generic [ref=e250]:
+              - heading "Homeboyz Radio" [level=3] [ref=e251]
+              - paragraph [ref=e252]: 103.5 Homeboyz Radio
+            - button "Add to favorites" [ref=e253] [cursor=pointer]:
+              - img [ref=e254]
+          - generic [ref=e256]:
+            - generic [ref=e258]: LIVE
+            - generic [ref=e259]: ·
+            - generic [ref=e260]: Urban
+            - generic [ref=e261]: 103.5 FM
+          - button "Listen Now" [ref=e262] [cursor=pointer]:
+            - img [ref=e263]
+            - text: Listen Now
+        - generic [ref=e266]:
+          - generic [ref=e267]:
+            - generic [ref=e270]: KE
+            - generic [ref=e271]:
+              - heading "KBC English Service" [level=3] [ref=e272]
+              - paragraph [ref=e273]: Kenya's National Broadcaster
+            - button "Add to favorites" [ref=e274] [cursor=pointer]:
+              - img [ref=e275]
+          - generic [ref=e277]:
+            - generic [ref=e279]: LIVE
+            - generic [ref=e280]: ·
+            - generic [ref=e281]: News
+            - generic [ref=e282]: 95.6 FM
+          - button "Listen Now" [ref=e283] [cursor=pointer]:
+            - img [ref=e284]
+            - text: Listen Now
+        - generic [ref=e287]:
+          - generic [ref=e288]:
+            - generic [ref=e291]: RJ
+            - generic [ref=e292]:
+              - heading "Radio Jambo" [level=3] [ref=e293]
+              - paragraph [ref=e294]: Redio ya Kwanza Kenya
+            - button "Add to favorites" [ref=e295] [cursor=pointer]:
+              - img [ref=e296]
+          - generic [ref=e298]:
+            - generic [ref=e300]: LIVE
+            - generic [ref=e301]: ·
+            - generic [ref=e302]: Talk
+            - generic [ref=e303]: 97.5 FM
+          - button "Listen Now" [ref=e304] [cursor=pointer]:
+            - img [ref=e305]
+            - text: Listen Now
+        - generic [ref=e308]:
+          - generic [ref=e309]:
+            - generic [ref=e312]: H9
+            - generic [ref=e313]:
+              - heading "Hot 96" [level=3] [ref=e314]
+              - paragraph [ref=e315]: We Play What We Want
+            - button "Add to favorites" [ref=e316] [cursor=pointer]:
+              - img [ref=e317]
+          - generic [ref=e319]:
+            - generic [ref=e321]: LIVE
+            - generic [ref=e322]: ·
+            - generic [ref=e323]: Contemporary
+            - generic [ref=e324]: 96.0 FM
+          - button "Listen Now" [ref=e325] [cursor=pointer]:
+            - img [ref=e326]
+            - text: Listen Now
+        - generic [ref=e329]:
+          - generic [ref=e330]:
+            - generic [ref=e333]: NR
+            - generic [ref=e334]:
+              - heading "NRG Radio" [level=3] [ref=e335]
+              - paragraph [ref=e336]: Energy to the Max
+            - button "Add to favorites" [ref=e337] [cursor=pointer]:
+              - img [ref=e338]
+          - generic [ref=e340]:
+            - generic [ref=e342]: LIVE
+            - generic [ref=e343]: ·
+            - generic [ref=e344]: Dance
+            - generic [ref=e345]: 100.9 FM
+          - button "Listen Now" [ref=e346] [cursor=pointer]:
+            - img [ref=e347]
+            - text: Listen Now
+        - generic [ref=e350]:
+          - generic [ref=e351]:
+            - generic [ref=e354]: IF
+            - generic [ref=e355]:
+              - heading "Inooro FM" [level=3] [ref=e356]
+              - paragraph [ref=e357]: Gikuyu Community Radio
+            - button "Add to favorites" [ref=e358] [cursor=pointer]:
+              - img [ref=e359]
+          - generic [ref=e361]:
+            - generic [ref=e363]: LIVE
+            - generic [ref=e364]: ·
+            - generic [ref=e365]: Talk
+            - generic [ref=e366]: 88.9 FM
+          - button "Listen Now" [ref=e367] [cursor=pointer]:
+            - img [ref=e368]
+            - text: Listen Now
+        - generic [ref=e371]:
+          - generic [ref=e372]:
+            - generic [ref=e375]: RF
+            - generic [ref=e376]:
+              - heading "Ramogi FM" [level=3] [ref=e377]
+              - paragraph [ref=e378]: Vernacular Radio Station
+            - button "Add to favorites" [ref=e379] [cursor=pointer]:
+              - img [ref=e380]
+          - generic [ref=e382]:
+            - generic [ref=e384]: LIVE
+            - generic [ref=e385]: ·
+            - generic [ref=e386]: Talk
+            - generic [ref=e387]: 107.1 FM
+          - button "Listen Now" [ref=e388] [cursor=pointer]:
+            - img [ref=e389]
+            - text: Listen Now
+        - generic [ref=e392]:
+          - generic [ref=e393]:
+            - generic [ref=e396]: HF
+            - generic [ref=e397]:
+              - heading "Hope FM" [level=3] [ref=e398]
+              - paragraph [ref=e399]: Nairobi's Inspirational Radio
+            - button "Add to favorites" [ref=e400] [cursor=pointer]:
+              - img [ref=e401]
+          - generic [ref=e403]:
+            - generic [ref=e405]: LIVE
+            - generic [ref=e406]: ·
+            - generic [ref=e407]: Contemporary
+            - generic [ref=e408]: 93.3 FM
+          - button "Listen Now" [ref=e409] [cursor=pointer]:
+            - img [ref=e410]
+            - text: Listen Now
+        - generic [ref=e413]:
+          - generic [ref=e414]:
+            - generic [ref=e417]: FR
+            - generic [ref=e418]:
+              - heading "Family Radio" [level=3] [ref=e419]
+              - paragraph [ref=e420]: Wholesome Family Entertainment
+            - button "Add to favorites" [ref=e421] [cursor=pointer]:
+              - img [ref=e422]
+          - generic [ref=e424]:
+            - generic [ref=e426]: LIVE
+            - generic [ref=e427]: ·
+            - generic [ref=e428]: Contemporary
+            - generic [ref=e429]: 103.9 FM
+          - button "Listen Now" [ref=e430] [cursor=pointer]:
+            - img [ref=e431]
+            - text: Listen Now
+        - generic [ref=e434]:
+          - generic [ref=e435]:
+            - generic [ref=e438]: GR
+            - generic [ref=e439]:
+              - heading "Ghetto Radio" [level=3] [ref=e440]
+              - paragraph [ref=e441]: Mtaani Radio
+            - button "Add to favorites" [ref=e442] [cursor=pointer]:
+              - img [ref=e443]
+          - generic [ref=e445]:
+            - generic [ref=e447]: LIVE
+            - generic [ref=e448]: ·
+            - generic [ref=e449]: Hip Hop
+          - button "Listen Now" [ref=e450] [cursor=pointer]:
+            - img [ref=e451]
+            - text: Listen Now
+        - generic [ref=e454]:
+          - generic [ref=e455]:
+            - generic [ref=e458]: MF
+            - generic [ref=e459]:
+              - heading "Mulembe FM" [level=3] [ref=e460]
+              - paragraph [ref=e461]: Luhya Community Radio
+            - button "Add to favorites" [ref=e462] [cursor=pointer]:
+              - img [ref=e463]
+          - generic [ref=e465]:
+            - generic [ref=e467]: LIVE
+            - generic [ref=e468]: ·
+            - generic [ref=e469]: Talk
+            - generic [ref=e470]: 97.9 FM
+          - button "Listen Now" [ref=e471] [cursor=pointer]:
+            - img [ref=e472]
+            - text: Listen Now
+        - generic [ref=e475]:
+          - generic [ref=e476]:
+            - generic [ref=e479]: KF
+            - generic [ref=e480]:
+              - heading "Kass FM" [level=3] [ref=e481]
+              - paragraph [ref=e482]: Kalenjin Community Radio
+            - button "Add to favorites" [ref=e483] [cursor=pointer]:
+              - img [ref=e484]
+          - generic [ref=e486]:
+            - generic [ref=e488]: LIVE
+            - generic [ref=e489]: ·
+            - generic [ref=e490]: Talk
+            - generic [ref=e491]: 89.1 FM
+          - button "Listen Now" [ref=e492] [cursor=pointer]:
+            - img [ref=e493]
+            - text: Listen Now
+        - generic [ref=e496]:
+          - generic [ref=e497]:
+            - generic [ref=e500]: WF
+            - generic [ref=e501]:
+              - heading "Waumini FM" [level=3] [ref=e502]
+              - paragraph [ref=e503]: Catholic Radio Kenya
+            - button "Add to favorites" [ref=e504] [cursor=pointer]:
+              - img [ref=e505]
+          - generic [ref=e507]:
+            - generic [ref=e509]: LIVE
+            - generic [ref=e510]: ·
+            - generic [ref=e511]: Talk
+            - generic [ref=e512]: 88.3 FM
+          - button "Listen Now" [ref=e513] [cursor=pointer]:
+            - img [ref=e514]
+            - text: Listen Now
+  - region "Notifications alt+T"
+  - alert [ref=e516]

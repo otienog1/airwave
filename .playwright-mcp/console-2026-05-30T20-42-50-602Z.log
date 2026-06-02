@@ -1,0 +1,11 @@
+[     957ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/reset-password?token=test123:0
+[     958ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/reset-password?token=test123:0
+[    1769ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:38559
+[    2255ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/icons/icon-192.png:0
+[    2451ms] [WARNING] Error while trying to use the following icon from the Manifest: http://localhost:3000/icons/icon-192.png (Download error or resource isn't a valid image) @ http://localhost:3000/reset-password?token=test123:0
+[    2731ms] [ERROR] Failed to load resource: the server responded with a status of 401 (UNAUTHORIZED) @ http://localhost:5002/api/auth/profile:0
+[    2978ms] [ERROR] Failed to load resource: the server responded with a status of 401 (UNAUTHORIZED) @ http://localhost:5002/api/auth/profile:0
+[    3039ms] [ERROR] Failed to load resource: the server responded with a status of 401 (UNAUTHORIZED) @ http://localhost:5002/api/auth/refresh:0
+[    3047ms] [ERROR] Failed to load resource: the server responded with a status of 401 (UNAUTHORIZED) @ http://localhost:5002/api/auth/refresh:0
+[   27983ms] [ERROR] Failed to load resource: the server responded with a status of 400 (BAD REQUEST) @ http://localhost:5002/api/auth/reset-password:0
+[   43443ms] [ERROR] Failed to load resource: the server responded with a status of 400 (BAD REQUEST) @ http://localhost:5002/api/auth/reset-password:0

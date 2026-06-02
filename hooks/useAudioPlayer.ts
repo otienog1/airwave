@@ -34,6 +34,21 @@ export function useAudioPlayer(options: UseAudioPlayerOptions = {}) {
   useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
   useEffect(() => { optionsRef.current = options; });
 
+  // Restore last station after hydration (must run client-side only to avoid SSR mismatch)
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('airwave_last_station');
+      if (stored) setCurrentStation(JSON.parse(stored) as Station);
+    } catch {}
+  }, []);
+
+  // Persist last station whenever it changes
+  useEffect(() => {
+    if (currentStation) {
+      try { localStorage.setItem('airwave_last_station', JSON.stringify(currentStation)); } catch {}
+    }
+  }, [currentStation]);
+
   // Set up the audio element and attach listeners ONCE (empty deps).
   // Previously this had [currentStation, options] which caused the cleanup
   // to run on every station change — the cleanup's .then(audio.pause) fired
@@ -142,6 +157,10 @@ export function useAudioPlayer(options: UseAudioPlayerOptions = {}) {
         }
         audio.pause();
       } else {
+        if (!audio.src || audio.src === window.location.href) {
+          audio.src = station.url;
+          audio.load();
+        }
         setIsLoading(true);
         try {
           playPromiseRef.current = audio.play();
@@ -188,6 +207,20 @@ export function useAudioPlayer(options: UseAudioPlayerOptions = {}) {
     }
   }, []);
 
+  const stopPlayback = useCallback(async () => {
+    if (!audioRef.current) return;
+    // Clear any pending reconnect so handleError doesn't restart the stream
+    if (reconnectTimerRef.current) {
+      clearTimeout(reconnectTimerRef.current);
+      reconnectTimerRef.current = null;
+    }
+    reconnectAttemptsRef.current = MAX_RECONNECT; // exhaust retries so handleError gives up
+    if (playPromiseRef.current) {
+      try { await playPromiseRef.current; } catch {}
+    }
+    audioRef.current.pause();
+  }, []);
+
   const togglePlay = useCallback(async () => {
     if (!audioRef.current || !currentStationRef.current) return;
     const audio = audioRef.current;
@@ -198,6 +231,10 @@ export function useAudioPlayer(options: UseAudioPlayerOptions = {}) {
       }
       audio.pause();
     } else {
+      if (!audio.src || audio.src === window.location.href) {
+        audio.src = currentStationRef.current.url;
+        audio.load();
+      }
       setIsLoading(true);
       try {
         playPromiseRef.current = audio.play();
@@ -234,6 +271,7 @@ export function useAudioPlayer(options: UseAudioPlayerOptions = {}) {
     error,
     playStation,
     togglePlay,
+    stopPlayback,
     handleVolumeChange,
     toggleMute,
     clearError: () => setError(null),

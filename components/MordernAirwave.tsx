@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useRef, useCallback, useMemo } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import React, { useRef, useCallback, useMemo, useEffect } from 'react';
+import { toast } from 'sonner';
 import { Heart } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useStationFilter } from '@/hooks/useStationFilter';
 import { useFavorites } from '@/hooks/useFavorites';
 import { HeartBurst } from '@/components/ui/HeartBurst';
@@ -66,6 +67,33 @@ const ModernAirwave: React.FC = () => {
         [toggleFavorite]
     );
 
+    const dismissTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const toastVisible = useRef(false);
+
+    useEffect(() => {
+        if (audioError) {
+            if (dismissTimer.current) {
+                clearTimeout(dismissTimer.current);
+                dismissTimer.current = null;
+            }
+            if (!toastVisible.current) {
+                toastVisible.current = true;
+                toast.warning(audioError, {
+                    id: 'audio-error',
+                    duration: Infinity,
+                    onDismiss: () => { toastVisible.current = false; clearError(); },
+                });
+            }
+        } else {
+            // Delay dismissal — brief null gaps during reconnect retries shouldn't flicker the toast
+            dismissTimer.current = setTimeout(() => {
+                toastVisible.current = false;
+                toast.dismiss('audio-error');
+                dismissTimer.current = null;
+            }, 5000);
+        }
+    }, [audioError, clearError]);
+
     useKeyboardShortcuts({
         togglePlay,
         toggleMute,
@@ -100,62 +128,72 @@ const ModernAirwave: React.FC = () => {
                     <TrendingStrip
                         stations={stations}
                         currentStation={currentStation}
+                        isPlaying={isPlaying}
+                        isLoading={isLoading}
                         onPlay={playStation}
                     />
                 }
             />
 
-            {showFavoritesOnly && (
+            <div className="mt-5 sm:mt-8 mb-5 sm:mb-8 flex items-center gap-4">
                 <div
-                    className="mb-5 rounded-xl px-4 py-3 flex items-center gap-3"
-                    style={{
-                        background: 'rgba(248,113,113,0.08)',
-                        border: '1px solid rgba(248,113,113,0.2)',
-                    }}
+                    className="h-px flex-1"
+                    style={{ background: 'var(--color-border)' }}
+                />
+                <span
+                    className="text-[9px] font-semibold uppercase tracking-widest shrink-0"
+                    style={{ color: 'var(--color-text-muted)' }}
                 >
-                    <Heart className="w-4 h-4 fill-current shrink-0" style={{ color: '#f87171' }} />
-                    <span className="text-sm font-medium" style={{ color: '#f87171' }}>
-                        My Favorites &mdash; {displayedStations.length} station{displayedStations.length !== 1 ? 's' : ''}
-                    </span>
-                    <button
-                        onClick={() => router.push('/')}
-                        className="ml-auto text-xs opacity-70 hover:opacity-100 transition-opacity"
-                        style={{ color: '#f87171' }}
-                    >
-                        View all
-                    </button>
-                </div>
-            )}
-
-            {audioError && (
+                    Stations
+                </span>
                 <div
-                    className="mb-5 rounded-xl p-3.5 flex items-center gap-3 text-sm"
-                    style={{
-                        background: 'rgba(251, 191, 36, 0.08)',
-                        border: '1px solid rgba(251, 191, 36, 0.2)',
-                    }}
-                >
-                    <span
-                        className="w-2 h-2 rounded-full shrink-0"
-                        style={{ background: '#fbbf24', animation: 'pulse-glow 1.5s ease-in-out infinite' }}
-                    />
-                    <span style={{ color: '#fbbf24' }}>{audioError}</span>
-                    <button
-                        onClick={clearError}
-                        className="ml-auto text-xs opacity-60 hover:opacity-100"
-                        style={{ color: '#fbbf24' }}
-                    >
-                        ✕
-                    </button>
-                </div>
-            )}
+                    className="h-px flex-1"
+                    style={{ background: 'var(--color-border)' }}
+                />
+            </div>
 
-            <p
-                className="text-xs font-semibold mb-3 uppercase"
-                style={{ color: 'var(--color-text-muted)', letterSpacing: '0.06em' }}
-            >
-                📻 All Stations
-            </p>
+            <div className="flex items-center gap-2 mb-5">
+                <button
+                    onClick={() => router.push('/')}
+                    className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-[11px] font-semibold uppercase tracking-widest transition-all duration-150 cursor-pointer"
+                    style={
+                        !showFavoritesOnly
+                            ? {
+                                  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                  color: '#ffffff',
+                                  border: '1px solid transparent',
+                                  boxShadow: '0 0 0 1px rgba(99,102,241,0.4)',
+                              }
+                            : {
+                                  background: 'var(--color-surface)',
+                                  color: 'var(--color-text-secondary)',
+                                  border: '1px solid var(--color-border)',
+                              }
+                    }
+                >
+                    <span>📻</span> All
+                </button>
+                <button
+                    onClick={() => router.push('/?view=favorites')}
+                    className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-[11px] font-semibold uppercase tracking-widest transition-all duration-150 cursor-pointer"
+                    style={
+                        showFavoritesOnly
+                            ? {
+                                  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                  color: '#ffffff',
+                                  border: '1px solid transparent',
+                                  boxShadow: '0 0 0 1px rgba(99,102,241,0.4)',
+                              }
+                            : {
+                                  background: 'var(--color-surface)',
+                                  color: 'var(--color-text-secondary)',
+                                  border: '1px solid var(--color-border)',
+                              }
+                    }
+                >
+                    <Heart className="w-3 h-3" /> Favourites
+                </button>
+            </div>
 
             <StationGrid
                 stations={displayedStations}
@@ -163,7 +201,7 @@ const ModernAirwave: React.FC = () => {
                 error={stationsError}
                 currentStation={currentStation}
                 isPlaying={isPlaying}
-                isAudioLoading={isLoading}
+                isAudioLoading={isLoading || (!!audioError && !isPlaying)}
                 favorites={favorites}
                 onPlay={playStation}
                 onFavorite={toggleFavorite}

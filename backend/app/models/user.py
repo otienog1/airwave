@@ -88,6 +88,34 @@ class User:
         return cls(doc)
 
     @classmethod
+    def find_by_google_id(cls, google_id: str) -> 'User | None':
+        doc = get_users_col().find_one({'google_id': google_id})
+        return cls(doc) if doc else None
+
+    @classmethod
+    def create_google_user(cls, email: str, username: str, google_id: str) -> 'User':
+        col = get_users_col()
+        now = datetime.utcnow()
+        doc = {
+            'id': get_next_id('user'),
+            'email': email.lower().strip(),
+            'username': username.strip(),
+            'password_hash': None,
+            'google_id': google_id,
+            'is_admin': False,
+            'is_active': True,
+            'favorite_station_ids': [],
+            'last_login': now,
+            'created_at': now,
+        }
+        col.insert_one(doc)
+        return cls(doc)
+
+    def link_google_id(self, google_id: str) -> None:
+        get_users_col().update_one({'id': self.id}, {'$set': {'google_id': google_id}})
+        self._doc['google_id'] = google_id
+
+    @classmethod
     def find_by_email(cls, email: str) -> 'User | None':
         doc = get_users_col().find_one({'email': email.lower().strip()})
         return cls(doc) if doc else None
@@ -109,6 +137,17 @@ class User:
     @classmethod
     def username_exists(cls, username: str) -> bool:
         return get_users_col().count_documents({'username': username.strip()}) > 0
+
+    def update_profile(self, username: str = None, email: str = None) -> None:
+        updates = {}
+        if username is not None:
+            updates['username'] = username.strip()
+            self._doc['username'] = username.strip()
+        if email is not None:
+            updates['email'] = email.lower().strip()
+            self._doc['email'] = email.lower().strip()
+        if updates:
+            get_users_col().update_one({'id': self.id}, {'$set': updates})
 
     def update_last_login(self) -> None:
         now = datetime.utcnow()

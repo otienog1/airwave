@@ -1,0 +1,25 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - button "Nu'Radio" [ref=e6] [cursor=pointer]:
+        - img [ref=e8]
+        - generic [ref=e15]: Nu'Radio
+    - main [ref=e19]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - heading "Live Stations" [level=2] [ref=e24]
+            - paragraph [ref=e25]: … · Kenya's Best Radio
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - img
+              - textbox "Search stations" [ref=e28]:
+                - /placeholder: Search stations...
+            - button "Toggle filters" [ref=e29] [cursor=pointer]:
+              - img [ref=e30]
+              - text: Filters
+        - generic [ref=e41]:
+          - paragraph [ref=e42]: Genre
+          - button "All" [pressed] [ref=e44] [cursor=pointer]
+      - paragraph [ref=e45]: 📻 All Stations
+  - region "Notifications alt+T"

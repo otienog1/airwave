@@ -4,14 +4,16 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
+import { ProfileModal } from '@/components/auth/ProfileModal';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { Radio, User, LogOut, Settings, Heart, ChevronDown } from 'lucide-react';
+import { Radio, User, LogOut, Settings, ChevronDown, UserCog } from 'lucide-react';
 
 export const Header: React.FC = () => {
     const router = useRouter();
     const { user, logout, isAuthenticated, loading } = useAuth();
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
+    const [showProfileModal, setShowProfileModal] = useState(false);
 
     return (
         <>
@@ -24,7 +26,7 @@ export const Header: React.FC = () => {
                     borderBottom: '1px solid var(--color-border)',
                 }}
             >
-                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                <div className="max-w-7xl lg:max-w-screen-2xl mx-auto px-4 sm:px-6">
                     <div className="flex items-center justify-between h-16">
 
                         {/* Logo */}
@@ -37,16 +39,10 @@ export const Header: React.FC = () => {
                             </div>
                             <div>
                                 <div
-                                    className="text-lg font-bold tracking-tight leading-none"
+                                    className="text-base font-bold uppercase tracking-widest leading-none"
                                     style={{ color: 'var(--color-text-primary)' }}
                                 >
-                                    AirWave
-                                </div>
-                                <div
-                                    className="text-xs hidden sm:block leading-none mt-0.5"
-                                    style={{ color: 'var(--color-text-muted)' }}
-                                >
-                                    Kenya&apos;s Radio
+                                    MBR
                                 </div>
                             </div>
                         </button>
@@ -120,14 +116,14 @@ export const Header: React.FC = () => {
 
                                                 <div className="py-1">
                                                     <button
-                                                        onClick={() => { router.push('/?view=favorites'); setShowUserMenu(false); }}
+                                                        onClick={() => { setShowProfileModal(true); setShowUserMenu(false); }}
                                                         className="w-full text-left px-4 py-2.5 flex items-center gap-2.5 text-sm transition-colors"
                                                         style={{ color: 'var(--color-text-secondary)' }}
                                                         onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-overlay-hover)')}
                                                         onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                                                     >
-                                                        <Heart className="w-4 h-4" />
-                                                        My Favorites
+                                                        <UserCog className="w-4 h-4" />
+                                                        Edit Profile
                                                     </button>
 
                                                     {user?.is_admin && (
@@ -174,6 +170,7 @@ export const Header: React.FC = () => {
             </header>
 
             <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+            <ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
         </>
     );
 };

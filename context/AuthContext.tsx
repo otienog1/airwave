@@ -9,6 +9,8 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<string | null>;
   register: (email: string, username: string, password: string) => Promise<string | null>;
   logout: () => Promise<void>;
+  updateProfile: (username: string, email: string) => Promise<string | null>;
+  loginWithGoogle: (accessToken: string) => Promise<string | null>;
   isAuthenticated: boolean;
 }
 
@@ -60,12 +62,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   };
 
+  const updateProfile = async (username: string, email: string): Promise<string | null> => {
+    const response = await apiService.updateProfile(username, email);
+    if (response.data) {
+      setUser(response.data.user);
+      return null;
+    }
+    return response.error || 'Update failed';
+  };
+
+  const loginWithGoogle = async (accessToken: string): Promise<string | null> => {
+    const response = await apiService.googleAuth(accessToken);
+    if (response.data) {
+      setUser(response.data.user);
+      return null;
+    }
+    return response.error || 'Google sign-in failed';
+  };
+
   const value = {
     user,
     loading,
     login,
     register,
     logout,
+    updateProfile,
+    loginWithGoogle,
     isAuthenticated: !!user,
   };
 
