@@ -50,6 +50,14 @@ def create_app(config_name='development', test_config=None):
         allow_headers=['Content-Type'],
     )
 
+    from .db import ensure_indexes, ensure_counters
+    try:
+        ensure_indexes()
+        ensure_counters()
+    except Exception as _e:
+        import logging as _logging
+        _logging.warning(f"Startup DB setup warning: {_e}")
+
     from .stations_bp import stations_bp
     from .auth_bp import auth_bp
     from .admin_bp import admin_bp

@@ -43,6 +43,14 @@ def get_next_id(name: str) -> int:
     )
     return result['seq']
 
+def ensure_counters() -> None:
+    """Sync counters to max existing IDs to prevent collisions after manual inserts."""
+    col = get_counters_col()
+    for name, collection in (('user', get_users_col()), ('station', get_stations_col())):
+        top = collection.find_one({}, sort=[(name if name == 'station' else 'id', DESCENDING)])
+        max_id = top['id'] if top and 'id' in top else 0
+        col.update_one({'_id': name}, {'$max': {'seq': max_id}}, upsert=True)
+
 def ensure_indexes() -> None:
     stations = get_stations_col()
     stations.create_index([('id', ASCENDING)], unique=True, name='station_id_unique')
