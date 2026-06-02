@@ -22,6 +22,7 @@ interface PlayerContextValue {
     clearError: () => void;
     nowPlaying: string | null;
     listenerCounts: Record<number, number>;
+    streamListeners: number | null;
 }
 
 const PlayerContext = createContext<PlayerContextValue | null>(null);
@@ -33,7 +34,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         },
     });
 
-    const { title: nowPlaying } = useStreamMetadata(
+    const { title: nowPlaying, listeners: streamListeners } = useStreamMetadata(
         player.isPlaying && player.currentStation ? player.currentStation.id : null,
         player.currentStation
     );
@@ -54,7 +55,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     }, [player.currentStation, player.isPlaying, nowPlaying]);
 
     return (
-        <PlayerContext.Provider value={{ ...player, nowPlaying: nowPlaying ?? null, listenerCounts }}>
+        <PlayerContext.Provider value={{ ...player, nowPlaying: nowPlaying ?? null, listenerCounts, streamListeners: streamListeners ?? null }}>
             {children}
         </PlayerContext.Provider>
     );

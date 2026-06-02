@@ -13,11 +13,15 @@ export const PersistentAudioPlayer: React.FC = () => {
         isLoading,
         nowPlaying,
         listenerCounts,
+        streamListeners,
         togglePlay,
         stopPlayback,
         handleVolumeChange,
         toggleMute,
     } = usePlayer();
+
+    const sessionListeners = currentStation ? (listenerCounts[currentStation.id] ?? 0) : 0;
+    const liveListeners = streamListeners ?? sessionListeners;
 
     return (
         <AudioPlayer
@@ -31,7 +35,7 @@ export const PersistentAudioPlayer: React.FC = () => {
             onMuteToggle={toggleMute}
             isLoading={isLoading}
             nowPlaying={nowPlaying}
-            liveListeners={currentStation ? (listenerCounts[currentStation.id] ?? 0) : 0}
+            liveListeners={liveListeners}
         />
     );
 };
