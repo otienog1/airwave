@@ -29,6 +29,17 @@ export const PersistentAudioPlayer: React.FC = () => {
 =======
     const [sheetOpen, setSheetOpen] = useState(false);
 
+    const touchStartYRef = React.useRef<number>(0);
+
+    const handlePlayerTouchStart = (e: React.TouchEvent) => {
+        touchStartYRef.current = e.touches[0].clientY;
+    };
+
+    const handlePlayerTouchEnd = (e: React.TouchEvent) => {
+        const delta = touchStartYRef.current - e.changedTouches[0].clientY;
+        if (delta > 48) setSheetOpen(true); // swipe up ≥ 48px opens the sheet
+    };
+
     const liveListeners = streamListeners
         ?? (currentStation ? (listenerCounts[currentStation.id] ?? 0) : 0);
 
@@ -45,22 +56,28 @@ export const PersistentAudioPlayer: React.FC = () => {
                     : ''}
             </div>
 
-            <AudioPlayer
-                currentStation={currentStation}
-                isPlaying={isPlaying}
-                volume={volume}
-                isMuted={isMuted}
-                onTogglePlay={togglePlay}
-                onStopPlayback={stopPlayback}
-                onVolumeChange={handleVolumeChange}
-                onMuteToggle={toggleMute}
-                isLoading={isLoading}
-                nowPlaying={nowPlaying}
-                liveListeners={liveListeners}
-                onExpand={() => setSheetOpen(true)}
-                statusText={statusText}
-                statusLevel={statusLevel}
-            />
+            <div
+                onTouchStart={handlePlayerTouchStart}
+                onTouchEnd={handlePlayerTouchEnd}
+                style={{ touchAction: 'pan-x' }}
+            >
+                <AudioPlayer
+                    currentStation={currentStation}
+                    isPlaying={isPlaying}
+                    volume={volume}
+                    isMuted={isMuted}
+                    onTogglePlay={togglePlay}
+                    onStopPlayback={stopPlayback}
+                    onVolumeChange={handleVolumeChange}
+                    onMuteToggle={toggleMute}
+                    isLoading={isLoading}
+                    nowPlaying={nowPlaying}
+                    liveListeners={liveListeners}
+                    onExpand={() => setSheetOpen(true)}
+                    statusText={statusText}
+                    statusLevel={statusLevel}
+                />
+            </div>
 
             <NowPlayingSheet open={sheetOpen} onClose={() => setSheetOpen(false)} />
         </>
