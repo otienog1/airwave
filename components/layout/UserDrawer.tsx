@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { X, User, LogOut, Settings, UserCog, LogIn } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -13,7 +13,6 @@ interface UserDrawerProps {
     onSignIn: () => void;
 }
 
-/** Right-side account drawer: profile, theme, navigation, sign in/out. */
 export const UserDrawer: React.FC<UserDrawerProps> = ({
     isOpen,
     onClose,
@@ -22,38 +21,31 @@ export const UserDrawer: React.FC<UserDrawerProps> = ({
 }) => {
     const router = useRouter();
     const { user, logout, isAuthenticated } = useAuth();
-    const [mounted, setMounted] = useState(isOpen);
-
-    useEffect(() => {
-        if (isOpen) {
-            setMounted(true);
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => { document.body.style.overflow = 'unset'; };
-    }, [isOpen]);
 
     useEffect(() => {
         if (!isOpen) return;
+        document.body.style.overflow = 'hidden';
         const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
         document.addEventListener('keydown', onKey);
-        return () => document.removeEventListener('keydown', onKey);
+        return () => {
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', onKey);
+        };
     }, [isOpen, onClose]);
 
-    if (!mounted) return null;
+    if (!isOpen) return null;
 
     const itemClass =
         'w-full text-left px-4 py-3 flex items-center gap-3 text-sm rounded-xl transition-colors cursor-pointer hover:bg-[var(--color-overlay-hover)]';
 
     return (
         <div
-            className={`fixed inset-0 z-[70] ${isOpen ? 'modal-overlay-enter' : 'modal-overlay-exit'}`}
+            className="fixed inset-0 z-[70]"
             style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
             onClick={onClose}
         >
             <aside
-                className={`absolute inset-y-0 left-0 w-80 max-w-[85vw] flex flex-col ${isOpen ? 'drawer-enter' : 'drawer-exit'}`}
+                className="absolute inset-y-0 left-0 w-80 max-w-[85vw] flex flex-col"
                 style={{
                     background: 'var(--color-surface)',
                     borderRight: '1px solid var(--color-border-strong)',
@@ -64,7 +56,6 @@ export const UserDrawer: React.FC<UserDrawerProps> = ({
                 aria-modal="true"
                 aria-label="Account menu"
                 onClick={e => e.stopPropagation()}
-                onAnimationEnd={() => { if (!isOpen) setMounted(false); }}
             >
                 {/* Header row */}
                 <div
@@ -105,11 +96,8 @@ export const UserDrawer: React.FC<UserDrawerProps> = ({
 
                 {/* Body */}
                 <div className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
-                    {/* Theme */}
                     <div className="flex items-center justify-between px-4 py-2.5 rounded-xl">
-                        <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                            Theme
-                        </span>
+                        <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Theme</span>
                         <ThemeToggle />
                     </div>
 
@@ -146,7 +134,6 @@ export const UserDrawer: React.FC<UserDrawerProps> = ({
                     )}
                 </div>
 
-                {/* Footer: sign out */}
                 {isAuthenticated && (
                     <div className="px-3 py-3" style={{ borderTop: '1px solid var(--color-border)' }}>
                         <button
