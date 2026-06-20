@@ -9,6 +9,9 @@ import { VolumeControl } from './VolumeControl';
 import { getGenreTheme } from '@/lib/genreTheme';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { slugify } from '@/lib/slug';
+import { useStations } from '@/hooks/useStations';
+import { StationTile } from '@/components/station/StationTile';
+import { Shelf } from '@/components/ui/Shelf';
 
 interface NowPlayingSheetProps {
     open: boolean;
@@ -59,6 +62,26 @@ export const NowPlayingSheet: React.FC<NowPlayingSheetProps> = ({ open, onClose 
         const delta = e.changedTouches[0].clientY - sheetTouchStartYRef.current;
         if (delta > 80) onClose(); // swipe down ≥ 80px from drag handle area
     };
+
+    const { stations: allStations } = useStations({ autoFetch: true });
+
+    const similar = currentStation
+        ? allStations
+              .filter(s =>
+                  s.id !== currentStation.id &&
+                  (s.genre === currentStation.genre || s.region === currentStation.region)
+              )
+              .sort((a, b) => {
+                  const aScore =
+                      (a.genre === currentStation.genre ? 2 : 0) +
+                      (a.region === currentStation.region ? 1 : 0);
+                  const bScore =
+                      (b.genre === currentStation.genre ? 2 : 0) +
+                      (b.region === currentStation.region ? 1 : 0);
+                  return bScore - aScore;
+              })
+              .slice(0, 8)
+        : [];
 
     if (!open || !currentStation) return null;
 
@@ -241,6 +264,20 @@ export const NowPlayingSheet: React.FC<NowPlayingSheetProps> = ({ open, onClose 
                             limit={6}
                         />
                     </div>
+
+                    {similar.length > 0 && (
+                        <div className="mt-6 pb-6">
+                            <Shelf title="More like this">
+                                {similar.map(s => (
+                                    <StationTile
+                                        key={s.id}
+                                        station={s}
+                                        isPlaying={currentStation?.id === s.id && isPlaying}
+                                    />
+                                ))}
+                            </Shelf>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
