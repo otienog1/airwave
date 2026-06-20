@@ -12,7 +12,15 @@ export function useAudioPlayer(options: UseAudioPlayerOptions = {}) {
   const [currentStation, setCurrentStation] = useState<Station | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [volume, setVolume] = useState(options.volume ?? 0.8);
+  const [volume, setVolume] = useState<number>(() => {
+    if (typeof window === 'undefined') return options.volume ?? 0.8;
+    const saved = localStorage.getItem('airwave_volume');
+    if (saved !== null) {
+      const parsed = parseFloat(saved);
+      if (!isNaN(parsed) && parsed >= 0 && parsed <= 1) return parsed;
+    }
+    return options.volume ?? 0.8;
+  });
   const [isMuted, setIsMuted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -251,6 +259,7 @@ export function useAudioPlayer(options: UseAudioPlayerOptions = {}) {
 
   const handleVolumeChange = useCallback((newVolume: number) => {
     setVolume(newVolume);
+    try { localStorage.setItem('airwave_volume', String(newVolume)); } catch {}
     if (newVolume === 0) {
       setIsMuted(true);
     } else {
