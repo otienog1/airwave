@@ -7,6 +7,8 @@ import { StationArt } from '@/components/station/StationArt';
 import { RecentTracks } from '@/components/station/RecentTracks';
 import { VolumeControl } from './VolumeControl';
 import { getGenreTheme } from '@/lib/genreTheme';
+import { ShareButton } from '@/components/ui/ShareButton';
+import { slugify } from '@/lib/slug';
 
 interface NowPlayingSheetProps {
     open: boolean;
@@ -110,7 +112,10 @@ export const NowPlayingSheet: React.FC<NowPlayingSheetProps> = ({ open, onClose 
                         >
                             Now Playing
                         </span>
-                        <span className="w-11" aria-hidden="true" />
+                        <ShareButton
+                            stationName={currentStation.name}
+                            stationSlug={slugify(currentStation.name)}
+                        />
                     </div>
 
                     {/* Artwork */}
