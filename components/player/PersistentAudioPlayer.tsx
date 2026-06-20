@@ -22,11 +22,6 @@ export const PersistentAudioPlayer: React.FC = () => {
         toggleMute,
     } = usePlayer();
 
-<<<<<<< HEAD
-    const liveListeners = currentStation
-        ? (streamListeners ?? listenerCounts[currentStation.id] ?? 0)
-        : 0;
-=======
     const [sheetOpen, setSheetOpen] = useState(false);
 
     const touchStartYRef = React.useRef<number>(0);
@@ -37,7 +32,7 @@ export const PersistentAudioPlayer: React.FC = () => {
 
     const handlePlayerTouchEnd = (e: React.TouchEvent) => {
         const delta = touchStartYRef.current - e.changedTouches[0].clientY;
-        if (delta > 48) setSheetOpen(true); // swipe up ≥ 48px opens the sheet
+        if (delta > 48) setSheetOpen(true);
     };
 
     const liveListeners = streamListeners
@@ -45,7 +40,6 @@ export const PersistentAudioPlayer: React.FC = () => {
 
     const statusText: string | null = error ?? (isLoading ? 'Buffering…' : null);
     const statusLevel: 'info' | 'error' = error ? 'error' : 'info';
->>>>>>> 0fd1aed (feat: show buffering and error status in player bar)
 
     return (
         <>
