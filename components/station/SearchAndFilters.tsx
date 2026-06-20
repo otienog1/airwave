@@ -1,8 +1,7 @@
 'use client';
 
-import React, { forwardRef, useRef, useEffect, useState, type ReactNode } from 'react';
+import React, { forwardRef, useState, type ReactNode } from 'react';
 import { Search, X, SlidersHorizontal } from 'lucide-react';
-import { gsap } from 'gsap';
 
 interface SearchAndFiltersProps {
     searchTerm: string;
@@ -111,28 +110,6 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
         const showRegions = regions.length > 2;
         const filtersActive = selectedGenre !== 'All' || selectedRegion !== 'All';
 
-        const filterPanelDesktopRef = useRef<HTMLDivElement>(null);
-        const filterPanelMobileRef = useRef<HTMLDivElement>(null);
-        const isFirstRender = useRef(true);
-
-        useEffect(() => {
-            const panels = [filterPanelDesktopRef.current, filterPanelMobileRef.current].filter(Boolean) as HTMLDivElement[];
-            if (isFirstRender.current) {
-                isFirstRender.current = false;
-                panels.forEach(p => gsap.set(p, { height: 0, opacity: 0, marginTop: 0 }));
-                return;
-            }
-            if (showFilters) {
-                panels.forEach(p =>
-                    gsap.to(p, { height: 'auto', opacity: 1, marginTop: 12, duration: 0.3, ease: 'power2.out', overwrite: true })
-                );
-            } else {
-                panels.forEach(p =>
-                    gsap.to(p, { height: 0, opacity: 0, marginTop: 0, duration: 0.2, ease: 'power2.in', overwrite: true })
-                );
-            }
-        }, [showFilters]);
-
         return (
             <div className="mb-0 sm:mb-6">
                 {/* ── Desktop ─────────────────────────────────────────── */}
@@ -145,19 +122,13 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                             >
                                 Live Stations
                             </h2>
-                            <p
-                                className="text-sm mt-0.5"
-                                style={{ color: 'var(--color-text-secondary)' }}
-                            >
-                                {loading
-                                    ? '…'
-                                    : `${stationCount} station${stationCount !== 1 ? 's' : ''}`}{' '}
+                            <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
+                                {loading ? '…' : `${stationCount} station${stationCount !== 1 ? 's' : ''}`}{' '}
                                 · Kenya&apos;s Best Radio
                             </p>
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0">
-                            {/* Search */}
                             <div className="relative w-72">
                                 <Search
                                     className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
@@ -188,7 +159,6 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                                 )}
                             </div>
 
-                            {/* Filter toggle */}
                             <button
                                 onClick={() => setShowFilters((f) => !f)}
                                 aria-expanded={showFilters}
@@ -197,8 +167,7 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                                 style={
                                     showFilters
                                         ? {
-                                              background:
-                                                  'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
                                               color: '#ffffff',
                                               border: '1px solid transparent',
                                           }
@@ -213,64 +182,50 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                                 {filtersActive && !showFilters && (
                                     <span
                                         className="absolute -top-1 -right-1 w-2 h-2 rounded-full"
-                                        style={{
-                                            background: '#6366f1',
-                                            border: '2px solid var(--color-bg)',
-                                        }}
+                                        style={{ background: '#6366f1', border: '2px solid var(--color-bg)' }}
                                     />
                                 )}
                             </button>
                         </div>
                     </div>
 
-                    {/* GSAP-animated filter panel */}
-                    <div ref={filterPanelDesktopRef} style={{ overflow: 'hidden', height: 0, opacity: 0 }}>
-                        <div
-                            className="rounded-2xl p-4"
-                            style={{
-                                background: 'var(--color-surface-raised)',
-                                border: '1px solid var(--color-border)',
-                            }}
-                        >
-                            {/* Desktop: side by side wrapping */}
-                            <div className="hidden sm:flex items-start gap-6">
-                                <div className="flex-1 min-w-0">
-                                    <FilterSection
-                                        label="Genre"
-                                        items={genres}
-                                        selected={selectedGenre}
-                                        onSelect={onGenreChange}
-                                    />
-                                </div>
-                                {showRegions && (
-                                    <div className="shrink-0">
+                    {/* Filter panel */}
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateRows: showFilters ? '1fr' : '0fr',
+                            opacity: showFilters ? 1 : 0,
+                            transition: 'grid-template-rows 280ms ease, opacity 200ms ease',
+                        }}
+                    >
+                        <div style={{ overflow: 'hidden' }}>
+                            <div
+                                className="rounded-2xl p-4 mt-3"
+                                style={{
+                                    background: 'var(--color-surface-raised)',
+                                    border: '1px solid var(--color-border)',
+                                }}
+                            >
+                                <div className="flex items-start gap-6">
+                                    <div className="flex-1 min-w-0">
                                         <FilterSection
-                                            label="Region"
-                                            items={regions}
-                                            selected={selectedRegion}
-                                            onSelect={onRegionChange}
+                                            label="Genre"
+                                            items={genres}
+                                            selected={selectedGenre}
+                                            onSelect={onGenreChange}
                                         />
                                     </div>
-                                )}
-                            </div>
-                            {/* Mobile: two scrollable rows */}
-                            <div className="flex flex-col gap-3 sm:hidden">
-                                <FilterSection
-                                    label="Genre"
-                                    items={genres}
-                                    selected={selectedGenre}
-                                    onSelect={onGenreChange}
-                                    scroll
-                                />
-                                {showRegions && (
-                                    <FilterSection
-                                        label="Region"
-                                        items={regions}
-                                        selected={selectedRegion}
-                                        onSelect={onRegionChange}
-                                        scroll
-                                    />
-                                )}
+                                    {showRegions && (
+                                        <div className="shrink-0">
+                                            <FilterSection
+                                                label="Region"
+                                                items={regions}
+                                                selected={selectedRegion}
+                                                onSelect={onRegionChange}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -281,7 +236,6 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                 {/* ── Mobile ──────────────────────────────────────────── */}
                 <div className="flex flex-col sm:hidden">
                     <div className="flex items-center gap-2">
-                        {/* Search */}
                         <div className="relative flex-1">
                             <Search
                                 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
@@ -311,7 +265,6 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                             )}
                         </div>
 
-                        {/* Filter toggle — icon only on mobile */}
                         <button
                             onClick={() => setShowFilters((f) => !f)}
                             aria-expanded={showFilters}
@@ -320,8 +273,7 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                             style={
                                 showFilters
                                     ? {
-                                          background:
-                                              'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                          background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
                                           color: '#ffffff',
                                           border: '1px solid transparent',
                                       }
@@ -336,41 +288,47 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                             {filtersActive && !showFilters && (
                                 <span
                                     className="absolute -top-1 -right-1 w-2 h-2 rounded-full"
-                                    style={{
-                                        background: '#6366f1',
-                                        border: '2px solid var(--color-bg)',
-                                    }}
+                                    style={{ background: '#6366f1', border: '2px solid var(--color-bg)' }}
                                 />
                             )}
                         </button>
                     </div>
 
-                    {/* GSAP-animated filter panel */}
-                    <div ref={filterPanelMobileRef} style={{ overflow: 'hidden', height: 0, opacity: 0 }}>
-                        <div
-                            className="rounded-2xl p-4"
-                            style={{
-                                background: 'var(--color-surface-raised)',
-                                border: '1px solid var(--color-border)',
-                            }}
-                        >
-                            <div className="flex flex-col gap-3">
-                                <FilterSection
-                                    label="Genre"
-                                    items={genres}
-                                    selected={selectedGenre}
-                                    onSelect={onGenreChange}
-                                    scroll
-                                />
-                                {showRegions && (
+                    {/* Filter panel */}
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateRows: showFilters ? '1fr' : '0fr',
+                            opacity: showFilters ? 1 : 0,
+                            transition: 'grid-template-rows 280ms ease, opacity 200ms ease',
+                        }}
+                    >
+                        <div style={{ overflow: 'hidden' }}>
+                            <div
+                                className="rounded-2xl p-4 mt-3"
+                                style={{
+                                    background: 'var(--color-surface-raised)',
+                                    border: '1px solid var(--color-border)',
+                                }}
+                            >
+                                <div className="flex flex-col gap-3">
                                     <FilterSection
-                                        label="Region"
-                                        items={regions}
-                                        selected={selectedRegion}
-                                        onSelect={onRegionChange}
+                                        label="Genre"
+                                        items={genres}
+                                        selected={selectedGenre}
+                                        onSelect={onGenreChange}
                                         scroll
                                     />
-                                )}
+                                    {showRegions && (
+                                        <FilterSection
+                                            label="Region"
+                                            items={regions}
+                                            selected={selectedRegion}
+                                            onSelect={onRegionChange}
+                                            scroll
+                                        />
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

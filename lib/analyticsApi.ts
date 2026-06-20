@@ -1,4 +1,6 @@
-const BACKEND = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+// Relative path: Flask endpoints are reached through the Next.js proxy
+// (fallback rewrite), so the browser never makes a cross-origin request.
+const BACKEND = '/api';
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${BACKEND}${path}`, { credentials: 'include' });
@@ -228,3 +230,112 @@ export function fetchTrendingNow(): Promise<TrendingNowResponse> {
 }
 
 export const PERIOD_HOURS: Record<number, number> = { 1: 24, 7: 168, 30: 720, 90: 2160 };
+
+// ── Live Pulse (Next.js route, in-app heartbeat sessions) ──────────────────
+
+export interface LivePulseStation {
+  station_id: number;
+  station_name: string;
+  listeners: number;
+  now_playing: string | null;
+}
+
+export interface LivePulseResponse {
+  total_listeners: number;
+  stations_active: number;
+  started_last_hour: number;
+  avg_session_minutes: number;
+  stations: LivePulseStation[];
+  feed: { station_name: string; started_at: string }[];
+  timestamp: string;
+}
+
+export function fetchLivePulse(): Promise<LivePulseResponse> {
+  return get('/analytics/live-pulse');
+}
+
+// ── Audience insights: peak + WoW movers (Next.js route) ───────────────────
+
+export interface AudienceMover {
+  station_id: number;
+  station_name: string;
+  current: number;
+  previous: number;
+  growth_pct: number;
+}
+
+export interface AudienceInsightsResponse {
+  days: number;
+  peak: { listeners: number; at: string } | null;
+  movers: AudienceMover[];
+}
+
+export function fetchAudienceInsights(days: number): Promise<AudienceInsightsResponse> {
+  return get(`/analytics/audience-insights?days=${days}`);
+}
+
+// ── Song impact: listener delta per track (Next.js route) ──────────────────
+
+export interface SongImpactEntry {
+  title: string;
+  artist: string | null;
+  avg_delta: number;
+  plays: number;
+  avg_start: number;
+}
+
+export interface SongImpactResponse {
+  days: number;
+  gainers: SongImpactEntry[];
+  losers: SongImpactEntry[];
+  sample_size: number;
+}
+
+export function fetchSongImpact(days: number): Promise<SongImpactResponse> {
+  return get(`/analytics/song-impact?days=${days}`);
+}
+
+// ── Metadata quality (Next.js route) ───────────────────────────────────────
+
+export interface MetadataQualityStation {
+  station_id: number;
+  station_name: string;
+  uptime_pct: number;
+  metadata_rate_pct: number;
+  primary_source: string | null;
+  sources: { zetta: number; icecast: number; icy: number; none: number };
+  last_title_at: string | null;
+  stale: boolean;
+}
+
+export interface MetadataQualityResponse {
+  days: number;
+  stations: MetadataQualityStation[];
+}
+
+export function fetchMetadataQuality(days: number): Promise<MetadataQualityResponse> {
+  return get(`/analytics/metadata-quality?days=${days}`);
+}
+
+// ── Retention cohorts (Next.js route) ──────────────────────────────────────
+
+export interface RetentionWeek {
+  week: string;
+  returned: number;
+  pct: number;
+}
+
+export interface RetentionCohort {
+  week: string;
+  size: number;
+  retention: RetentionWeek[];
+}
+
+export interface RetentionResponse {
+  weeks: number;
+  cohorts: RetentionCohort[];
+}
+
+export function fetchRetention(weeks: number): Promise<RetentionResponse> {
+  return get(`/analytics/retention?weeks=${weeks}`);
+}

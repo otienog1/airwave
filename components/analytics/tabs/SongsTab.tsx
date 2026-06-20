@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { fetchTrending, PERIOD_HOURS, type TrendingEntry } from '@/lib/analyticsApi';
 import { SkeletonCard } from '../SkeletonCard';
 import { HBarChart } from '../charts/HBarChart';
+import { SongImpactPanel } from '../InsightPanels';
 
 function fmtDuration(sec: number | null) {
   if (!sec || sec === 0) return '—';
@@ -166,6 +167,9 @@ export function SongsTab({ period }: Props) {
           Source: track metadata from live stream detection
         </p>
       </div>
+
+      {/* Listener-impact leaderboard: which songs grow or lose the audience */}
+      <SongImpactPanel period={period} />
     </div>
   );
 }

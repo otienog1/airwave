@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Layout } from '@/components/layout/Layout';
 import { LiveStatusBar } from '@/components/analytics/LiveStatusBar';
 import { PeriodFilter } from '@/components/analytics/PeriodFilter';
+import { LivePulseTab } from '@/components/analytics/tabs/LivePulseTab';
 import { OverviewTab } from '@/components/analytics/tabs/OverviewTab';
 import { StationsTab } from '@/components/analytics/tabs/StationsTab';
 import { SongsTab } from '@/components/analytics/tabs/SongsTab';
@@ -15,9 +16,10 @@ import { HealthTab } from '@/components/analytics/tabs/HealthTab';
 import { AudienceTab } from '@/components/analytics/tabs/AudienceTab';
 import { fetchRealTime, type RealTimeResponse } from '@/lib/analyticsApi';
 
-type Tab = 'overview' | 'audience' | 'stations' | 'songs' | 'genres' | 'health';
+type Tab = 'pulse' | 'overview' | 'audience' | 'stations' | 'songs' | 'genres' | 'health';
 
 const TABS: { id: Tab; label: string }[] = [
+  { id: 'pulse',     label: 'Live Pulse' },
   { id: 'overview',  label: 'Overview' },
   { id: 'audience',  label: 'Audience' },
   { id: 'stations',  label: 'Stations' },
@@ -41,7 +43,7 @@ function AnalyticsPageInner() {
   const params = useSearchParams();
   const { user, loading } = useAuth();
 
-  const tab = (params.get('tab') as Tab) || 'overview';
+  const tab = (params.get('tab') as Tab) || 'pulse';
   const period = VALID_PERIODS.includes(Number(params.get('period')))
     ? Number(params.get('period'))
     : 7;
@@ -130,6 +132,7 @@ function AnalyticsPageInner() {
 
           {/* Tab content */}
           <div role="tabpanel">
+            {tab === 'pulse'     && <LivePulseTab />}
             {tab === 'overview'  && <OverviewTab period={period} realtime={realtime} />}
             {tab === 'audience'  && <AudienceTab period={period} />}
             {tab === 'stations'  && <StationsTab period={period} realtime={realtime} />}

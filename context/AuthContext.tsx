@@ -25,9 +25,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const handler = () => setUser(null);
-    window.addEventListener('auth:expired', handler);
-    return () => window.removeEventListener('auth:expired', handler);
+    apiService.setOnUnauthorized(() => setUser(null));
+    return () => apiService.setOnUnauthorized(undefined);
   }, []);
 
   const checkAuth = async () => {

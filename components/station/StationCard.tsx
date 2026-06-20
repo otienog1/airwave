@@ -1,23 +1,13 @@
 'use client';
-import React, { useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { Heart, Play, Pause, Loader2 } from 'lucide-react';
 import { Station } from '../../types/Station';
-import { Heart } from 'lucide-react';
-import { PlayButton } from './PlayButton';
-import { StationAvatar } from './StationAvatar';
-
-const GENRE_COLORS: Record<string, { glow: string; accent: string }> = {
-    Pop:          { glow: 'rgba(236, 72, 153, 0.10)',  accent: '#ec4899' },
-    Soul:         { glow: 'rgba(245, 158, 11, 0.10)', accent: '#f59e0b' },
-    'Hip Hop':    { glow: 'rgba(124, 58, 237, 0.10)', accent: '#7c3aed' },
-    Urban:        { glow: 'rgba(79, 70, 229, 0.10)',  accent: '#4f46e5' },
-    Contemporary: { glow: 'rgba(5, 150, 105, 0.10)',  accent: '#059669' },
-    Talk:         { glow: 'rgba(71, 85, 105, 0.10)',  accent: '#3b82f6' },
-    News:         { glow: 'rgba(29, 78, 216, 0.10)',  accent: '#1d4ed8' },
-    Dance:        { glow: 'rgba(8, 145, 178, 0.10)',  accent: '#0891b2' },
-};
-
-const DEFAULT_COLOR = { glow: 'rgba(99, 102, 241, 0.10)', accent: '#6366f1' };
+import { StationArt } from './StationArt';
+import { getGenreTheme } from '@/lib/genreTheme';
+import { slugify } from '@/lib/slug';
+import { Badge } from '@/components/ui/Badge';
+import { Waveform } from '@/components/ui/Waveform';
 
 interface StationCardProps {
     station: Station;
@@ -42,137 +32,124 @@ export const StationCard: React.FC<StationCardProps> = ({
     nowPlaying,
     liveListeners = 0,
 }) => {
-    const colors = (station.genre ? GENRE_COLORS[station.genre] : undefined) ?? DEFAULT_COLOR;
-    const genre = station.genre ?? null;
-    const frequency = station.frequency ?? null;
-    const nowPlayingRef = useRef<HTMLSpanElement>(null);
-
-    useEffect(() => {
-        if (!nowPlayingRef.current || !nowPlaying) return;
-        gsap.fromTo(
-            nowPlayingRef.current,
-            { opacity: 0, y: 4 },
-            { opacity: 1, y: 0, duration: 0.22, ease: 'power2.out' }
-        );
-    }, [nowPlaying]);
+    const router = useRouter();
+    const colors = getGenreTheme(station.genre);
+    const isActive = isCurrentStation && isPlaying;
+    const showSpinner = Boolean(isLoading && isCurrentStation);
 
     return (
         <div
-            className="station-card"
+            className="group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ease-out hover:-translate-y-px"
             style={{
-                borderLeft: `3px solid ${isCurrentStation ? colors.accent : 'transparent'}`,
-                ...(isCurrentStation
-                    ? { boxShadow: `0 8px 32px ${colors.glow}` }
-                    : undefined),
+                background: 'var(--color-surface)',
+                border: `1px solid ${isCurrentStation ? colors.accent + '45' : 'var(--color-border)'}`,
+                boxShadow: isCurrentStation
+                    ? `0 0 0 1px ${colors.accent}18, 0 12px 48px ${colors.accent}14`
+                    : '0 1px 4px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)',
             }}
         >
-            <div className="p-4">
-                {/* Top row: icon + name + heart */}
-                <div className="flex items-center gap-3 mb-3">
-                    <div className="relative">
-                        <StationAvatar
-                            name={station.name}
-                            logoUrl={station.logo_url}
-                            accentColor={colors.accent}
-                            size={36}
-                            hideInitials={isPlaying && isCurrentStation}
-                        />
-                        {isPlaying && isCurrentStation && (
-                            <div
-                                className="absolute inset-0 rounded-xl flex items-center justify-center"
-                                style={{ background: colors.glow }}
-                            >
-                                <div className="flex items-end gap-0.5" style={{ height: '14px' }}>
-                                    {[0, 1, 2, 3].map(i => (
-                                        <div
-                                            key={i}
-                                            className="waveform-bar"
-                                            style={{ background: colors.accent, animationDelay: `${i * 0.15}s`, width: '2px', height: '14px' }}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                        <h3
-                            className="font-semibold text-sm leading-tight truncate"
-                            style={{ color: 'var(--color-text-primary)' }}
-                        >
-                            {station.name}
-                        </h3>
-                        <p
-                            className="text-xs truncate mt-0.5"
-                            style={{ color: 'var(--color-text-secondary)' }}
-                        >
-                            {station.description}
-                        </p>
-                    </div>
-
-                    <button
-                        onClick={(e) => { e.stopPropagation(); onFavorite(); }}
-                        className="shrink-0 p-1.5 rounded-lg transition-all duration-150 hover:scale-110 active:scale-95"
-                        style={{ color: isFavorite ? '#f87171' : 'var(--color-text-muted)' }}
-                        aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                    >
-                        <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
-                    </button>
-                </div>
-
-                {/* Meta row: live · genre | now playing marquee | frequency */}
-                <div className="flex items-center gap-2 mb-3">
-                    {station.is_live && (
-                        <>
-                            <span
-                                className="w-1.5 h-1.5 rounded-full shrink-0"
-                                style={{
-                                    background: '#4ade80',
-                                    animation: 'pulse-glow 1.5s ease-in-out infinite',
-                                }}
-                            />
-                            <span className="text-xs font-medium shrink-0" style={{ color: '#4ade80' }}>LIVE</span>
-                            {genre && <span className="text-xs shrink-0" style={{ color: 'var(--color-text-muted)' }}>·</span>}
-                        </>
-                    )}
-                    {genre && (
-                        <span className="text-xs shrink-0" style={{ color: 'var(--color-text-muted)' }}>
-                            {genre}
-                        </span>
-                    )}
-
-                    {/* Inline marquee between genre and frequency */}
-                    {nowPlaying && (
-                        <>
-                            <span className="text-xs shrink-0" style={{ color: 'var(--color-text-muted)' }}>·</span>
-                            <span ref={nowPlayingRef} className="flex-1 min-w-0 overflow-hidden">
-                                <span
-                                    className="flex whitespace-nowrap"
-                                    style={{ width: 'max-content', animation: 'marquee-scroll 12s linear infinite' }}
-                                >
-                                    <span className="text-xs pr-8" style={{ color: colors.accent }}>♪ {nowPlaying}</span>
-                                    <span className="text-xs pr-8" style={{ color: colors.accent }}>♪ {nowPlaying}</span>
-                                </span>
-                            </span>
-                        </>
-                    )}
-
-                    {frequency && (
-                        <span className="text-xs ml-auto shrink-0 tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
-                            {frequency}
-                        </span>
-                    )}
-                </div>
-
-                {/* Play button */}
-                <PlayButton
-                    isPlaying={isPlaying}
-                    isCurrentStation={isCurrentStation}
-                    isLoading={isLoading}
-                    isLive={station.is_live}
-                    onPlay={onPlay}
-                    accentColor={colors.accent}
+            {/* Art */}
+            <button
+                type="button"
+                onClick={() => router.push(`/station/${slugify(station.name)}`)}
+                className="relative block w-full overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+                style={{ aspectRatio: '1 / 1' }}
+                aria-label={`Open ${station.name} detail page`}
+            >
+                <StationArt
+                    name={station.name}
+                    logoUrl={station.logo_url}
+                    genre={station.genre}
+                    fill
+                    radius={0}
+                    className="absolute inset-0"
                 />
+
+                <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    style={{ background: 'rgba(0,0,0,0.12)' }}
+                    aria-hidden="true"
+                />
+
+                {isActive && (
+                    <div
+                        className="absolute inset-0 flex items-center justify-center"
+                        style={{ background: `${colors.accent}1e` }}
+                        aria-hidden="true"
+                    >
+                        <div
+                            className="px-4 py-2.5 rounded-2xl"
+                            style={{
+                                background: 'rgba(0,0,0,0.55)',
+                                backdropFilter: 'blur(16px)',
+                                WebkitBackdropFilter: 'blur(16px)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                            }}
+                        >
+                            <Waveform isAnimating={true} bars={6} color="#ffffff" height={20} />
+                        </div>
+                    </div>
+                )}
+
+                {station.is_live && (
+                    <Badge variant="live" pulse className="absolute top-2.5 left-2.5 font-bold uppercase tracking-widest">
+                        Live
+                    </Badge>
+                )}
+
+                {liveListeners > 0 && (
+                    <Badge variant="listeners" className="absolute bottom-2.5 left-2.5 tabular-nums">
+                        {liveListeners.toLocaleString()} listening
+                    </Badge>
+                )}
+            </button>
+
+            {/* Info + controls */}
+            <div className="flex items-center gap-1.5 px-3 pt-2.5 pb-3">
+                <div className="flex-1 min-w-0 mr-1">
+                    <p className="font-semibold text-[13px] leading-snug truncate" style={{ color: 'var(--color-text-primary)' }}>
+                        {station.name}
+                    </p>
+                    {nowPlaying ? (
+                        <p className="text-[11px] mt-[3px] truncate" style={{ color: colors.accent }}>♪ {nowPlaying}</p>
+                    ) : (
+                        <p className="text-[11px] mt-[3px] truncate" style={{ color: 'var(--color-text-muted)' }}>
+                            {[station.genre, station.frequency].filter(Boolean).join(' · ')}
+                        </p>
+                    )}
+                </div>
+
+                <button
+                    onClick={(e) => { e.stopPropagation(); onFavorite(); }}
+                    className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-150 hover:scale-110 active:scale-95 cursor-pointer"
+                    style={{ color: isFavorite ? '#f87171' : 'var(--color-text-muted)' }}
+                    aria-label={isFavorite ? 'Remove from favourites' : 'Add to favourites'}
+                    aria-pressed={isFavorite}
+                >
+                    <Heart className={`w-[15px] h-[15px] transition-transform duration-150 ${isFavorite ? 'fill-current scale-110' : ''}`} />
+                </button>
+
+                <button
+                    onClick={onPlay}
+                    disabled={!station.is_live || showSpinner}
+                    className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-150 active:scale-95 cursor-pointer"
+                    style={{
+                        background: isActive ? `${colors.accent}1c` : colors.accent,
+                        color: isActive ? colors.accent : '#fff',
+                        border: `1px solid ${isActive ? colors.accent + '40' : 'transparent'}`,
+                        opacity: (!station.is_live || showSpinner) ? 0.38 : 1,
+                        cursor: (!station.is_live || showSpinner) ? 'not-allowed' : 'pointer',
+                    }}
+                    aria-label={isActive ? 'Pause' : 'Play'}
+                >
+                    {showSpinner ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : isActive ? (
+                        <Pause className="w-4 h-4" />
+                    ) : (
+                        <Play className="w-4 h-4 ml-[2px]" />
+                    )}
+                </button>
             </div>
         </div>
     );

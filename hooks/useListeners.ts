@@ -1,17 +1,37 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { CLIENT_ROUTES } from '@/lib/routes';
 
-const LS_KEY = 'airwave_session_id';
+const SESSION_KEY = 'airwave_session_id';
+const DEVICE_KEY  = 'airwave_device_id';
 const HEARTBEAT_MS = 20_000;
 const COUNTS_POLL_MS = 15_000;
 
 function getOrCreateSessionId(): string {
   if (typeof window === 'undefined') return '';
-  let id = sessionStorage.getItem(LS_KEY);
+  let id = sessionStorage.getItem(SESSION_KEY);
   if (!id) {
     id = crypto.randomUUID();
-    sessionStorage.setItem(LS_KEY, id);
+    sessionStorage.setItem(SESSION_KEY, id);
   }
   return id;
+}
+
+/**
+ * Stable device identifier — lives in localStorage so it survives tab/browser
+ * restarts. Used to build retention cohorts without requiring sign-in.
+ */
+function getOrCreateDeviceId(): string {
+  if (typeof window === 'undefined') return '';
+  try {
+    let id = localStorage.getItem(DEVICE_KEY);
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem(DEVICE_KEY, id);
+    }
+    return id;
+  } catch {
+    return '';
+  }
 }
 
 async function apiPost(path: string, body: object): Promise<void> {
@@ -32,17 +52,19 @@ export function useListeners(
 ): Record<number, number> {
   const [listenerCounts, setListenerCounts] = useState<Record<number, number>>({});
   const sessionId      = useRef<string>('');
+  const deviceId       = useRef<string>('');
   const heartbeatTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const countsTimer    = useRef<ReturnType<typeof setInterval> | null>(null);
   const prevStationId  = useRef<number | null>(null);
 
   useEffect(() => {
     sessionId.current = getOrCreateSessionId();
+    deviceId.current  = getOrCreateDeviceId();
   }, []);
 
   const fetchCounts = useCallback(async () => {
     try {
-      const res  = await fetch('/api/listeners/counts');
+      const res  = await fetch(CLIENT_ROUTES.listeners.counts);
       const data = await res.json() as { counts: Record<number, number> };
       setListenerCounts(data.counts ?? {});
     } catch {
@@ -61,7 +83,7 @@ export function useListeners(
     stopHeartbeat();
     heartbeatTimer.current = setInterval(() => {
       if (sessionId.current) {
-        apiPost('/api/listeners/heartbeat', { sessionId: sessionId.current });
+        apiPost(CLIENT_ROUTES.listeners.heartbeat, { sessionId: sessionId.current });
       }
     }, HEARTBEAT_MS);
   }, [stopHeartbeat]);
@@ -77,7 +99,7 @@ export function useListeners(
 
     if (currentStationId === null) {
       if (prevStationId.current !== null) {
-        apiPost('/api/listeners/leave', { sessionId: sid }).then(fetchCounts);
+        apiPost(CLIENT_ROUTES.listeners.leave, { sessionId: sid }).then(fetchCounts);
       }
       stopHeartbeat();
       prevStationId.current = null;
@@ -88,14 +110,15 @@ export function useListeners(
     if (!stationChanged) return;
 
     const leavePromise = prevStationId.current !== null
-      ? apiPost('/api/listeners/leave', { sessionId: sid })
+      ? apiPost(CLIENT_ROUTES.listeners.leave, { sessionId: sid })
       : Promise.resolve();
 
     prevStationId.current = currentStationId;
 
     leavePromise.then(() =>
-      apiPost('/api/listeners/join', {
+      apiPost(CLIENT_ROUTES.listeners.join, {
         sessionId: sid,
+        deviceId: deviceId.current,
         stationId: currentStationId,
         stationName: currentStationName ?? '',
       }).then(fetchCounts)
@@ -118,7 +141,7 @@ export function useListeners(
     const sendLeaveBeacon = () => {
       if (sessionId.current && prevStationId.current !== null) {
         navigator.sendBeacon(
-          '/api/listeners/leave',
+          CLIENT_ROUTES.listeners.leave,
           new Blob([JSON.stringify({ sessionId: sessionId.current })], { type: 'application/json' })
         );
       }
@@ -128,7 +151,7 @@ export function useListeners(
     return () => {
       stopHeartbeat();
       if (sessionId.current && prevStationId.current !== null) {
-        apiPost('/api/listeners/leave', { sessionId: sessionId.current });
+        apiPost(CLIENT_ROUTES.listeners.leave, { sessionId: sessionId.current });
       }
       window.removeEventListener('beforeunload', sendLeaveBeacon);
       window.removeEventListener('pagehide', sendLeaveBeacon);

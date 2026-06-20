@@ -53,6 +53,16 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      fontSize: {
+        'label-xs': ['11px', { lineHeight: '1.45', fontWeight: '500', letterSpacing: '0.04em' }],
+        'label-sm': ['12px', { lineHeight: '1.4',  fontWeight: '500' }],
+        'body-sm':  ['13px', { lineHeight: '1.5',  fontWeight: '400' }],
+        'body':     ['15px', { lineHeight: '1.6',  fontWeight: '400' }],
+        'title-sm': ['15px', { lineHeight: '1.4',  fontWeight: '600' }],
+        'title':    ['17px', { lineHeight: '1.3',  fontWeight: '600' }],
+        'headline': ['22px', { lineHeight: '1.2',  fontWeight: '700', letterSpacing: '-0.015em' }],
+        'display':  ['28px', { lineHeight: '1.1',  fontWeight: '800', letterSpacing: '-0.02em' }],
+      },
     },
   },
   plugins: [],

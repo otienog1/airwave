@@ -16,13 +16,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-    title: "AirWave Radio",
+    title: "MBR Radio",
     description: "Stream Kenya's best radio stations live",
     manifest: '/manifest.json',
     appleWebApp: {
         capable: true,
         statusBarStyle: 'black-translucent',
-        title: 'AirWave',
+        title: 'MBR',
     },
     other: {
         'mobile-web-app-capable': 'yes',

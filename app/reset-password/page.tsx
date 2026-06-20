@@ -60,7 +60,7 @@ function ResetPasswordForm() {
                     className="mt-2 px-5 py-2.5 rounded-xl text-sm font-semibold"
                     style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: 'white' }}
                 >
-                    Go to AirWave
+                    Go to MBR
                 </button>
             </div>
         );

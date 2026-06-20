@@ -29,12 +29,18 @@ const nextConfig = {
         ];
     },
     async rewrites() {
-        return [
-            {
-                source: '/api/:path*',
-                destination: `${process.env.NEXT_PUBLIC_API_URL || 'https://api.airwave.qzz.io/api'}/:path*`,
-            },
-        ];
+        return {
+            // Fallback phase: only proxy to Flask when no local route —
+            // including dynamic ones like /api/analytics/station/[id] —
+            // matched the request. afterFiles rewrites would win against
+            // dynamic routes and wrongly proxy them.
+            fallback: [
+                {
+                    source: '/api/:path*',
+                    destination: `${process.env.NEXT_PUBLIC_API_URL || 'https://api.airwave.qzz.io/api'}/:path*`,
+                },
+            ],
+        };
     },
     images: {
         domains: ['localhost', 'yourdomain.com'],

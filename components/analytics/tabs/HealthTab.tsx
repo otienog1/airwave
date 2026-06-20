@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { fetchDashboard, type DashboardResponse, type RealTimeResponse } from '@/lib/analyticsApi';
 import { SkeletonCard } from '../SkeletonCard';
+import { MetadataQualityPanel } from '../InsightPanels';
 
 interface Props {
   period: number;
@@ -158,6 +159,9 @@ export function HealthTab({ period, realtime }: Props) {
           </table>
         </div>
       )}
+
+      {/* Per-station metadata pipeline health */}
+      <MetadataQualityPanel period={period} />
     </div>
   );
 }

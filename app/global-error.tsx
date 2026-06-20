@@ -44,7 +44,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
                             marginBottom: '0.5rem',
                         }}
                     >
-                        AirWave encountered a critical error
+                        MBR encountered a critical error
                     </h2>
                     <p
                         style={{

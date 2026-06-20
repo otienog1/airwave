@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
@@ -11,59 +11,29 @@ interface VolumeControlProps {
     onMuteToggle: () => void;
 }
 
+/**
+ * Volume UI follows platform convention: the slider renders only on
+ * pointer (mouse/trackpad) devices — touch users adjust volume with
+ * hardware buttons. The icon is always a mute toggle.
+ */
 export const VolumeControl: React.FC<VolumeControlProps> = ({
     volume,
     isMuted,
     onVolumeChange,
     onMuteToggle,
 }) => {
-    const [showSlider, setShowSlider] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
     const displayVolume = isMuted ? 0 : volume;
 
-    // Close popup when clicking outside on small screens
-    useEffect(() => {
-        if (!showSlider) return;
-        const handleOutside = (e: MouseEvent) => {
-            if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-                setShowSlider(false);
-            }
-        };
-        document.addEventListener('mousedown', handleOutside);
-        return () => document.removeEventListener('mousedown', handleOutside);
-    }, [showSlider]);
-
-    const handleIconClick = () => {
-        if (window.innerWidth < 640) {
-            setShowSlider(s => !s);
-        } else {
-            onMuteToggle();
-        }
-    };
-
-    const sliderInput = (
-        <input
-            type="range"
-            min={0}
-            max={1}
-            step={0.01}
-            value={displayVolume}
-            onChange={(e) => onVolumeChange(Number(e.target.value))}
-            className="volume-slider"
-            aria-label="Volume"
-            style={{ '--vol-pct': `${displayVolume * 100}%` } as React.CSSProperties}
-        />
-    );
-
     return (
-        <div ref={containerRef} className="relative flex items-center gap-2">
+        <div className="flex items-center gap-2">
             <Tooltip>
                 <TooltipTrigger
                     type="button"
-                    onClick={handleIconClick}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-150 hover:bg-white/10 active:scale-90"
+                    onClick={onMuteToggle}
+                    className="w-11 h-11 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-all duration-150 hover:bg-white/10 active:scale-90"
                     style={{ color: isMuted ? 'var(--color-text-muted)' : 'var(--color-accent)' }}
                     aria-label={isMuted ? 'Unmute' : 'Mute'}
+                    aria-pressed={isMuted}
                 >
                     {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                 </TooltipTrigger>
@@ -73,27 +43,20 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({
                 </TooltipContent>
             </Tooltip>
 
-            {/* Large screens: inline horizontal slider */}
-            <div className="hidden sm:block volume-wrapper">
-                {sliderInput}
+            {/* Pointer devices only */}
+            <div className="pointer-only volume-wrapper">
+                <input
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    value={displayVolume}
+                    onChange={(e) => onVolumeChange(Number(e.target.value))}
+                    className="volume-slider"
+                    aria-label="Volume"
+                    style={{ '--vol-pct': `${displayVolume * 100}%` } as React.CSSProperties}
+                />
             </div>
-
-            {/* Small screens: popup vertical slider above icon */}
-            {showSlider && (
-                <div
-                    className="sm:hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50
-                               flex items-center justify-center rounded-xl p-2"
-                    style={{
-                        background: 'var(--color-surface)',
-                        border: '1px solid var(--color-border)',
-                        boxShadow: '0 -6px 20px rgba(0,0,0,0.15)',
-                    }}
-                >
-                    <div className="volume-wrapper">
-                        {sliderInput}
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

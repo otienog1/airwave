@@ -1,0 +1,1887 @@
+{
+  ".claude/settings.local.json": {
+    "mtime": 1779727854.151222,
+    "ast_hash": "1e3e97b967efa7d02d68838e0f80f0ef",
+    "semantic_hash": "1e3e97b967efa7d02d68838e0f80f0ef"
+  },
+  ".eslintrc.json": {
+    "mtime": 1753022346.065415,
+    "ast_hash": "934a81616adbd809dfc38314baaa3409",
+    "semantic_hash": "934a81616adbd809dfc38314baaa3409"
+  },
+  "app/admin/analytics/page.tsx": {
+    "mtime": 1781304475.6017253,
+    "ast_hash": "da3f980884e1cc855c6b81690c3c6252",
+    "semantic_hash": ""
+  },
+  "app/admin/page.tsx": {
+    "mtime": 1780161887.5085404,
+    "ast_hash": "a6cfcf35f238ba825e30ada41f47e239",
+    "semantic_hash": "a6cfcf35f238ba825e30ada41f47e239"
+  },
+  "app/api/analytics/play-event/route.ts": {
+    "mtime": 1779818774.5194561,
+    "ast_hash": "dbdf119a881b8a6e431d3e649ae36283",
+    "semantic_hash": "dbdf119a881b8a6e431d3e649ae36283"
+  },
+  "app/api/analytics/snapshot/route.ts": {
+    "mtime": 1779819535.6580606,
+    "ast_hash": "9ce8912ad63a45c2dec4df79ea69d9a6",
+    "semantic_hash": "9ce8912ad63a45c2dec4df79ea69d9a6"
+  },
+  "app/api/analytics/station/[id]/route.ts": {
+    "mtime": 1779818959.4996276,
+    "ast_hash": "0a9060d3d023b660e2612584077f5eae",
+    "semantic_hash": "0a9060d3d023b660e2612584077f5eae"
+  },
+  "app/api/analytics/trending/route.ts": {
+    "mtime": 1780418845.4689336,
+    "ast_hash": "0e39853732fd1f94eae867f63f703091",
+    "semantic_hash": "0e39853732fd1f94eae867f63f703091"
+  },
+  "app/api/health/route.ts": {
+    "mtime": 1780161887.5094657,
+    "ast_hash": "deb04adf095d9efaf872002835d8b4cc",
+    "semantic_hash": "deb04adf095d9efaf872002835d8b4cc"
+  },
+  "app/api/listeners/counts/route.ts": {
+    "mtime": 1780162326.756934,
+    "ast_hash": "50ba69fef63ee3a346caa144911b83e2",
+    "semantic_hash": "50ba69fef63ee3a346caa144911b83e2"
+  },
+  "app/api/listeners/heartbeat/route.ts": {
+    "mtime": 1780161887.5105636,
+    "ast_hash": "badc97cef7e2484d7b80e00cd2a3ef7a",
+    "semantic_hash": "badc97cef7e2484d7b80e00cd2a3ef7a"
+  },
+  "app/api/listeners/join/route.ts": {
+    "mtime": 1781327880.3195412,
+    "ast_hash": "c726f766f64d258853e027f7241e755c",
+    "semantic_hash": ""
+  },
+  "app/api/listeners/leave/route.ts": {
+    "mtime": 1780162326.7574427,
+    "ast_hash": "1819f255387afea57435876ea2b4bb07",
+    "semantic_hash": "1819f255387afea57435876ea2b4bb07"
+  },
+  "app/api/stream-metadata/route.ts": {
+    "mtime": 1780161887.5133984,
+    "ast_hash": "d50f1c4bae1aef0b607dc66592fec9fc",
+    "semantic_hash": "d50f1c4bae1aef0b607dc66592fec9fc"
+  },
+  "app/error.tsx": {
+    "mtime": 1780161887.5133984,
+    "ast_hash": "64794b4697b5d171a5aee2d8fcfad330",
+    "semantic_hash": "64794b4697b5d171a5aee2d8fcfad330"
+  },
+  "app/global-error.tsx": {
+    "mtime": 1781236063.79413,
+    "ast_hash": "26d9d2aabbd0311c86c008fa294bc64d",
+    "semantic_hash": ""
+  },
+  "app/layout.tsx": {
+    "mtime": 1781236046.4929154,
+    "ast_hash": "094a4bc4853142b2b7adcc0691088d30",
+    "semantic_hash": ""
+  },
+  "app/page.tsx": {
+    "mtime": 1781279045.2922394,
+    "ast_hash": "450928a129070fea9d971b717eba0289",
+    "semantic_hash": ""
+  },
+  "app/reset-password/page.tsx": {
+    "mtime": 1781236065.967823,
+    "ast_hash": "4d33b5ecc79c0e37c118e9e9b90f84bc",
+    "semantic_hash": ""
+  },
+  "backend/app/__init__.py": {
+    "mtime": 1780425532.0746162,
+    "ast_hash": "02f5f53c196992ada98eecb543fa2bff",
+    "semantic_hash": "02f5f53c196992ada98eecb543fa2bff"
+  },
+  "backend/app/admin_bp.py": {
+    "mtime": 1780162326.7650006,
+    "ast_hash": "e5a12572e29579b453ba733f6fa25b82",
+    "semantic_hash": "e5a12572e29579b453ba733f6fa25b82"
+  },
+  "backend/app/analytics_bp.py": {
+    "mtime": 1780161887.5198798,
+    "ast_hash": "cd54b590912d05553f6bb9778529fc6f",
+    "semantic_hash": "cd54b590912d05553f6bb9778529fc6f"
+  },
+  "backend/app/auth_bp.py": {
+    "mtime": 1780418845.473495,
+    "ast_hash": "8688fc230738e3349fa668086088ccfa",
+    "semantic_hash": "8688fc230738e3349fa668086088ccfa"
+  },
+  "backend/app/db.py": {
+    "mtime": 1780425525.1390667,
+    "ast_hash": "80637afb57b049415a90ae043f41580d",
+    "semantic_hash": "80637afb57b049415a90ae043f41580d"
+  },
+  "backend/app/email_utils.py": {
+    "mtime": 1780418845.4739952,
+    "ast_hash": "967a4ba13f3451cf5a42c7577b1b4e3b",
+    "semantic_hash": "967a4ba13f3451cf5a42c7577b1b4e3b"
+  },
+  "backend/app/models/analytics.py": {
+    "mtime": 1780161887.5240479,
+    "ast_hash": "02012a894f48d38ec2b173f1869f4abb",
+    "semantic_hash": "02012a894f48d38ec2b173f1869f4abb"
+  },
+  "backend/app/models/favorites.py": {
+    "mtime": 1780161887.5247283,
+    "ast_hash": "e23be143fffbfcfc45a2633a502da50c",
+    "semantic_hash": "e23be143fffbfcfc45a2633a502da50c"
+  },
+  "backend/app/models/station.py": {
+    "mtime": 1780161887.5254705,
+    "ast_hash": "c4ec24c828aedc8fd8e203e7ed8a6779",
+    "semantic_hash": "c4ec24c828aedc8fd8e203e7ed8a6779"
+  },
+  "backend/app/models/user.py": {
+    "mtime": 1780418845.4751391,
+    "ast_hash": "0e8b5467250503a1b87fc0d9dc9d74ef",
+    "semantic_hash": "0e8b5467250503a1b87fc0d9dc9d74ef"
+  },
+  "backend/app/stations_bp.py": {
+    "mtime": 1780161887.5268595,
+    "ast_hash": "dfc8b5d65fd2de41ef84b5901689217b",
+    "semantic_hash": "dfc8b5d65fd2de41ef84b5901689217b"
+  },
+  "backend/config/base.py": {
+    "mtime": 1753114941.5326183,
+    "ast_hash": "9440008f49e70b51e07e3cb19ebbc147",
+    "semantic_hash": "9440008f49e70b51e07e3cb19ebbc147"
+  },
+  "backend/run.py": {
+    "mtime": 1780162823.5218058,
+    "ast_hash": "33c6c33c06c8ba62669ef6d4361264f1",
+    "semantic_hash": "33c6c33c06c8ba62669ef6d4361264f1"
+  },
+  "backend/services/station_service.py": {
+    "mtime": 1753114983.8347726,
+    "ast_hash": "10512109e795d13118df84e51122e257",
+    "semantic_hash": "10512109e795d13118df84e51122e257"
+  },
+  "backend/tests/__init__.py": {
+    "mtime": 1780161887.5275977,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "backend/tests/conftest.py": {
+    "mtime": 1780161887.5284946,
+    "ast_hash": "8f2d705cc4ab4785ae22e2dba8f9d209",
+    "semantic_hash": "8f2d705cc4ab4785ae22e2dba8f9d209"
+  },
+  "backend/tests/test_auth.py": {
+    "mtime": 1780161887.5284946,
+    "ast_hash": "081cb94efe45f41f83e8157c2747258a",
+    "semantic_hash": "081cb94efe45f41f83e8157c2747258a"
+  },
+  "backend/tests/test_trending.py": {
+    "mtime": 1780161887.5289948,
+    "ast_hash": "c69c1b08f31882de6ef5df248e194e3f",
+    "semantic_hash": "c69c1b08f31882de6ef5df248e194e3f"
+  },
+  "backend/utils/decorators.py": {
+    "mtime": 1753114768.5424204,
+    "ast_hash": "5d6276d601f18eb43ae3a5c2af08c5f7",
+    "semantic_hash": "5d6276d601f18eb43ae3a5c2af08c5f7"
+  },
+  "backend/utils/errors.py": {
+    "mtime": 1753116102.7212417,
+    "ast_hash": "d9b142ce11871c6b4b9e7e46d3ee12ff",
+    "semantic_hash": "d9b142ce11871c6b4b9e7e46d3ee12ff"
+  },
+  "components.json": {
+    "mtime": 1779733312.581359,
+    "ast_hash": "c29cc61948ee91658bc0b4039de5e3f6",
+    "semantic_hash": "c29cc61948ee91658bc0b4039de5e3f6"
+  },
+  "components/Equalizer.tsx": {
+    "mtime": 1780161887.5295303,
+    "ast_hash": "83fcae076824557eed23b324786f95c9",
+    "semantic_hash": "83fcae076824557eed23b324786f95c9"
+  },
+  "components/GlobalShortcuts.tsx": {
+    "mtime": 1780161887.5300415,
+    "ast_hash": "3f9587ce577e48e29319d456f3bbb735",
+    "semantic_hash": "3f9587ce577e48e29319d456f3bbb735"
+  },
+  "components/MordernAirwave.tsx": {
+    "mtime": 1781281498.735682,
+    "ast_hash": "7cd5ea1a03f57d9ef45ae605012e47a2",
+    "semantic_hash": ""
+  },
+  "components/analytics/KpiCard.tsx": {
+    "mtime": 1780161887.5313153,
+    "ast_hash": "83acadd6bcbff02d97ad62fa01237e4c",
+    "semantic_hash": "83acadd6bcbff02d97ad62fa01237e4c"
+  },
+  "components/analytics/LiveStatusBar.tsx": {
+    "mtime": 1780161887.5313153,
+    "ast_hash": "20784b30d7f96e53106584bd90328c50",
+    "semantic_hash": "20784b30d7f96e53106584bd90328c50"
+  },
+  "components/analytics/PeriodFilter.tsx": {
+    "mtime": 1780161887.5320692,
+    "ast_hash": "8521db0de2a07c4199ac973520bcf5ed",
+    "semantic_hash": "8521db0de2a07c4199ac973520bcf5ed"
+  },
+  "components/analytics/SkeletonCard.tsx": {
+    "mtime": 1780161887.5325842,
+    "ast_hash": "18f2ced0c9dfa255c3c3cf0f9920b25d",
+    "semantic_hash": "18f2ced0c9dfa255c3c3cf0f9920b25d"
+  },
+  "components/analytics/charts/DonutChart.tsx": {
+    "mtime": 1780161887.5331042,
+    "ast_hash": "2b68b6213edc922e35886b08f0eb08fc",
+    "semantic_hash": "2b68b6213edc922e35886b08f0eb08fc"
+  },
+  "components/analytics/charts/HBarChart.tsx": {
+    "mtime": 1780161887.5331042,
+    "ast_hash": "f27b94e0135a69edaf0d861da3b0f000",
+    "semantic_hash": "f27b94e0135a69edaf0d861da3b0f000"
+  },
+  "components/analytics/charts/HeatmapGrid.tsx": {
+    "mtime": 1780161887.533631,
+    "ast_hash": "2997fdf973eef75d24597c0b2a99ceff",
+    "semantic_hash": "2997fdf973eef75d24597c0b2a99ceff"
+  },
+  "components/analytics/charts/LineChart.tsx": {
+    "mtime": 1780161887.534413,
+    "ast_hash": "071c046742ec6d644e3d9dc754771eb2",
+    "semantic_hash": "071c046742ec6d644e3d9dc754771eb2"
+  },
+  "components/analytics/tabs/AudienceTab.tsx": {
+    "mtime": 1781327992.9015453,
+    "ast_hash": "3ffdd8b7c017fe50592f6a43481d41ce",
+    "semantic_hash": ""
+  },
+  "components/analytics/tabs/GenresTab.tsx": {
+    "mtime": 1780161887.535447,
+    "ast_hash": "4ea30ce4ba45b1d085e2ba941152c5ea",
+    "semantic_hash": "4ea30ce4ba45b1d085e2ba941152c5ea"
+  },
+  "components/analytics/tabs/HealthTab.tsx": {
+    "mtime": 1781304629.0921574,
+    "ast_hash": "00674626d3e3fa4dd0af55e1d3e7ae6d",
+    "semantic_hash": ""
+  },
+  "components/analytics/tabs/OverviewTab.tsx": {
+    "mtime": 1780161887.536302,
+    "ast_hash": "d080541c8203b576c6579e8091dbac43",
+    "semantic_hash": "d080541c8203b576c6579e8091dbac43"
+  },
+  "components/analytics/tabs/SongsTab.tsx": {
+    "mtime": 1781304598.0586214,
+    "ast_hash": "2ccd179dc1e36901f66c45e0edb5ebe8",
+    "semantic_hash": ""
+  },
+  "components/analytics/tabs/StationsTab.tsx": {
+    "mtime": 1780161887.5368552,
+    "ast_hash": "97dbdba33e4fd0693e812a991c708f1f",
+    "semantic_hash": "97dbdba33e4fd0693e812a991c708f1f"
+  },
+  "components/auth/LoginModal.tsx": {
+    "mtime": 1781238926.1150088,
+    "ast_hash": "054a122b08e9c2ba4678cb168f98ec68",
+    "semantic_hash": ""
+  },
+  "components/auth/ProfileModal.tsx": {
+    "mtime": 1780418845.477018,
+    "ast_hash": "deefe2765c046eef62e3721c6a0cafd1",
+    "semantic_hash": "deefe2765c046eef62e3721c6a0cafd1"
+  },
+  "components/layout/Header.tsx": {
+    "mtime": 1781295595.0362875,
+    "ast_hash": "37f75504cc5e7a47a732474d61b1e7e4",
+    "semantic_hash": ""
+  },
+  "components/layout/Layout.tsx": {
+    "mtime": 1781278844.6499128,
+    "ast_hash": "c5513b6ad5b5380287b18e52df04610d",
+    "semantic_hash": ""
+  },
+  "components/player/AudioPlayer.tsx": {
+    "mtime": 1781280903.8461964,
+    "ast_hash": "1637fc31812e66d2835323d728275c75",
+    "semantic_hash": ""
+  },
+  "components/player/PersistentAudioPlayer.tsx": {
+    "mtime": 1781239517.0137465,
+    "ast_hash": "ea7134e06ad04938ba3703abbde2ae97",
+    "semantic_hash": ""
+  },
+  "components/player/PlayControl.tsx": {
+    "mtime": 1780161887.5393581,
+    "ast_hash": "f5f18be669b9083ea6216c76cf666dbc",
+    "semantic_hash": "f5f18be669b9083ea6216c76cf666dbc"
+  },
+  "components/player/SleepTimer.tsx": {
+    "mtime": 1780418845.480219,
+    "ast_hash": "b144a14f4e90a4a5c36c81bd54c025a6",
+    "semantic_hash": "b144a14f4e90a4a5c36c81bd54c025a6"
+  },
+  "components/player/StationInfo.tsx": {
+    "mtime": 1781239316.099123,
+    "ast_hash": "9af80aa439bec442bca75e29b5fd6c56",
+    "semantic_hash": ""
+  },
+  "components/player/VolumeControl.tsx": {
+    "mtime": 1781239368.3771727,
+    "ast_hash": "460a1dfe9315a0ffa6188cc066a51499",
+    "semantic_hash": ""
+  },
+  "components/player/index.ts": {
+    "mtime": 1753038078.9342263,
+    "ast_hash": "2139ee200f20e814b28c4cce86d5fa85",
+    "semantic_hash": "2139ee200f20e814b28c4cce86d5fa85"
+  },
+  "components/providers/GoogleProvider.tsx": {
+    "mtime": 1780418845.4812276,
+    "ast_hash": "23c8b378ce3fc52522b0e047b6fd2364",
+    "semantic_hash": "23c8b378ce3fc52522b0e047b6fd2364"
+  },
+  "components/station/PlayButton.tsx": {
+    "mtime": 1779821078.7210805,
+    "ast_hash": "3f88798bc5b71661a549076cf6218da1",
+    "semantic_hash": "3f88798bc5b71661a549076cf6218da1"
+  },
+  "components/station/SearchAndFilters.tsx": {
+    "mtime": 1781236602.5769083,
+    "ast_hash": "d69ae965c9203a96f1ed244a5d357701",
+    "semantic_hash": ""
+  },
+  "components/station/StationCard.tsx": {
+    "mtime": 1781279998.6974654,
+    "ast_hash": "9c76b3d25e0448dc7a78bb34b9a150bb",
+    "semantic_hash": ""
+  },
+  "components/station/StationGrid.tsx": {
+    "mtime": 1781279899.5754282,
+    "ast_hash": "21ddd43a818530db9b80adf7e1fcb7d9",
+    "semantic_hash": ""
+  },
+  "components/station/StationHeader.tsx": {
+    "mtime": 1753129258.431409,
+    "ast_hash": "8c930e35d9e8af127ee2e5e0aa795497",
+    "semantic_hash": "8c930e35d9e8af127ee2e5e0aa795497"
+  },
+  "components/station/StationStats.tsx": {
+    "mtime": 1753129258.427805,
+    "ast_hash": "49fbd86e8615f2f21c7e42c9239dd415",
+    "semantic_hash": "49fbd86e8615f2f21c7e42c9239dd415"
+  },
+  "components/station/TrendingStrip.tsx": {
+    "mtime": 1780418845.4837465,
+    "ast_hash": "8d238834fd252523fa0f33507efcc925",
+    "semantic_hash": "8d238834fd252523fa0f33507efcc925"
+  },
+  "components/ui/ErrorMessage.tsx": {
+    "mtime": 1753129226.8989596,
+    "ast_hash": "02cb485df180985c766ebc756d4b249d",
+    "semantic_hash": "02cb485df180985c766ebc756d4b249d"
+  },
+  "components/ui/HeartBurst.tsx": {
+    "mtime": 1781236419.9447744,
+    "ast_hash": "4fbcc06c2aca0734a010e8620ebf464c",
+    "semantic_hash": ""
+  },
+  "components/ui/LoadingSpinner.tsx": {
+    "mtime": 1753125318.057662,
+    "ast_hash": "fb0d2d12b66de9f0359872b38f806b2f",
+    "semantic_hash": "fb0d2d12b66de9f0359872b38f806b2f"
+  },
+  "components/ui/Modal.tsx": {
+    "mtime": 1781236435.7072852,
+    "ast_hash": "41b3fadb5b7ebcb42c2f4d4d58561ed4",
+    "semantic_hash": ""
+  },
+  "components/ui/ShortcutCheatsheet.tsx": {
+    "mtime": 1780161887.5427551,
+    "ast_hash": "a56fa1845b03c830f1ead3d1fe24f773",
+    "semantic_hash": "a56fa1845b03c830f1ead3d1fe24f773"
+  },
+  "components/ui/ThemeToggle.tsx": {
+    "mtime": 1779729059.3119645,
+    "ast_hash": "e490ea21d47341e7ff3a6d4a17664f72",
+    "semantic_hash": "e490ea21d47341e7ff3a6d4a17664f72"
+  },
+  "components/ui/button.tsx": {
+    "mtime": 1779733454.9691424,
+    "ast_hash": "705bf3552a39e0c722665ccbecb30654",
+    "semantic_hash": "705bf3552a39e0c722665ccbecb30654"
+  },
+  "components/ui/slider.tsx": {
+    "mtime": 1779734600.5368626,
+    "ast_hash": "1ddc476cffc083f68378a07276c64546",
+    "semantic_hash": "1ddc476cffc083f68378a07276c64546"
+  },
+  "components/ui/sonner.tsx": {
+    "mtime": 1779734600.4494505,
+    "ast_hash": "f46214bc2a6a5153a6e04fad523d5587",
+    "semantic_hash": "f46214bc2a6a5153a6e04fad523d5587"
+  },
+  "components/ui/tooltip.tsx": {
+    "mtime": 1780161887.5435467,
+    "ast_hash": "a34eac76a243457ebe1c86289b4fd34c",
+    "semantic_hash": "a34eac76a243457ebe1c86289b4fd34c"
+  },
+  "context/AuthContext.tsx": {
+    "mtime": 1780418845.4856963,
+    "ast_hash": "530fe771e47c149ff7a94652100fbced",
+    "semantic_hash": "530fe771e47c149ff7a94652100fbced"
+  },
+  "context/PlayerContext.tsx": {
+    "mtime": 1781278728.3179793,
+    "ast_hash": "03880a4e31130f78ccda31518a206a75",
+    "semantic_hash": ""
+  },
+  "hooks/useAudioManager.ts": {
+    "mtime": 1753131402.857383,
+    "ast_hash": "920c1e0a555cc4ea7daef42d08a47b92",
+    "semantic_hash": "920c1e0a555cc4ea7daef42d08a47b92"
+  },
+  "hooks/useAudioPlayer.ts": {
+    "mtime": 1780418845.4872148,
+    "ast_hash": "010732e3807f0c73a2c61054a3fd37c9",
+    "semantic_hash": "010732e3807f0c73a2c61054a3fd37c9"
+  },
+  "hooks/useFavorites.ts": {
+    "mtime": 1779825213.4150026,
+    "ast_hash": "1ea643671adf3dd142daf476ed0a9184",
+    "semantic_hash": "1ea643671adf3dd142daf476ed0a9184"
+  },
+  "hooks/useKeyboardShortcuts.ts": {
+    "mtime": 1780161887.5478964,
+    "ast_hash": "20702e148526386d7b2ed1b8c977dbfd",
+    "semantic_hash": "20702e148526386d7b2ed1b8c977dbfd"
+  },
+  "hooks/useListeners.ts": {
+    "mtime": 1781327868.2794561,
+    "ast_hash": "aed2d86e07c5a94eba00f64cf46620dd",
+    "semantic_hash": ""
+  },
+  "hooks/useSleepTimer.ts": {
+    "mtime": 1780418845.4877179,
+    "ast_hash": "a58bee9f78e96cd21d82d6394cc7d54a",
+    "semantic_hash": "a58bee9f78e96cd21d82d6394cc7d54a"
+  },
+  "hooks/useStationFilter.ts": {
+    "mtime": 1780161887.5494297,
+    "ast_hash": "bbc0d895311a28f3e202c9eef0efb966",
+    "semantic_hash": "bbc0d895311a28f3e202c9eef0efb966"
+  },
+  "hooks/useStations.ts": {
+    "mtime": 1780162326.7838676,
+    "ast_hash": "ed895e4655563ed1de534503688d2607",
+    "semantic_hash": "ed895e4655563ed1de534503688d2607"
+  },
+  "hooks/useStreamMetadata.ts": {
+    "mtime": 1780162326.7843702,
+    "ast_hash": "ac3695d89c194dec12fa64caacaaa22a",
+    "semantic_hash": "ac3695d89c194dec12fa64caacaaa22a"
+  },
+  "lib/analytics.ts": {
+    "mtime": 1780161887.5509531,
+    "ast_hash": "bbbf7301958cf3a541c3b075944f8d4f",
+    "semantic_hash": "bbbf7301958cf3a541c3b075944f8d4f"
+  },
+  "lib/analyticsApi.ts": {
+    "mtime": 1781327930.1550865,
+    "ast_hash": "10a980d93f1350d62079d8787706e1aa",
+    "semantic_hash": ""
+  },
+  "lib/api.ts": {
+    "mtime": 1780426509.1738803,
+    "ast_hash": "578cf9a21c100503756257c94da1728d",
+    "semantic_hash": "578cf9a21c100503756257c94da1728d"
+  },
+  "lib/mongodb.ts": {
+    "mtime": 1781305185.3117611,
+    "ast_hash": "d07bc9d113b3e2f9645cf1e78952ec76",
+    "semantic_hash": ""
+  },
+  "lib/utils.ts": {
+    "mtime": 1779733455.0989783,
+    "ast_hash": "5a6fd53fdcf2be529e9cc0b718fde352",
+    "semantic_hash": "5a6fd53fdcf2be529e9cc0b718fde352"
+  },
+  "middleware.ts": {
+    "mtime": 1780161887.5528185,
+    "ast_hash": "046b15287df2eeadc223038c2109c6f5",
+    "semantic_hash": "046b15287df2eeadc223038c2109c6f5"
+  },
+  "next.config.mjs": {
+    "mtime": 1781295583.7585807,
+    "ast_hash": "8ef8e041d6084246cf86406a77d49e96",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1781238163.707911,
+    "ast_hash": "fddf965bc2f097e8c724d74e3e103174",
+    "semantic_hash": ""
+  },
+  "postcss.config.mjs": {
+    "mtime": 1753022346.069406,
+    "ast_hash": "3507368dae6e94b0070b0a10efa15a05",
+    "semantic_hash": "3507368dae6e94b0070b0a10efa15a05"
+  },
+  "public/manifest.json": {
+    "mtime": 1781238683.3985596,
+    "ast_hash": "b474f3640d0fa4b80018c98a221d9466",
+    "semantic_hash": ""
+  },
+  "public/sw.js": {
+    "mtime": 1781328228.6879153,
+    "ast_hash": "3a1b87e3602fc3e6dac999f68cf598ac",
+    "semantic_hash": ""
+  },
+  "public/workbox-4754cb34.js": {
+    "mtime": 1781328228.688416,
+    "ast_hash": "98d58f6ba4bb37cd18d746933f6b0ed4",
+    "semantic_hash": "98d58f6ba4bb37cd18d746933f6b0ed4"
+  },
+  "tailwind.config.ts": {
+    "mtime": 1781236233.3712077,
+    "ast_hash": "53e88615c96e3f75ff053cc98be4e848",
+    "semantic_hash": ""
+  },
+  "tsconfig.json": {
+    "mtime": 1753022346.070917,
+    "ast_hash": "b1b0130e5d79f78fd6d7f68e5f95b1a5",
+    "semantic_hash": "b1b0130e5d79f78fd6d7f68e5f95b1a5"
+  },
+  "types/Station.ts": {
+    "mtime": 1780161887.554449,
+    "ast_hash": "c6c8632409eb452e3b9de9c5e8252f13",
+    "semantic_hash": "c6c8632409eb452e3b9de9c5e8252f13"
+  },
+  ".playwright-mcp/page-2026-05-30T20-42-52-645Z.yml": {
+    "mtime": 1780418845.4479742,
+    "ast_hash": "507dbf57c8e925190b30d26ae2d88e0c",
+    "semantic_hash": "507dbf57c8e925190b30d26ae2d88e0c"
+  },
+  ".playwright-mcp/page-2026-05-30T20-46-56-825Z.yml": {
+    "mtime": 1780418845.4494832,
+    "ast_hash": "8a470c6999b1a86cee2bdda17cb90565",
+    "semantic_hash": "8a470c6999b1a86cee2bdda17cb90565"
+  },
+  ".playwright-mcp/page-2026-05-30T20-48-45-445Z.yml": {
+    "mtime": 1780418845.4499931,
+    "ast_hash": "70ca5d95cb2ae5cafdd8defa8b9e398d",
+    "semantic_hash": "70ca5d95cb2ae5cafdd8defa8b9e398d"
+  },
+  ".playwright-mcp/page-2026-05-30T20-54-08-354Z.yml": {
+    "mtime": 1780418845.450572,
+    "ast_hash": "507dbf57c8e925190b30d26ae2d88e0c",
+    "semantic_hash": "507dbf57c8e925190b30d26ae2d88e0c"
+  },
+  ".playwright-mcp/page-2026-05-30T21-31-42-439Z.yml": {
+    "mtime": 1780418845.4515798,
+    "ast_hash": "80925157edf00bbb37f8888b83d9f3a9",
+    "semantic_hash": "80925157edf00bbb37f8888b83d9f3a9"
+  },
+  ".playwright-mcp/page-2026-05-30T21-33-18-301Z.yml": {
+    "mtime": 1780418845.4533193,
+    "ast_hash": "65e103da401f1be84783acbabaab0484",
+    "semantic_hash": "65e103da401f1be84783acbabaab0484"
+  },
+  ".superpowers/brainstorm/1077-1779970097/content/cheatsheet-design.html": {
+    "mtime": 1780162326.7412784,
+    "ast_hash": "63d7d6ddd63662bf11cbe88b157e70d3",
+    "semantic_hash": "63d7d6ddd63662bf11cbe88b157e70d3"
+  },
+  ".superpowers/brainstorm/1077-1779970097/content/discoverability.html": {
+    "mtime": 1780162326.7412784,
+    "ast_hash": "480e025cb52b859143a2384203a216b4",
+    "semantic_hash": "480e025cb52b859143a2384203a216b4"
+  },
+  ".superpowers/brainstorm/1077-1779970097/content/shortcut-areas.html": {
+    "mtime": 1780162326.7468152,
+    "ast_hash": "cf03b2f1fcef4af84b50415badb2b0f7",
+    "semantic_hash": "cf03b2f1fcef4af84b50415badb2b0f7"
+  },
+  ".superpowers/brainstorm/545-1780153783/content/scope.html": {
+    "mtime": 1780162326.7483604,
+    "ast_hash": "f1103936213dcca9597f93ea43018d08",
+    "semantic_hash": "f1103936213dcca9597f93ea43018d08"
+  },
+  ".superpowers/brainstorm/545-1780153783/content/trending-layout.html": {
+    "mtime": 1780162326.7488718,
+    "ast_hash": "c1664f0ae0f6cae7509da9d46cd18603",
+    "semantic_hash": "c1664f0ae0f6cae7509da9d46cd18603"
+  },
+  ".superpowers/brainstorm/545-1780153783/content/waiting-1.html": {
+    "mtime": 1780162326.7493742,
+    "ast_hash": "484f41fa91be936104ed1d80e8c9da0a",
+    "semantic_hash": "484f41fa91be936104ed1d80e8c9da0a"
+  },
+  ".superpowers/brainstorm/session-1/content/composite-layout.html": {
+    "mtime": 1780162326.752784,
+    "ast_hash": "28b8f975193e7c51e7437546924a897d",
+    "semantic_hash": "28b8f975193e7c51e7437546924a897d"
+  },
+  ".superpowers/brainstorm/session-1/content/layout-options.html": {
+    "mtime": 1780162326.7532878,
+    "ast_hash": "056df1c635c0215e8024ce8598babfed",
+    "semantic_hash": "056df1c635c0215e8024ce8598babfed"
+  },
+  ".superpowers/brainstorm/session-1/content/tab-contents.html": {
+    "mtime": 1780162326.753791,
+    "ast_hash": "bcfbfcb0f24fb524edf6a46ea7ece9a6",
+    "semantic_hash": "bcfbfcb0f24fb524edf6a46ea7ece9a6"
+  },
+  ".superpowers/brainstorm/session-1/content/waiting.html": {
+    "mtime": 1780162326.7542932,
+    "ast_hash": "e3271f1b438e1b344610c72221376334",
+    "semantic_hash": "e3271f1b438e1b344610c72221376334"
+  },
+  ".yarnrc.yml": {
+    "mtime": 1780162386.5498657,
+    "ast_hash": "5e2778b27069b932c31ef9806947cf99",
+    "semantic_hash": "5e2778b27069b932c31ef9806947cf99"
+  },
+  "README.md": {
+    "mtime": 1753022346.065915,
+    "ast_hash": "0feef7df5b8692b8ed6037ce47b42011",
+    "semantic_hash": "0feef7df5b8692b8ed6037ce47b42011"
+  },
+  "docs/superpowers/plans/2026-05-25-airwave-improvements.md": {
+    "mtime": 1779732524.2474139,
+    "ast_hash": "38b36822e36775e4890cf941cece55fc",
+    "semantic_hash": "38b36822e36775e4890cf941cece55fc"
+  },
+  "docs/superpowers/plans/2026-05-26-realtime-listener-tracking.md": {
+    "mtime": 1779820328.7738645,
+    "ast_hash": "7bdb03f434a1c59c9cf495546f3a1573",
+    "semantic_hash": "7bdb03f434a1c59c9cf495546f3a1573"
+  },
+  "docs/superpowers/plans/2026-05-26-stream-metadata-analytics.md": {
+    "mtime": 1779818169.6975396,
+    "ast_hash": "43e2eab3d6991438c51d80b24ab6bd9a",
+    "semantic_hash": "43e2eab3d6991438c51d80b24ab6bd9a"
+  },
+  "docs/superpowers/plans/2026-05-27-smart-polling.md": {
+    "mtime": 1779861821.5300975,
+    "ast_hash": "4b99f3a5b77acb935d10279a620227b0",
+    "semantic_hash": "4b99f3a5b77acb935d10279a620227b0"
+  },
+  "docs/superpowers/plans/2026-05-28-keyboard-shortcuts.md": {
+    "mtime": 1780162326.7782905,
+    "ast_hash": "eb7767db2e26fc43f925dfcd5a1d5cc4",
+    "semantic_hash": "eb7767db2e26fc43f925dfcd5a1d5cc4"
+  },
+  "docs/superpowers/plans/2026-05-28-security-auth-hardening.md": {
+    "mtime": 1780161887.544565,
+    "ast_hash": "51615b1175e79baf4415b47ee31882c1",
+    "semantic_hash": "51615b1175e79baf4415b47ee31882c1"
+  },
+  "docs/superpowers/plans/2026-05-29-architecture-refactoring.md": {
+    "mtime": 1780162326.7787948,
+    "ast_hash": "df0ef9a8fed7b95830c375bf3bcacf95",
+    "semantic_hash": "df0ef9a8fed7b95830c375bf3bcacf95"
+  },
+  "docs/superpowers/plans/2026-05-29-mongodb-migration.md": {
+    "mtime": 1780162326.7792995,
+    "ast_hash": "2da06ab46aa4fe34eb409c6e1169fa3b",
+    "semantic_hash": "2da06ab46aa4fe34eb409c6e1169fa3b"
+  },
+  "docs/superpowers/plans/2026-05-29-monitoring.md": {
+    "mtime": 1780162326.7798047,
+    "ast_hash": "b32aa8426b82f297ae20f0a969f54fe0",
+    "semantic_hash": "b32aa8426b82f297ae20f0a969f54fe0"
+  },
+  "docs/superpowers/plans/2026-05-29-scalability.md": {
+    "mtime": 1780162326.7798047,
+    "ast_hash": "d59454c39ab9f3e8190599f05a324f83",
+    "semantic_hash": "d59454c39ab9f3e8190599f05a324f83"
+  },
+  "docs/superpowers/plans/2026-05-29-ux-polish.md": {
+    "mtime": 1780162326.78031,
+    "ast_hash": "e498b86d2c2ebe4153326f8deed35efa",
+    "semantic_hash": "e498b86d2c2ebe4153326f8deed35efa"
+  },
+  "docs/superpowers/plans/2026-05-30-analytics-audience-tab.md": {
+    "mtime": 1780161887.5452693,
+    "ast_hash": "f08ee5502a43c5b55f984638b7efc01f",
+    "semantic_hash": "f08ee5502a43c5b55f984638b7efc01f"
+  },
+  "docs/superpowers/plans/2026-05-30-analytics-dashboard.md": {
+    "mtime": 1780162326.7813187,
+    "ast_hash": "62d636be52bb5f4f8fc87a689598a0c5",
+    "semantic_hash": "62d636be52bb5f4f8fc87a689598a0c5"
+  },
+  "docs/superpowers/plans/2026-05-30-trending-stations.md": {
+    "mtime": 1780161887.5457752,
+    "ast_hash": "2d014f4643def027d85f7960b2df751a",
+    "semantic_hash": "2d014f4643def027d85f7960b2df751a"
+  },
+  "docs/superpowers/specs/2026-05-28-keyboard-shortcuts-design.md": {
+    "mtime": 1780162326.7818224,
+    "ast_hash": "08d120f64a2d25956b71f64d30bc39be",
+    "semantic_hash": "08d120f64a2d25956b71f64d30bc39be"
+  },
+  "docs/superpowers/specs/2026-05-28-security-auth-hardening-design.md": {
+    "mtime": 1780161887.5462768,
+    "ast_hash": "c4c1a9117688aa244630e98ac9e4b61f",
+    "semantic_hash": "c4c1a9117688aa244630e98ac9e4b61f"
+  },
+  "docs/superpowers/specs/2026-05-29-architecture-refactoring-design.md": {
+    "mtime": 1780162326.7823277,
+    "ast_hash": "c6876fc6088bb8157f1b0e50db107b90",
+    "semantic_hash": "c6876fc6088bb8157f1b0e50db107b90"
+  },
+  "docs/superpowers/specs/2026-05-30-analytics-audience-tab-design.md": {
+    "mtime": 1780161887.5469024,
+    "ast_hash": "84d5a8531eee4cfe4cab56222f0d607b",
+    "semantic_hash": "84d5a8531eee4cfe4cab56222f0d607b"
+  },
+  "docs/superpowers/specs/2026-05-30-analytics-dashboard-design.md": {
+    "mtime": 1780161887.547396,
+    "ast_hash": "73735325e05777e4895c4430ea90b59f",
+    "semantic_hash": "73735325e05777e4895c4430ea90b59f"
+  },
+  "docs/superpowers/specs/2026-05-30-trending-stations-design.md": {
+    "mtime": 1780161887.547396,
+    "ast_hash": "b05f613e3eb03005f96b72261ccf709d",
+    "semantic_hash": "b05f613e3eb03005f96b72261ccf709d"
+  },
+  ".playwright-mcp/page-2026-05-30T20-46-25-896Z.png": {
+    "mtime": 1780418845.44898,
+    "ast_hash": "7eb8c9bab62f869d7766e7f969ce617a",
+    "semantic_hash": "7eb8c9bab62f869d7766e7f969ce617a"
+  },
+  ".playwright-mcp/page-2026-05-30T20-55-23-110Z.png": {
+    "mtime": 1780418845.4510765,
+    "ast_hash": "ba64157b8ef88538255da0cd7d583fdc",
+    "semantic_hash": "ba64157b8ef88538255da0cd7d583fdc"
+  },
+  ".playwright-mcp/page-2026-05-30T21-32-39-723Z.png": {
+    "mtime": 1780418845.452817,
+    "ast_hash": "0a72408900cfb46a030117ef7d5b9873",
+    "semantic_hash": "0a72408900cfb46a030117ef7d5b9873"
+  },
+  ".playwright-mcp/page-2026-05-30T21-59-25-847Z.png": {
+    "mtime": 1780418845.4543464,
+    "ast_hash": "1900937331ecee12d786091c91d66b42",
+    "semantic_hash": "1900937331ecee12d786091c91d66b42"
+  },
+  "public/next.svg": {
+    "mtime": 1753022346.069911,
+    "ast_hash": "8e061864f388b47f33a1c3780831193e",
+    "semantic_hash": "8e061864f388b47f33a1c3780831193e"
+  },
+  "public/vercel.svg": {
+    "mtime": 1753022346.069911,
+    "ast_hash": "61c6b19abff40ea7acd577be818f3976",
+    "semantic_hash": "61c6b19abff40ea7acd577be818f3976"
+  },
+  "lib/genreTheme.ts": {
+    "mtime": 1781236266.2190225,
+    "ast_hash": "14a82395d6d054a4cc9100c0971235e1",
+    "semantic_hash": ""
+  },
+  "scripts/generate-icons.mjs": {
+    "mtime": 1781238444.9851024,
+    "ast_hash": "1798494a2f08b1d712038c1097b87ba1",
+    "semantic_hash": ""
+  },
+  "docs/redesign/2026-06-12-frontend-redesign-proposal.md": {
+    "mtime": 1781235586.3439057,
+    "ast_hash": "1a0d5bc9b82c8e22e4d4e63c3141b582",
+    "semantic_hash": ""
+  },
+  "public/icons/icon-192.png": {
+    "mtime": 1781238458.9540555,
+    "ast_hash": "e29dd56e3eebeed3803124c20cc70184",
+    "semantic_hash": ""
+  },
+  "public/icons/icon-512.png": {
+    "mtime": 1781238458.9836593,
+    "ast_hash": "df6d87910687b554ef8d894f18574569",
+    "semantic_hash": ""
+  },
+  "public/icons/icon-maskable-192.png": {
+    "mtime": 1781238459.0008328,
+    "ast_hash": "c22acadbb3d738f985bd923ec87f3485",
+    "semantic_hash": ""
+  },
+  "public/icons/icon-maskable-512.png": {
+    "mtime": 1781238459.034342,
+    "ast_hash": "91d23fd6b6a7a25fd6c440a3174594a6",
+    "semantic_hash": ""
+  },
+  "components/player/NowPlayingSheet.tsx": {
+    "mtime": 1781278811.1918838,
+    "ast_hash": "44371c7abbb830dc7a32f422cb8007ce",
+    "semantic_hash": ""
+  },
+  "components/station/StationArt.tsx": {
+    "mtime": 1781239284.79471,
+    "ast_hash": "b4facf26fa64dc23c7d9892696f91cb4",
+    "semantic_hash": ""
+  },
+  "app/charts/page.tsx": {
+    "mtime": 1781278953.7323804,
+    "ast_hash": "32872213dc41d47a340122d3f18277f7",
+    "semantic_hash": ""
+  },
+  "app/library/page.tsx": {
+    "mtime": 1781278976.7756476,
+    "ast_hash": "34035efc02466d38611eaf1d82deca45",
+    "semantic_hash": ""
+  },
+  "app/station/[slug]/page.tsx": {
+    "mtime": 1781278898.472968,
+    "ast_hash": "f7dd745730160df5cf6608273a45678b",
+    "semantic_hash": ""
+  },
+  "components/layout/Sidebar.tsx": {
+    "mtime": 1781282791.501468,
+    "ast_hash": "5d1e4e6c4a703356fc49ce950c3cc876",
+    "semantic_hash": ""
+  },
+  "components/layout/TabBar.tsx": {
+    "mtime": 1781280885.9096782,
+    "ast_hash": "0cbeb11423d92b3fa57c247dbde66eb3",
+    "semantic_hash": ""
+  },
+  "components/station/RecentTracks.tsx": {
+    "mtime": 1781278769.508518,
+    "ast_hash": "02cbd7af0140c98b56d69eda008c0405",
+    "semantic_hash": ""
+  },
+  "components/station/StationDetail.tsx": {
+    "mtime": 1781278929.599338,
+    "ast_hash": "6f802117db2fe468659f3078ec43285f",
+    "semantic_hash": ""
+  },
+  "components/station/StationRow.tsx": {
+    "mtime": 1781279855.2842944,
+    "ast_hash": "fc23215071be5e2005036da2adde43cc",
+    "semantic_hash": ""
+  },
+  "components/station/StationTile.tsx": {
+    "mtime": 1781278748.2880359,
+    "ast_hash": "7c66f02f31243d6e0ddbf000196bf115",
+    "semantic_hash": ""
+  },
+  "components/ui/Shelf.tsx": {
+    "mtime": 1781278741.685673,
+    "ast_hash": "1484e72ff6aa1c294e962817a79c3ad5",
+    "semantic_hash": ""
+  },
+  "hooks/useRecentStations.ts": {
+    "mtime": 1781240348.5337546,
+    "ast_hash": "86a1c28604bf8f6fb65816fb3da2cde4",
+    "semantic_hash": ""
+  },
+  "lib/slug.ts": {
+    "mtime": 1781240343.1773944,
+    "ast_hash": "d26e5df1fb18af8db24950d1ae9230b6",
+    "semantic_hash": ""
+  },
+  "hooks/useScrollDirection.ts": {
+    "mtime": 1781280870.056102,
+    "ast_hash": "86c0071919c78b62716ad96c9ab28a9c",
+    "semantic_hash": ""
+  },
+  "components/layout/UserDrawer.tsx": {
+    "mtime": 1781282599.951338,
+    "ast_hash": "66e06cc430924935ff2e149bc1eb1a3e",
+    "semantic_hash": ""
+  },
+  "app/api/analytics/audience-insights/route.ts": {
+    "mtime": 1781304346.5771446,
+    "ast_hash": "5b580c497eba7b15d1d991bd197d7284",
+    "semantic_hash": ""
+  },
+  "app/api/analytics/live-pulse/route.ts": {
+    "mtime": 1781304325.3907876,
+    "ast_hash": "ad127c56a145f04b147bf4cb54cb69c5",
+    "semantic_hash": ""
+  },
+  "app/api/analytics/metadata-quality/route.ts": {
+    "mtime": 1781304392.9131546,
+    "ast_hash": "f056021f31f06a567e30bdf3a325053b",
+    "semantic_hash": ""
+  },
+  "app/api/analytics/song-impact/route.ts": {
+    "mtime": 1781304369.0131729,
+    "ast_hash": "835b7ed486f592ed3ce5245194a7d958",
+    "semantic_hash": ""
+  },
+  "components/analytics/InsightPanels.tsx": {
+    "mtime": 1781327963.2833962,
+    "ast_hash": "14c1746ccde3d30056d34a8a15dbba43",
+    "semantic_hash": ""
+  },
+  "components/analytics/tabs/LivePulseTab.tsx": {
+    "mtime": 1781304444.099835,
+    "ast_hash": "96d13ac1248bf6ac2085e614fade2800",
+    "semantic_hash": ""
+  },
+  "app/api/analytics/retention/route.ts": {
+    "mtime": 1781327905.083985,
+    "ast_hash": "eb9d6312fb48b514b39c01fa65a97d19",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\otien\\build\\airwave\\.claude\\settings.local.json": {
+    "mtime": 1779727854.151222,
+    "ast_hash": "1e3e97b967efa7d02d68838e0f80f0ef",
+    "semantic_hash": "1e3e97b967efa7d02d68838e0f80f0ef"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.eslintrc.json": {
+    "mtime": 1753022346.065415,
+    "ast_hash": "934a81616adbd809dfc38314baaa3409",
+    "semantic_hash": "934a81616adbd809dfc38314baaa3409"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\admin\\analytics\\page.tsx": {
+    "mtime": 1781304475.6017253,
+    "ast_hash": "da3f980884e1cc855c6b81690c3c6252",
+    "semantic_hash": "da3f980884e1cc855c6b81690c3c6252"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\admin\\page.tsx": {
+    "mtime": 1780161887.5085404,
+    "ast_hash": "a6cfcf35f238ba825e30ada41f47e239",
+    "semantic_hash": "a6cfcf35f238ba825e30ada41f47e239"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\analytics\\audience-insights\\route.ts": {
+    "mtime": 1781304346.5771446,
+    "ast_hash": "5b580c497eba7b15d1d991bd197d7284",
+    "semantic_hash": "5b580c497eba7b15d1d991bd197d7284"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\analytics\\live-pulse\\route.ts": {
+    "mtime": 1781304325.3907876,
+    "ast_hash": "ad127c56a145f04b147bf4cb54cb69c5",
+    "semantic_hash": "ad127c56a145f04b147bf4cb54cb69c5"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\analytics\\metadata-quality\\route.ts": {
+    "mtime": 1781304392.9131546,
+    "ast_hash": "f056021f31f06a567e30bdf3a325053b",
+    "semantic_hash": "f056021f31f06a567e30bdf3a325053b"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\analytics\\play-event\\route.ts": {
+    "mtime": 1779818774.5194561,
+    "ast_hash": "dbdf119a881b8a6e431d3e649ae36283",
+    "semantic_hash": "dbdf119a881b8a6e431d3e649ae36283"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\analytics\\retention\\route.ts": {
+    "mtime": 1781327905.083985,
+    "ast_hash": "eb9d6312fb48b514b39c01fa65a97d19",
+    "semantic_hash": "eb9d6312fb48b514b39c01fa65a97d19"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\analytics\\snapshot\\route.ts": {
+    "mtime": 1779819535.6580606,
+    "ast_hash": "9ce8912ad63a45c2dec4df79ea69d9a6",
+    "semantic_hash": "9ce8912ad63a45c2dec4df79ea69d9a6"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\analytics\\song-impact\\route.ts": {
+    "mtime": 1781304369.0131729,
+    "ast_hash": "835b7ed486f592ed3ce5245194a7d958",
+    "semantic_hash": "835b7ed486f592ed3ce5245194a7d958"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\analytics\\station\\[id]\\route.ts": {
+    "mtime": 1779818959.4996276,
+    "ast_hash": "0a9060d3d023b660e2612584077f5eae",
+    "semantic_hash": "0a9060d3d023b660e2612584077f5eae"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\analytics\\trending\\route.ts": {
+    "mtime": 1780418845.4689336,
+    "ast_hash": "0e39853732fd1f94eae867f63f703091",
+    "semantic_hash": "0e39853732fd1f94eae867f63f703091"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\health\\route.ts": {
+    "mtime": 1780161887.5094657,
+    "ast_hash": "deb04adf095d9efaf872002835d8b4cc",
+    "semantic_hash": "deb04adf095d9efaf872002835d8b4cc"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\listeners\\counts\\route.ts": {
+    "mtime": 1780162326.756934,
+    "ast_hash": "50ba69fef63ee3a346caa144911b83e2",
+    "semantic_hash": "50ba69fef63ee3a346caa144911b83e2"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\listeners\\heartbeat\\route.ts": {
+    "mtime": 1780161887.5105636,
+    "ast_hash": "badc97cef7e2484d7b80e00cd2a3ef7a",
+    "semantic_hash": "badc97cef7e2484d7b80e00cd2a3ef7a"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\listeners\\join\\route.ts": {
+    "mtime": 1781327880.3195412,
+    "ast_hash": "c726f766f64d258853e027f7241e755c",
+    "semantic_hash": "c726f766f64d258853e027f7241e755c"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\listeners\\leave\\route.ts": {
+    "mtime": 1780162326.7574427,
+    "ast_hash": "1819f255387afea57435876ea2b4bb07",
+    "semantic_hash": "1819f255387afea57435876ea2b4bb07"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\api\\stream-metadata\\route.ts": {
+    "mtime": 1780161887.5133984,
+    "ast_hash": "d50f1c4bae1aef0b607dc66592fec9fc",
+    "semantic_hash": "d50f1c4bae1aef0b607dc66592fec9fc"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\charts\\page.tsx": {
+    "mtime": 1781278953.7323804,
+    "ast_hash": "32872213dc41d47a340122d3f18277f7",
+    "semantic_hash": "32872213dc41d47a340122d3f18277f7"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\error.tsx": {
+    "mtime": 1780161887.5133984,
+    "ast_hash": "64794b4697b5d171a5aee2d8fcfad330",
+    "semantic_hash": "64794b4697b5d171a5aee2d8fcfad330"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\global-error.tsx": {
+    "mtime": 1781236063.79413,
+    "ast_hash": "26d9d2aabbd0311c86c008fa294bc64d",
+    "semantic_hash": "26d9d2aabbd0311c86c008fa294bc64d"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\layout.tsx": {
+    "mtime": 1781236046.4929154,
+    "ast_hash": "094a4bc4853142b2b7adcc0691088d30",
+    "semantic_hash": "094a4bc4853142b2b7adcc0691088d30"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\library\\page.tsx": {
+    "mtime": 1781278976.7756476,
+    "ast_hash": "34035efc02466d38611eaf1d82deca45",
+    "semantic_hash": "34035efc02466d38611eaf1d82deca45"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\page.tsx": {
+    "mtime": 1781279045.2922394,
+    "ast_hash": "450928a129070fea9d971b717eba0289",
+    "semantic_hash": "450928a129070fea9d971b717eba0289"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\reset-password\\page.tsx": {
+    "mtime": 1781236065.967823,
+    "ast_hash": "4d33b5ecc79c0e37c118e9e9b90f84bc",
+    "semantic_hash": "4d33b5ecc79c0e37c118e9e9b90f84bc"
+  },
+  "C:\\Users\\otien\\build\\airwave\\app\\station\\[slug]\\page.tsx": {
+    "mtime": 1781278898.472968,
+    "ast_hash": "f7dd745730160df5cf6608273a45678b",
+    "semantic_hash": "f7dd745730160df5cf6608273a45678b"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\app\\__init__.py": {
+    "mtime": 1780425532.0746162,
+    "ast_hash": "02f5f53c196992ada98eecb543fa2bff",
+    "semantic_hash": "02f5f53c196992ada98eecb543fa2bff"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\app\\admin_bp.py": {
+    "mtime": 1780162326.7650006,
+    "ast_hash": "e5a12572e29579b453ba733f6fa25b82",
+    "semantic_hash": "e5a12572e29579b453ba733f6fa25b82"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\app\\analytics_bp.py": {
+    "mtime": 1780161887.5198798,
+    "ast_hash": "cd54b590912d05553f6bb9778529fc6f",
+    "semantic_hash": "cd54b590912d05553f6bb9778529fc6f"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\app\\auth_bp.py": {
+    "mtime": 1780418845.473495,
+    "ast_hash": "8688fc230738e3349fa668086088ccfa",
+    "semantic_hash": "8688fc230738e3349fa668086088ccfa"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\app\\db.py": {
+    "mtime": 1780425525.1390667,
+    "ast_hash": "80637afb57b049415a90ae043f41580d",
+    "semantic_hash": "80637afb57b049415a90ae043f41580d"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\app\\email_utils.py": {
+    "mtime": 1780418845.4739952,
+    "ast_hash": "967a4ba13f3451cf5a42c7577b1b4e3b",
+    "semantic_hash": "967a4ba13f3451cf5a42c7577b1b4e3b"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\app\\models\\analytics.py": {
+    "mtime": 1780161887.5240479,
+    "ast_hash": "02012a894f48d38ec2b173f1869f4abb",
+    "semantic_hash": "02012a894f48d38ec2b173f1869f4abb"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\app\\models\\favorites.py": {
+    "mtime": 1780161887.5247283,
+    "ast_hash": "e23be143fffbfcfc45a2633a502da50c",
+    "semantic_hash": "e23be143fffbfcfc45a2633a502da50c"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\app\\models\\station.py": {
+    "mtime": 1780161887.5254705,
+    "ast_hash": "c4ec24c828aedc8fd8e203e7ed8a6779",
+    "semantic_hash": "c4ec24c828aedc8fd8e203e7ed8a6779"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\app\\models\\user.py": {
+    "mtime": 1780418845.4751391,
+    "ast_hash": "0e8b5467250503a1b87fc0d9dc9d74ef",
+    "semantic_hash": "0e8b5467250503a1b87fc0d9dc9d74ef"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\app\\stations_bp.py": {
+    "mtime": 1780161887.5268595,
+    "ast_hash": "dfc8b5d65fd2de41ef84b5901689217b",
+    "semantic_hash": "dfc8b5d65fd2de41ef84b5901689217b"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\config\\base.py": {
+    "mtime": 1753114941.5326183,
+    "ast_hash": "9440008f49e70b51e07e3cb19ebbc147",
+    "semantic_hash": "9440008f49e70b51e07e3cb19ebbc147"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\run.py": {
+    "mtime": 1780162823.5218058,
+    "ast_hash": "33c6c33c06c8ba62669ef6d4361264f1",
+    "semantic_hash": "33c6c33c06c8ba62669ef6d4361264f1"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\services\\station_service.py": {
+    "mtime": 1753114983.8347726,
+    "ast_hash": "10512109e795d13118df84e51122e257",
+    "semantic_hash": "10512109e795d13118df84e51122e257"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\tests\\__init__.py": {
+    "mtime": 1780161887.5275977,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\tests\\conftest.py": {
+    "mtime": 1780161887.5284946,
+    "ast_hash": "8f2d705cc4ab4785ae22e2dba8f9d209",
+    "semantic_hash": "8f2d705cc4ab4785ae22e2dba8f9d209"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\tests\\test_auth.py": {
+    "mtime": 1780161887.5284946,
+    "ast_hash": "081cb94efe45f41f83e8157c2747258a",
+    "semantic_hash": "081cb94efe45f41f83e8157c2747258a"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\tests\\test_trending.py": {
+    "mtime": 1780161887.5289948,
+    "ast_hash": "c69c1b08f31882de6ef5df248e194e3f",
+    "semantic_hash": "c69c1b08f31882de6ef5df248e194e3f"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\utils\\decorators.py": {
+    "mtime": 1753114768.5424204,
+    "ast_hash": "5d6276d601f18eb43ae3a5c2af08c5f7",
+    "semantic_hash": "5d6276d601f18eb43ae3a5c2af08c5f7"
+  },
+  "C:\\Users\\otien\\build\\airwave\\backend\\utils\\errors.py": {
+    "mtime": 1753116102.7212417,
+    "ast_hash": "d9b142ce11871c6b4b9e7e46d3ee12ff",
+    "semantic_hash": "d9b142ce11871c6b4b9e7e46d3ee12ff"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components.json": {
+    "mtime": 1779733312.581359,
+    "ast_hash": "c29cc61948ee91658bc0b4039de5e3f6",
+    "semantic_hash": "c29cc61948ee91658bc0b4039de5e3f6"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\Equalizer.tsx": {
+    "mtime": 1780161887.5295303,
+    "ast_hash": "83fcae076824557eed23b324786f95c9",
+    "semantic_hash": "83fcae076824557eed23b324786f95c9"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\GlobalShortcuts.tsx": {
+    "mtime": 1780161887.5300415,
+    "ast_hash": "3f9587ce577e48e29319d456f3bbb735",
+    "semantic_hash": "3f9587ce577e48e29319d456f3bbb735"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\MordernAirwave.tsx": {
+    "mtime": 1781364440.7841225,
+    "ast_hash": "b22437170518ad2e672e75a01b91b38a",
+    "semantic_hash": "b22437170518ad2e672e75a01b91b38a"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\InsightPanels.tsx": {
+    "mtime": 1781327963.2833962,
+    "ast_hash": "14c1746ccde3d30056d34a8a15dbba43",
+    "semantic_hash": "14c1746ccde3d30056d34a8a15dbba43"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\KpiCard.tsx": {
+    "mtime": 1780161887.5313153,
+    "ast_hash": "83acadd6bcbff02d97ad62fa01237e4c",
+    "semantic_hash": "83acadd6bcbff02d97ad62fa01237e4c"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\LiveStatusBar.tsx": {
+    "mtime": 1780161887.5313153,
+    "ast_hash": "20784b30d7f96e53106584bd90328c50",
+    "semantic_hash": "20784b30d7f96e53106584bd90328c50"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\PeriodFilter.tsx": {
+    "mtime": 1780161887.5320692,
+    "ast_hash": "8521db0de2a07c4199ac973520bcf5ed",
+    "semantic_hash": "8521db0de2a07c4199ac973520bcf5ed"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\SkeletonCard.tsx": {
+    "mtime": 1780161887.5325842,
+    "ast_hash": "18f2ced0c9dfa255c3c3cf0f9920b25d",
+    "semantic_hash": "18f2ced0c9dfa255c3c3cf0f9920b25d"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\charts\\DonutChart.tsx": {
+    "mtime": 1780161887.5331042,
+    "ast_hash": "2b68b6213edc922e35886b08f0eb08fc",
+    "semantic_hash": "2b68b6213edc922e35886b08f0eb08fc"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\charts\\HBarChart.tsx": {
+    "mtime": 1780161887.5331042,
+    "ast_hash": "f27b94e0135a69edaf0d861da3b0f000",
+    "semantic_hash": "f27b94e0135a69edaf0d861da3b0f000"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\charts\\HeatmapGrid.tsx": {
+    "mtime": 1780161887.533631,
+    "ast_hash": "2997fdf973eef75d24597c0b2a99ceff",
+    "semantic_hash": "2997fdf973eef75d24597c0b2a99ceff"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\charts\\LineChart.tsx": {
+    "mtime": 1780161887.534413,
+    "ast_hash": "071c046742ec6d644e3d9dc754771eb2",
+    "semantic_hash": "071c046742ec6d644e3d9dc754771eb2"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\tabs\\AudienceTab.tsx": {
+    "mtime": 1781327992.9015453,
+    "ast_hash": "3ffdd8b7c017fe50592f6a43481d41ce",
+    "semantic_hash": "3ffdd8b7c017fe50592f6a43481d41ce"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\tabs\\GenresTab.tsx": {
+    "mtime": 1780161887.535447,
+    "ast_hash": "4ea30ce4ba45b1d085e2ba941152c5ea",
+    "semantic_hash": "4ea30ce4ba45b1d085e2ba941152c5ea"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\tabs\\HealthTab.tsx": {
+    "mtime": 1781304629.0921574,
+    "ast_hash": "00674626d3e3fa4dd0af55e1d3e7ae6d",
+    "semantic_hash": "00674626d3e3fa4dd0af55e1d3e7ae6d"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\tabs\\LivePulseTab.tsx": {
+    "mtime": 1781304444.099835,
+    "ast_hash": "96d13ac1248bf6ac2085e614fade2800",
+    "semantic_hash": "96d13ac1248bf6ac2085e614fade2800"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\tabs\\OverviewTab.tsx": {
+    "mtime": 1780161887.536302,
+    "ast_hash": "d080541c8203b576c6579e8091dbac43",
+    "semantic_hash": "d080541c8203b576c6579e8091dbac43"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\tabs\\SongsTab.tsx": {
+    "mtime": 1781304598.0586214,
+    "ast_hash": "2ccd179dc1e36901f66c45e0edb5ebe8",
+    "semantic_hash": "2ccd179dc1e36901f66c45e0edb5ebe8"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\analytics\\tabs\\StationsTab.tsx": {
+    "mtime": 1780161887.5368552,
+    "ast_hash": "97dbdba33e4fd0693e812a991c708f1f",
+    "semantic_hash": "97dbdba33e4fd0693e812a991c708f1f"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\auth\\LoginModal.tsx": {
+    "mtime": 1781238926.1150088,
+    "ast_hash": "054a122b08e9c2ba4678cb168f98ec68",
+    "semantic_hash": "054a122b08e9c2ba4678cb168f98ec68"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\auth\\ProfileModal.tsx": {
+    "mtime": 1780418845.477018,
+    "ast_hash": "deefe2765c046eef62e3721c6a0cafd1",
+    "semantic_hash": "deefe2765c046eef62e3721c6a0cafd1"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\layout\\Header.tsx": {
+    "mtime": 1781295595.0362875,
+    "ast_hash": "37f75504cc5e7a47a732474d61b1e7e4",
+    "semantic_hash": "37f75504cc5e7a47a732474d61b1e7e4"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\layout\\Layout.tsx": {
+    "mtime": 1781278844.6499128,
+    "ast_hash": "c5513b6ad5b5380287b18e52df04610d",
+    "semantic_hash": "c5513b6ad5b5380287b18e52df04610d"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\layout\\Sidebar.tsx": {
+    "mtime": 1781282791.501468,
+    "ast_hash": "5d1e4e6c4a703356fc49ce950c3cc876",
+    "semantic_hash": "5d1e4e6c4a703356fc49ce950c3cc876"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\layout\\TabBar.tsx": {
+    "mtime": 1781280885.9096782,
+    "ast_hash": "0cbeb11423d92b3fa57c247dbde66eb3",
+    "semantic_hash": "0cbeb11423d92b3fa57c247dbde66eb3"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\layout\\UserDrawer.tsx": {
+    "mtime": 1781282599.951338,
+    "ast_hash": "66e06cc430924935ff2e149bc1eb1a3e",
+    "semantic_hash": "66e06cc430924935ff2e149bc1eb1a3e"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\player\\AudioPlayer.tsx": {
+    "mtime": 1781280903.8461964,
+    "ast_hash": "1637fc31812e66d2835323d728275c75",
+    "semantic_hash": "1637fc31812e66d2835323d728275c75"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\player\\NowPlayingSheet.tsx": {
+    "mtime": 1781278811.1918838,
+    "ast_hash": "44371c7abbb830dc7a32f422cb8007ce",
+    "semantic_hash": "44371c7abbb830dc7a32f422cb8007ce"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\player\\PersistentAudioPlayer.tsx": {
+    "mtime": 1781239517.0137465,
+    "ast_hash": "ea7134e06ad04938ba3703abbde2ae97",
+    "semantic_hash": "ea7134e06ad04938ba3703abbde2ae97"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\player\\PlayControl.tsx": {
+    "mtime": 1780161887.5393581,
+    "ast_hash": "f5f18be669b9083ea6216c76cf666dbc",
+    "semantic_hash": "f5f18be669b9083ea6216c76cf666dbc"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\player\\SleepTimer.tsx": {
+    "mtime": 1780418845.480219,
+    "ast_hash": "b144a14f4e90a4a5c36c81bd54c025a6",
+    "semantic_hash": "b144a14f4e90a4a5c36c81bd54c025a6"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\player\\StationInfo.tsx": {
+    "mtime": 1781239316.099123,
+    "ast_hash": "9af80aa439bec442bca75e29b5fd6c56",
+    "semantic_hash": "9af80aa439bec442bca75e29b5fd6c56"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\player\\VolumeControl.tsx": {
+    "mtime": 1781239368.3771727,
+    "ast_hash": "460a1dfe9315a0ffa6188cc066a51499",
+    "semantic_hash": "460a1dfe9315a0ffa6188cc066a51499"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\player\\index.ts": {
+    "mtime": 1753038078.9342263,
+    "ast_hash": "2139ee200f20e814b28c4cce86d5fa85",
+    "semantic_hash": "2139ee200f20e814b28c4cce86d5fa85"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\providers\\GoogleProvider.tsx": {
+    "mtime": 1780418845.4812276,
+    "ast_hash": "23c8b378ce3fc52522b0e047b6fd2364",
+    "semantic_hash": "23c8b378ce3fc52522b0e047b6fd2364"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\PlayButton.tsx": {
+    "mtime": 1779821078.7210805,
+    "ast_hash": "3f88798bc5b71661a549076cf6218da1",
+    "semantic_hash": "3f88798bc5b71661a549076cf6218da1"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\RecentTracks.tsx": {
+    "mtime": 1781278769.508518,
+    "ast_hash": "02cbd7af0140c98b56d69eda008c0405",
+    "semantic_hash": "02cbd7af0140c98b56d69eda008c0405"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\SearchAndFilters.tsx": {
+    "mtime": 1781349214.2783372,
+    "ast_hash": "f7c30fad9f3de487b7c7265468f9287c",
+    "semantic_hash": "f7c30fad9f3de487b7c7265468f9287c"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\StationArt.tsx": {
+    "mtime": 1781347846.5272908,
+    "ast_hash": "11500e933f2a4b92f91dae5378467e96",
+    "semantic_hash": "11500e933f2a4b92f91dae5378467e96"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\StationAvatar.tsx": {
+    "mtime": 1781347444.3884597,
+    "ast_hash": "bf45666602b0d546926044239d2b45e4",
+    "semantic_hash": "bf45666602b0d546926044239d2b45e4"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\StationCard.tsx": {
+    "mtime": 1781375522.7943773,
+    "ast_hash": "6202362feb61072d3d627b9c9f781f1f",
+    "semantic_hash": "6202362feb61072d3d627b9c9f781f1f"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\StationDetail.tsx": {
+    "mtime": 1781278929.599338,
+    "ast_hash": "6f802117db2fe468659f3078ec43285f",
+    "semantic_hash": "6f802117db2fe468659f3078ec43285f"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\StationGrid.tsx": {
+    "mtime": 1781374119.8776288,
+    "ast_hash": "175ab3f3ad6082d370bf72ce1dcf7a8b",
+    "semantic_hash": "175ab3f3ad6082d370bf72ce1dcf7a8b"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\StationHeader.tsx": {
+    "mtime": 1753129258.431409,
+    "ast_hash": "8c930e35d9e8af127ee2e5e0aa795497",
+    "semantic_hash": "8c930e35d9e8af127ee2e5e0aa795497"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\StationRow.tsx": {
+    "mtime": 1781364370.1687863,
+    "ast_hash": "80461adc9d4367eb77fb713ea18d9b76",
+    "semantic_hash": "80461adc9d4367eb77fb713ea18d9b76"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\StationStats.tsx": {
+    "mtime": 1753129258.427805,
+    "ast_hash": "49fbd86e8615f2f21c7e42c9239dd415",
+    "semantic_hash": "49fbd86e8615f2f21c7e42c9239dd415"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\StationTile.tsx": {
+    "mtime": 1781364287.6577137,
+    "ast_hash": "a902cfea8550829ddfa977a77df9f768",
+    "semantic_hash": "a902cfea8550829ddfa977a77df9f768"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\station\\TrendingStrip.tsx": {
+    "mtime": 1781364304.5608132,
+    "ast_hash": "e4b81194094455fb33d5a883848d8e44",
+    "semantic_hash": "e4b81194094455fb33d5a883848d8e44"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\Badge.tsx": {
+    "mtime": 1781365127.0380354,
+    "ast_hash": "b0a46ccb3292c21b089a270998a25f31",
+    "semantic_hash": "b0a46ccb3292c21b089a270998a25f31"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\ErrorMessage.tsx": {
+    "mtime": 1753129226.8989596,
+    "ast_hash": "02cb485df180985c766ebc756d4b249d",
+    "semantic_hash": "02cb485df180985c766ebc756d4b249d"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\HeartBurst.tsx": {
+    "mtime": 1781236419.9447744,
+    "ast_hash": "4fbcc06c2aca0734a010e8620ebf464c",
+    "semantic_hash": "4fbcc06c2aca0734a010e8620ebf464c"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\LoadingSpinner.tsx": {
+    "mtime": 1753125318.057662,
+    "ast_hash": "fb0d2d12b66de9f0359872b38f806b2f",
+    "semantic_hash": "fb0d2d12b66de9f0359872b38f806b2f"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\Modal.tsx": {
+    "mtime": 1781236435.7072852,
+    "ast_hash": "41b3fadb5b7ebcb42c2f4d4d58561ed4",
+    "semantic_hash": "41b3fadb5b7ebcb42c2f4d4d58561ed4"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\Shelf.tsx": {
+    "mtime": 1781364269.670987,
+    "ast_hash": "6b9a24d6c353a50ea1cfa6b5d0b8ca89",
+    "semantic_hash": "6b9a24d6c353a50ea1cfa6b5d0b8ca89"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\ShortcutCheatsheet.tsx": {
+    "mtime": 1780161887.5427551,
+    "ast_hash": "a56fa1845b03c830f1ead3d1fe24f773",
+    "semantic_hash": "a56fa1845b03c830f1ead3d1fe24f773"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\SkeletonCard.tsx": {
+    "mtime": 1781350292.77894,
+    "ast_hash": "ba8ab4f59bbce6fb7ea38a879b26fadb",
+    "semantic_hash": "ba8ab4f59bbce6fb7ea38a879b26fadb"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\ThemeToggle.tsx": {
+    "mtime": 1779729059.3119645,
+    "ast_hash": "e490ea21d47341e7ff3a6d4a17664f72",
+    "semantic_hash": "e490ea21d47341e7ff3a6d4a17664f72"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\Waveform.tsx": {
+    "mtime": 1781375515.10767,
+    "ast_hash": "c1b4f84624eba3402e7270e5aa8a06e9",
+    "semantic_hash": "c1b4f84624eba3402e7270e5aa8a06e9"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\button.tsx": {
+    "mtime": 1781358700.9909086,
+    "ast_hash": "e5ae9fc6bd05a9375a2fc13a6acf8300",
+    "semantic_hash": "e5ae9fc6bd05a9375a2fc13a6acf8300"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\slider.tsx": {
+    "mtime": 1779734600.5368626,
+    "ast_hash": "1ddc476cffc083f68378a07276c64546",
+    "semantic_hash": "1ddc476cffc083f68378a07276c64546"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\sonner.tsx": {
+    "mtime": 1779734600.4494505,
+    "ast_hash": "f46214bc2a6a5153a6e04fad523d5587",
+    "semantic_hash": "f46214bc2a6a5153a6e04fad523d5587"
+  },
+  "C:\\Users\\otien\\build\\airwave\\components\\ui\\tooltip.tsx": {
+    "mtime": 1780161887.5435467,
+    "ast_hash": "a34eac76a243457ebe1c86289b4fd34c",
+    "semantic_hash": "a34eac76a243457ebe1c86289b4fd34c"
+  },
+  "C:\\Users\\otien\\build\\airwave\\context\\AuthContext.tsx": {
+    "mtime": 1780418845.4856963,
+    "ast_hash": "530fe771e47c149ff7a94652100fbced",
+    "semantic_hash": "530fe771e47c149ff7a94652100fbced"
+  },
+  "C:\\Users\\otien\\build\\airwave\\context\\PlayerContext.tsx": {
+    "mtime": 1781278728.3179793,
+    "ast_hash": "03880a4e31130f78ccda31518a206a75",
+    "semantic_hash": "03880a4e31130f78ccda31518a206a75"
+  },
+  "C:\\Users\\otien\\build\\airwave\\hooks\\useAudioManager.ts": {
+    "mtime": 1753131402.857383,
+    "ast_hash": "920c1e0a555cc4ea7daef42d08a47b92",
+    "semantic_hash": "920c1e0a555cc4ea7daef42d08a47b92"
+  },
+  "C:\\Users\\otien\\build\\airwave\\hooks\\useAudioPlayer.ts": {
+    "mtime": 1780418845.4872148,
+    "ast_hash": "010732e3807f0c73a2c61054a3fd37c9",
+    "semantic_hash": "010732e3807f0c73a2c61054a3fd37c9"
+  },
+  "C:\\Users\\otien\\build\\airwave\\hooks\\useFavorites.ts": {
+    "mtime": 1779825213.4150026,
+    "ast_hash": "1ea643671adf3dd142daf476ed0a9184",
+    "semantic_hash": "1ea643671adf3dd142daf476ed0a9184"
+  },
+  "C:\\Users\\otien\\build\\airwave\\hooks\\useKeyboardShortcuts.ts": {
+    "mtime": 1780161887.5478964,
+    "ast_hash": "20702e148526386d7b2ed1b8c977dbfd",
+    "semantic_hash": "20702e148526386d7b2ed1b8c977dbfd"
+  },
+  "C:\\Users\\otien\\build\\airwave\\hooks\\useListeners.ts": {
+    "mtime": 1781327868.2794561,
+    "ast_hash": "aed2d86e07c5a94eba00f64cf46620dd",
+    "semantic_hash": "aed2d86e07c5a94eba00f64cf46620dd"
+  },
+  "C:\\Users\\otien\\build\\airwave\\hooks\\useRecentStations.ts": {
+    "mtime": 1781240348.5337546,
+    "ast_hash": "86a1c28604bf8f6fb65816fb3da2cde4",
+    "semantic_hash": "86a1c28604bf8f6fb65816fb3da2cde4"
+  },
+  "C:\\Users\\otien\\build\\airwave\\hooks\\useScrollDirection.ts": {
+    "mtime": 1781280870.056102,
+    "ast_hash": "86c0071919c78b62716ad96c9ab28a9c",
+    "semantic_hash": "86c0071919c78b62716ad96c9ab28a9c"
+  },
+  "C:\\Users\\otien\\build\\airwave\\hooks\\useSleepTimer.ts": {
+    "mtime": 1780418845.4877179,
+    "ast_hash": "a58bee9f78e96cd21d82d6394cc7d54a",
+    "semantic_hash": "a58bee9f78e96cd21d82d6394cc7d54a"
+  },
+  "C:\\Users\\otien\\build\\airwave\\hooks\\useStationFilter.ts": {
+    "mtime": 1780161887.5494297,
+    "ast_hash": "bbc0d895311a28f3e202c9eef0efb966",
+    "semantic_hash": "bbc0d895311a28f3e202c9eef0efb966"
+  },
+  "C:\\Users\\otien\\build\\airwave\\hooks\\useStations.ts": {
+    "mtime": 1780162326.7838676,
+    "ast_hash": "ed895e4655563ed1de534503688d2607",
+    "semantic_hash": "ed895e4655563ed1de534503688d2607"
+  },
+  "C:\\Users\\otien\\build\\airwave\\hooks\\useStreamMetadata.ts": {
+    "mtime": 1780162326.7843702,
+    "ast_hash": "ac3695d89c194dec12fa64caacaaa22a",
+    "semantic_hash": "ac3695d89c194dec12fa64caacaaa22a"
+  },
+  "C:\\Users\\otien\\build\\airwave\\lib\\analytics.ts": {
+    "mtime": 1780161887.5509531,
+    "ast_hash": "bbbf7301958cf3a541c3b075944f8d4f",
+    "semantic_hash": "bbbf7301958cf3a541c3b075944f8d4f"
+  },
+  "C:\\Users\\otien\\build\\airwave\\lib\\analyticsApi.ts": {
+    "mtime": 1781327930.1550865,
+    "ast_hash": "10a980d93f1350d62079d8787706e1aa",
+    "semantic_hash": "10a980d93f1350d62079d8787706e1aa"
+  },
+  "C:\\Users\\otien\\build\\airwave\\lib\\api.ts": {
+    "mtime": 1780426509.1738803,
+    "ast_hash": "578cf9a21c100503756257c94da1728d",
+    "semantic_hash": "578cf9a21c100503756257c94da1728d"
+  },
+  "C:\\Users\\otien\\build\\airwave\\lib\\genreTheme.ts": {
+    "mtime": 1781236266.2190225,
+    "ast_hash": "14a82395d6d054a4cc9100c0971235e1",
+    "semantic_hash": "14a82395d6d054a4cc9100c0971235e1"
+  },
+  "C:\\Users\\otien\\build\\airwave\\lib\\mongodb.ts": {
+    "mtime": 1781305185.3117611,
+    "ast_hash": "d07bc9d113b3e2f9645cf1e78952ec76",
+    "semantic_hash": "d07bc9d113b3e2f9645cf1e78952ec76"
+  },
+  "C:\\Users\\otien\\build\\airwave\\lib\\slug.ts": {
+    "mtime": 1781240343.1773944,
+    "ast_hash": "d26e5df1fb18af8db24950d1ae9230b6",
+    "semantic_hash": "d26e5df1fb18af8db24950d1ae9230b6"
+  },
+  "C:\\Users\\otien\\build\\airwave\\lib\\utils.ts": {
+    "mtime": 1779733455.0989783,
+    "ast_hash": "5a6fd53fdcf2be529e9cc0b718fde352",
+    "semantic_hash": "5a6fd53fdcf2be529e9cc0b718fde352"
+  },
+  "C:\\Users\\otien\\build\\airwave\\middleware.ts": {
+    "mtime": 1780161887.5528185,
+    "ast_hash": "046b15287df2eeadc223038c2109c6f5",
+    "semantic_hash": "046b15287df2eeadc223038c2109c6f5"
+  },
+  "C:\\Users\\otien\\build\\airwave\\next.config.mjs": {
+    "mtime": 1781295583.7585807,
+    "ast_hash": "8ef8e041d6084246cf86406a77d49e96",
+    "semantic_hash": "8ef8e041d6084246cf86406a77d49e96"
+  },
+  "C:\\Users\\otien\\build\\airwave\\package.json": {
+    "mtime": 1781238163.707911,
+    "ast_hash": "fddf965bc2f097e8c724d74e3e103174",
+    "semantic_hash": "fddf965bc2f097e8c724d74e3e103174"
+  },
+  "C:\\Users\\otien\\build\\airwave\\postcss.config.mjs": {
+    "mtime": 1753022346.069406,
+    "ast_hash": "3507368dae6e94b0070b0a10efa15a05",
+    "semantic_hash": "3507368dae6e94b0070b0a10efa15a05"
+  },
+  "C:\\Users\\otien\\build\\airwave\\public\\manifest.json": {
+    "mtime": 1781238683.3985596,
+    "ast_hash": "b474f3640d0fa4b80018c98a221d9466",
+    "semantic_hash": "b474f3640d0fa4b80018c98a221d9466"
+  },
+  "C:\\Users\\otien\\build\\airwave\\public\\sw.js": {
+    "mtime": 1781328228.6879153,
+    "ast_hash": "3a1b87e3602fc3e6dac999f68cf598ac",
+    "semantic_hash": "3a1b87e3602fc3e6dac999f68cf598ac"
+  },
+  "C:\\Users\\otien\\build\\airwave\\public\\workbox-4754cb34.js": {
+    "mtime": 1781328228.688416,
+    "ast_hash": "98d58f6ba4bb37cd18d746933f6b0ed4",
+    "semantic_hash": "98d58f6ba4bb37cd18d746933f6b0ed4"
+  },
+  "C:\\Users\\otien\\build\\airwave\\scripts\\generate-icons.mjs": {
+    "mtime": 1781238444.9851024,
+    "ast_hash": "1798494a2f08b1d712038c1097b87ba1",
+    "semantic_hash": "1798494a2f08b1d712038c1097b87ba1"
+  },
+  "C:\\Users\\otien\\build\\airwave\\tailwind.config.ts": {
+    "mtime": 1781350279.1407893,
+    "ast_hash": "4721b9205cf9fba2e2ae5377d69c5155",
+    "semantic_hash": "4721b9205cf9fba2e2ae5377d69c5155"
+  },
+  "C:\\Users\\otien\\build\\airwave\\tsconfig.json": {
+    "mtime": 1753022346.070917,
+    "ast_hash": "b1b0130e5d79f78fd6d7f68e5f95b1a5",
+    "semantic_hash": "b1b0130e5d79f78fd6d7f68e5f95b1a5"
+  },
+  "C:\\Users\\otien\\build\\airwave\\types\\Station.ts": {
+    "mtime": 1780161887.554449,
+    "ast_hash": "c6c8632409eb452e3b9de9c5e8252f13",
+    "semantic_hash": "c6c8632409eb452e3b9de9c5e8252f13"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.playwright-mcp\\page-2026-05-30T20-42-52-645Z.yml": {
+    "mtime": 1780418845.4479742,
+    "ast_hash": "507dbf57c8e925190b30d26ae2d88e0c",
+    "semantic_hash": "507dbf57c8e925190b30d26ae2d88e0c"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.playwright-mcp\\page-2026-05-30T20-46-56-825Z.yml": {
+    "mtime": 1780418845.4494832,
+    "ast_hash": "8a470c6999b1a86cee2bdda17cb90565",
+    "semantic_hash": "8a470c6999b1a86cee2bdda17cb90565"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.playwright-mcp\\page-2026-05-30T20-48-45-445Z.yml": {
+    "mtime": 1780418845.4499931,
+    "ast_hash": "70ca5d95cb2ae5cafdd8defa8b9e398d",
+    "semantic_hash": "70ca5d95cb2ae5cafdd8defa8b9e398d"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.playwright-mcp\\page-2026-05-30T20-54-08-354Z.yml": {
+    "mtime": 1780418845.450572,
+    "ast_hash": "507dbf57c8e925190b30d26ae2d88e0c",
+    "semantic_hash": "507dbf57c8e925190b30d26ae2d88e0c"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.playwright-mcp\\page-2026-05-30T21-31-42-439Z.yml": {
+    "mtime": 1780418845.4515798,
+    "ast_hash": "80925157edf00bbb37f8888b83d9f3a9",
+    "semantic_hash": "80925157edf00bbb37f8888b83d9f3a9"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.playwright-mcp\\page-2026-05-30T21-33-18-301Z.yml": {
+    "mtime": 1780418845.4533193,
+    "ast_hash": "65e103da401f1be84783acbabaab0484",
+    "semantic_hash": "65e103da401f1be84783acbabaab0484"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.superpowers\\brainstorm\\1077-1779970097\\content\\cheatsheet-design.html": {
+    "mtime": 1780162326.7412784,
+    "ast_hash": "63d7d6ddd63662bf11cbe88b157e70d3",
+    "semantic_hash": "63d7d6ddd63662bf11cbe88b157e70d3"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.superpowers\\brainstorm\\1077-1779970097\\content\\discoverability.html": {
+    "mtime": 1780162326.7412784,
+    "ast_hash": "480e025cb52b859143a2384203a216b4",
+    "semantic_hash": "480e025cb52b859143a2384203a216b4"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.superpowers\\brainstorm\\1077-1779970097\\content\\shortcut-areas.html": {
+    "mtime": 1780162326.7468152,
+    "ast_hash": "cf03b2f1fcef4af84b50415badb2b0f7",
+    "semantic_hash": "cf03b2f1fcef4af84b50415badb2b0f7"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.superpowers\\brainstorm\\545-1780153783\\content\\scope.html": {
+    "mtime": 1780162326.7483604,
+    "ast_hash": "f1103936213dcca9597f93ea43018d08",
+    "semantic_hash": "f1103936213dcca9597f93ea43018d08"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.superpowers\\brainstorm\\545-1780153783\\content\\trending-layout.html": {
+    "mtime": 1780162326.7488718,
+    "ast_hash": "c1664f0ae0f6cae7509da9d46cd18603",
+    "semantic_hash": "c1664f0ae0f6cae7509da9d46cd18603"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.superpowers\\brainstorm\\545-1780153783\\content\\waiting-1.html": {
+    "mtime": 1780162326.7493742,
+    "ast_hash": "484f41fa91be936104ed1d80e8c9da0a",
+    "semantic_hash": "484f41fa91be936104ed1d80e8c9da0a"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.superpowers\\brainstorm\\session-1\\content\\composite-layout.html": {
+    "mtime": 1780162326.752784,
+    "ast_hash": "28b8f975193e7c51e7437546924a897d",
+    "semantic_hash": "28b8f975193e7c51e7437546924a897d"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.superpowers\\brainstorm\\session-1\\content\\layout-options.html": {
+    "mtime": 1780162326.7532878,
+    "ast_hash": "056df1c635c0215e8024ce8598babfed",
+    "semantic_hash": "056df1c635c0215e8024ce8598babfed"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.superpowers\\brainstorm\\session-1\\content\\tab-contents.html": {
+    "mtime": 1780162326.753791,
+    "ast_hash": "bcfbfcb0f24fb524edf6a46ea7ece9a6",
+    "semantic_hash": "bcfbfcb0f24fb524edf6a46ea7ece9a6"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.superpowers\\brainstorm\\session-1\\content\\waiting.html": {
+    "mtime": 1780162326.7542932,
+    "ast_hash": "e3271f1b438e1b344610c72221376334",
+    "semantic_hash": "e3271f1b438e1b344610c72221376334"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.yarnrc.yml": {
+    "mtime": 1780162386.5498657,
+    "ast_hash": "5e2778b27069b932c31ef9806947cf99",
+    "semantic_hash": "5e2778b27069b932c31ef9806947cf99"
+  },
+  "C:\\Users\\otien\\build\\airwave\\README.md": {
+    "mtime": 1753022346.065915,
+    "ast_hash": "0feef7df5b8692b8ed6037ce47b42011",
+    "semantic_hash": "0feef7df5b8692b8ed6037ce47b42011"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\redesign\\2026-06-12-frontend-redesign-proposal.md": {
+    "mtime": 1781235586.3439057,
+    "ast_hash": "1a0d5bc9b82c8e22e4d4e63c3141b582",
+    "semantic_hash": "1a0d5bc9b82c8e22e4d4e63c3141b582"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-25-airwave-improvements.md": {
+    "mtime": 1779732524.2474139,
+    "ast_hash": "38b36822e36775e4890cf941cece55fc",
+    "semantic_hash": "38b36822e36775e4890cf941cece55fc"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-26-realtime-listener-tracking.md": {
+    "mtime": 1779820328.7738645,
+    "ast_hash": "7bdb03f434a1c59c9cf495546f3a1573",
+    "semantic_hash": "7bdb03f434a1c59c9cf495546f3a1573"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-26-stream-metadata-analytics.md": {
+    "mtime": 1779818169.6975396,
+    "ast_hash": "43e2eab3d6991438c51d80b24ab6bd9a",
+    "semantic_hash": "43e2eab3d6991438c51d80b24ab6bd9a"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-27-smart-polling.md": {
+    "mtime": 1779861821.5300975,
+    "ast_hash": "4b99f3a5b77acb935d10279a620227b0",
+    "semantic_hash": "4b99f3a5b77acb935d10279a620227b0"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-28-keyboard-shortcuts.md": {
+    "mtime": 1780162326.7782905,
+    "ast_hash": "eb7767db2e26fc43f925dfcd5a1d5cc4",
+    "semantic_hash": "eb7767db2e26fc43f925dfcd5a1d5cc4"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-28-security-auth-hardening.md": {
+    "mtime": 1780161887.544565,
+    "ast_hash": "51615b1175e79baf4415b47ee31882c1",
+    "semantic_hash": "51615b1175e79baf4415b47ee31882c1"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-29-architecture-refactoring.md": {
+    "mtime": 1780162326.7787948,
+    "ast_hash": "df0ef9a8fed7b95830c375bf3bcacf95",
+    "semantic_hash": "df0ef9a8fed7b95830c375bf3bcacf95"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-29-mongodb-migration.md": {
+    "mtime": 1780162326.7792995,
+    "ast_hash": "2da06ab46aa4fe34eb409c6e1169fa3b",
+    "semantic_hash": "2da06ab46aa4fe34eb409c6e1169fa3b"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-29-monitoring.md": {
+    "mtime": 1780162326.7798047,
+    "ast_hash": "b32aa8426b82f297ae20f0a969f54fe0",
+    "semantic_hash": "b32aa8426b82f297ae20f0a969f54fe0"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-29-scalability.md": {
+    "mtime": 1780162326.7798047,
+    "ast_hash": "d59454c39ab9f3e8190599f05a324f83",
+    "semantic_hash": "d59454c39ab9f3e8190599f05a324f83"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-29-ux-polish.md": {
+    "mtime": 1780162326.78031,
+    "ast_hash": "e498b86d2c2ebe4153326f8deed35efa",
+    "semantic_hash": "e498b86d2c2ebe4153326f8deed35efa"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-30-analytics-audience-tab.md": {
+    "mtime": 1780161887.5452693,
+    "ast_hash": "f08ee5502a43c5b55f984638b7efc01f",
+    "semantic_hash": "f08ee5502a43c5b55f984638b7efc01f"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-30-analytics-dashboard.md": {
+    "mtime": 1780162326.7813187,
+    "ast_hash": "62d636be52bb5f4f8fc87a689598a0c5",
+    "semantic_hash": "62d636be52bb5f4f8fc87a689598a0c5"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-05-30-trending-stations.md": {
+    "mtime": 1780161887.5457752,
+    "ast_hash": "2d014f4643def027d85f7960b2df751a",
+    "semantic_hash": "2d014f4643def027d85f7960b2df751a"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\plans\\2026-06-13-mbr-radio-redesign.md": {
+    "mtime": 1781350070.539751,
+    "ast_hash": "6adbd6746d7543d0773ecc9c2a2d62a9",
+    "semantic_hash": "6adbd6746d7543d0773ecc9c2a2d62a9"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\specs\\2026-05-28-keyboard-shortcuts-design.md": {
+    "mtime": 1780162326.7818224,
+    "ast_hash": "08d120f64a2d25956b71f64d30bc39be",
+    "semantic_hash": "08d120f64a2d25956b71f64d30bc39be"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\specs\\2026-05-28-security-auth-hardening-design.md": {
+    "mtime": 1780161887.5462768,
+    "ast_hash": "c4c1a9117688aa244630e98ac9e4b61f",
+    "semantic_hash": "c4c1a9117688aa244630e98ac9e4b61f"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\specs\\2026-05-29-architecture-refactoring-design.md": {
+    "mtime": 1780162326.7823277,
+    "ast_hash": "c6876fc6088bb8157f1b0e50db107b90",
+    "semantic_hash": "c6876fc6088bb8157f1b0e50db107b90"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\specs\\2026-05-30-analytics-audience-tab-design.md": {
+    "mtime": 1780161887.5469024,
+    "ast_hash": "84d5a8531eee4cfe4cab56222f0d607b",
+    "semantic_hash": "84d5a8531eee4cfe4cab56222f0d607b"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\specs\\2026-05-30-analytics-dashboard-design.md": {
+    "mtime": 1780161887.547396,
+    "ast_hash": "73735325e05777e4895c4430ea90b59f",
+    "semantic_hash": "73735325e05777e4895c4430ea90b59f"
+  },
+  "C:\\Users\\otien\\build\\airwave\\docs\\superpowers\\specs\\2026-05-30-trending-stations-design.md": {
+    "mtime": 1780161887.547396,
+    "ast_hash": "b05f613e3eb03005f96b72261ccf709d",
+    "semantic_hash": "b05f613e3eb03005f96b72261ccf709d"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.playwright-mcp\\page-2026-05-30T20-46-25-896Z.png": {
+    "mtime": 1780418845.44898,
+    "ast_hash": "7eb8c9bab62f869d7766e7f969ce617a",
+    "semantic_hash": "7eb8c9bab62f869d7766e7f969ce617a"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.playwright-mcp\\page-2026-05-30T20-55-23-110Z.png": {
+    "mtime": 1780418845.4510765,
+    "ast_hash": "ba64157b8ef88538255da0cd7d583fdc",
+    "semantic_hash": "ba64157b8ef88538255da0cd7d583fdc"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.playwright-mcp\\page-2026-05-30T21-32-39-723Z.png": {
+    "mtime": 1780418845.452817,
+    "ast_hash": "0a72408900cfb46a030117ef7d5b9873",
+    "semantic_hash": "0a72408900cfb46a030117ef7d5b9873"
+  },
+  "C:\\Users\\otien\\build\\airwave\\.playwright-mcp\\page-2026-05-30T21-59-25-847Z.png": {
+    "mtime": 1780418845.4543464,
+    "ast_hash": "1900937331ecee12d786091c91d66b42",
+    "semantic_hash": "1900937331ecee12d786091c91d66b42"
+  },
+  "C:\\Users\\otien\\build\\airwave\\public\\icons\\icon-192.png": {
+    "mtime": 1781238458.9540555,
+    "ast_hash": "e29dd56e3eebeed3803124c20cc70184",
+    "semantic_hash": "e29dd56e3eebeed3803124c20cc70184"
+  },
+  "C:\\Users\\otien\\build\\airwave\\public\\icons\\icon-512.png": {
+    "mtime": 1781238458.9836593,
+    "ast_hash": "df6d87910687b554ef8d894f18574569",
+    "semantic_hash": "df6d87910687b554ef8d894f18574569"
+  },
+  "C:\\Users\\otien\\build\\airwave\\public\\icons\\icon-maskable-192.png": {
+    "mtime": 1781238459.0008328,
+    "ast_hash": "c22acadbb3d738f985bd923ec87f3485",
+    "semantic_hash": "c22acadbb3d738f985bd923ec87f3485"
+  },
+  "C:\\Users\\otien\\build\\airwave\\public\\icons\\icon-maskable-512.png": {
+    "mtime": 1781238459.034342,
+    "ast_hash": "91d23fd6b6a7a25fd6c440a3174594a6",
+    "semantic_hash": "91d23fd6b6a7a25fd6c440a3174594a6"
+  },
+  "C:\\Users\\otien\\build\\airwave\\public\\next.svg": {
+    "mtime": 1753022346.069911,
+    "ast_hash": "8e061864f388b47f33a1c3780831193e",
+    "semantic_hash": "8e061864f388b47f33a1c3780831193e"
+  },
+  "C:\\Users\\otien\\build\\airwave\\public\\vercel.svg": {
+    "mtime": 1753022346.069911,
+    "ast_hash": "61c6b19abff40ea7acd577be818f3976",
+    "semantic_hash": "61c6b19abff40ea7acd577be818f3976"
+  }
+}

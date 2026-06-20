@@ -9,6 +9,7 @@ import { KpiCard } from '../KpiCard';
 import { SkeletonCard } from '../SkeletonCard';
 import { LineChart } from '../charts/LineChart';
 import { HBarChart } from '../charts/HBarChart';
+import { AudienceMoversPanel, RetentionPanel } from '../InsightPanels';
 
 type SortKey = 'avg_listeners' | 'count';
 
@@ -198,6 +199,12 @@ export function AudienceTab({ period }: Props) {
           </table>
         )}
       </div>
+
+      {/* Peak + week-over-week growth from station snapshots */}
+      <AudienceMoversPanel period={period} />
+
+      {/* Weekly retention cohort triangle */}
+      <RetentionPanel weeks={8} />
     </div>
   );
 }

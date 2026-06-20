@@ -41,6 +41,11 @@ export async function getListenerSessionsCollection(): Promise<Collection<Listen
   return db.collection<ListenerSessionDocument>('listenerSessions');
 }
 
+export async function getListenerVisitsCollection(): Promise<Collection<ListenerVisitDocument>> {
+  const db = await getDb();
+  return db.collection<ListenerVisitDocument>('listenerVisits');
+}
+
 export interface PlayDocument {
   _id?: import('mongodb').ObjectId;
   stationId: number;
@@ -85,6 +90,22 @@ export interface ListenerSessionDocument {
   endedAt: Date | null;
 }
 
+/**
+ * Durable visit log for retention cohorts: one doc per device per day.
+ * Unlike listenerSessions (45s TTL), these persist for 180 days, keyed by
+ * a localStorage device id that survives browser restarts.
+ */
+export interface ListenerVisitDocument {
+  _id?: import('mongodb').ObjectId;
+  deviceId: string;
+  /** UTC day string, e.g. "2026-06-13" */
+  day: string;
+  /** Start of `day` as a Date — used for cohort aggregation and TTL */
+  date: Date;
+  firstSeenAt: Date;
+  lastSeenAt: Date;
+}
+
 export async function ensureIndexes(): Promise<void> {
   const plays = await getPlaysCollection();
   const snapshots = await getSnapshotsCollection();
@@ -111,5 +132,16 @@ export async function ensureIndexes(): Promise<void> {
   await sessions.createIndex(
     { sessionId: 1 },
     { unique: true, name: 'session_id_unique' }
+  );
+
+  const visits = await getListenerVisitsCollection();
+
+  await visits.createIndex(
+    { deviceId: 1, day: 1 },
+    { unique: true, name: 'visit_device_day_unique' }
+  );
+  await visits.createIndex(
+    { date: 1 },
+    { expireAfterSeconds: 60 * 60 * 24 * 180, name: 'visit_ttl_180d' }
   );
 }

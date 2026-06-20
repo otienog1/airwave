@@ -1,7 +1,6 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
-import { gsap } from 'gsap';
 
 interface ModalProps {
     isOpen: boolean;
@@ -13,8 +12,6 @@ interface ModalProps {
 
 export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 'md' }) => {
     const [mounted, setMounted] = useState(isOpen);
-    const overlayRef = useRef<HTMLDivElement>(null);
-    const panelRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (isOpen) {
@@ -26,35 +23,19 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
         return () => { document.body.style.overflow = 'unset'; };
     }, [isOpen]);
 
-    useEffect(() => {
-        if (!mounted) return;
-        if (isOpen) {
-            gsap.fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: 'power2.out' });
-            gsap.fromTo(panelRef.current,
-                { opacity: 0, scale: 0.92, y: 10 },
-                { opacity: 1, scale: 1, y: 0, duration: 0.25, ease: 'back.out(1.4)' }
-            );
-        } else {
-            const tl = gsap.timeline({ onComplete: () => setMounted(false) });
-            tl.to(panelRef.current, { opacity: 0, scale: 0.95, y: 6, duration: 0.15, ease: 'power2.in' });
-            tl.to(overlayRef.current, { opacity: 0, duration: 0.12, ease: 'power2.in' }, '-=0.05');
-        }
-    }, [isOpen, mounted]);
-
     if (!mounted) return null;
 
     const sizeClasses = { sm: 'max-w-sm', md: 'max-w-md', lg: 'max-w-lg', xl: 'max-w-2xl' };
 
     return (
         <div
-            ref={overlayRef}
-            className="fixed inset-0 flex items-center justify-center z-50 p-4"
+            className={`fixed inset-0 flex items-center justify-center z-50 p-4 ${isOpen ? 'modal-overlay-enter' : 'modal-overlay-exit'}`}
             style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
         >
             <div
-                ref={panelRef}
-                className={`w-full ${sizeClasses[size]} relative max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl`}
+                className={`w-full ${sizeClasses[size]} relative max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${isOpen ? 'modal-panel-enter' : 'modal-panel-exit'}`}
                 style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--color-border-strong)' }}
+                onAnimationEnd={() => { if (!isOpen) setMounted(false); }}
             >
                 <div
                     className="flex items-center justify-between px-6 py-4"
@@ -67,6 +48,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
                         style={{ color: 'var(--color-text-muted)' }}
                         onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-overlay-hover)')}
                         onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                        aria-label="Close dialog"
                     >
                         <X className="w-5 h-5" />
                     </button>
