@@ -1,30 +1,21 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
-import { StationAvatar } from '@/components/station/StationAvatar';
+import { StationArt } from '@/components/station/StationArt';
 import { Station } from '../../types/Station';
-
-const GENRE_COLORS: Record<string, string> = {
-    Pop:          '#ec4899',
-    Soul:         '#f59e0b',
-    'Hip Hop':    '#7c3aed',
-    Urban:        '#4f46e5',
-    Contemporary: '#059669',
-    Talk:         '#3b82f6',
-    News:         '#1d4ed8',
-    Dance:        '#0891b2',
-};
+import { getGenreTheme } from '@/lib/genreTheme';
 
 interface StationInfoProps {
     station: Station;
     isPlaying?: boolean;
     nowPlaying?: string | null;
     liveListeners?: number;
+    statusText?: string | null;
+    statusLevel?: 'info' | 'error';
 }
 
-export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, nowPlaying, liveListeners = 0 }) => {
-    const accentColor = (station.genre ? GENRE_COLORS[station.genre] : undefined) ?? '#6366f1';
+export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, nowPlaying, liveListeners = 0, statusText, statusLevel }) => {
+    const accentColor = getGenreTheme(station.genre).accent;
     const containerRef = useRef<HTMLDivElement>(null);
     const spanRef      = useRef<HTMLSpanElement>(null);
 
@@ -37,22 +28,13 @@ export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, no
         containerRef.current.style.width = isSmallAndOverflow ? `${parentW}px` : `${Math.min(spanW, parentW)}px`;
     }, [nowPlaying]);
 
-    // Animate in on each new song
-    useEffect(() => {
-        if (!containerRef.current || !nowPlaying) return;
-        gsap.fromTo(
-            containerRef.current,
-            { opacity: 0, y: 4 },
-            { opacity: 1, y: 0, duration: 0.22, ease: 'power2.out' }
-        );
-    }, [nowPlaying]);
-
     return (
         <div className="flex items-center gap-3 flex-1 min-w-0">
             <div className="relative">
-                <StationAvatar
+                <StationArt
                     name={station.name}
                     logoUrl={station.logo_url}
+                    genre={station.genre}
                     size={44}
                     hideInitials={isPlaying}
                 />
@@ -85,7 +67,7 @@ export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, no
                     <div
                         key={nowPlaying}
                         ref={containerRef}
-                        className="mt-0.5 overflow-hidden now-playing-container"
+                        className="mt-0.5 overflow-hidden now-playing-container now-playing-enter"
                     >
                         <div className="now-playing-track">
                             <span ref={spanRef} className="text-xs pr-10" style={{ color: 'var(--color-accent)' }}>
@@ -96,6 +78,20 @@ export const StationInfo: React.FC<StationInfoProps> = ({ station, isPlaying, no
                             </span>
                         </div>
                     </div>
+                )}
+                {statusText && (
+                    <p
+                        className="text-[11px] leading-none truncate mt-0.5"
+                        style={{
+                            color: statusLevel === 'error'
+                                ? 'var(--color-error, #ef4444)'
+                                : 'var(--color-text-muted)',
+                        }}
+                        role={statusLevel === 'error' ? 'alert' : undefined}
+                        aria-live={statusLevel !== 'error' ? 'polite' : undefined}
+                    >
+                        {statusText}
+                    </p>
                 )}
                 {liveListeners > 0 && (
                     <div className="flex items-center gap-1 mt-0.5">
