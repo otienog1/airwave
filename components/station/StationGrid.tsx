@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { StationCard } from '@/components/station/StationCard';
+import { StationRow } from '@/components/station/StationRow';
 import { Radio, AlertCircle } from 'lucide-react';
 import type { Station } from '@/types/Station';
 import { SkeletonCard } from '@/components/ui/SkeletonCard';
@@ -18,6 +19,7 @@ interface StationGridProps {
     onRetry?: () => void;
     nowPlaying?: string | null;
     listenerCounts?: Record<number, number>;
+    layout?: 'grid' | 'list';
 }
 
 export const StationGrid: React.FC<StationGridProps> = ({
@@ -33,6 +35,7 @@ export const StationGrid: React.FC<StationGridProps> = ({
     onRetry,
     nowPlaying,
     listenerCounts,
+    layout = 'grid',
 }) => {
     const prefersReducedMotion =
         typeof window !== 'undefined' &&
@@ -93,32 +96,83 @@ export const StationGrid: React.FC<StationGridProps> = ({
         );
     }
 
+    const rowProps = (station: Station, index: number) => {
+        const isCurrent = currentStation?.id === station.id;
+        return {
+            station,
+            isPlaying: isPlaying && isCurrent,
+            isCurrentStation: isCurrent,
+            isLoading: !!(isAudioLoading && isCurrent),
+            onPlay: () => onPlay(station),
+            onFavorite: () => onFavorite(station.id),
+            isFavorite: favorites.has(station.id),
+            nowPlaying: isCurrent ? nowPlaying : null,
+            liveListeners: listenerCounts?.[station.id] ?? 0,
+        };
+    };
+
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {stations.map((station, index) => {
-                const isCurrent = currentStation?.id === station.id;
-                return (
+        <>
+            {/* Mobile: always list */}
+            <div className="sm:hidden space-y-0.5">
+                {stations.map((station, index) => (
                     <div
                         key={station.id}
                         style={{
                             animation: 'card-enter 0.35s ease-out both',
-                            animationDelay: prefersReducedMotion ? '0ms' : `${index * 40}ms`,
+                            animationDelay: prefersReducedMotion ? '0ms' : `${index * 30}ms`,
                         }}
                     >
-                        <StationCard
-                            station={station}
-                            isPlaying={isPlaying && isCurrent}
-                            isCurrentStation={isCurrent}
-                            isLoading={isAudioLoading && isCurrent}
-                            onPlay={() => onPlay(station)}
-                            onFavorite={() => onFavorite(station.id)}
-                            isFavorite={favorites.has(station.id)}
-                            nowPlaying={isCurrent ? nowPlaying : null}
-                            liveListeners={listenerCounts?.[station.id] ?? 0}
-                        />
+                        <StationRow {...rowProps(station, index)} />
                     </div>
-                );
-            })}
-        </div>
+                ))}
+            </div>
+
+            {/* Desktop: grid or list */}
+            <div className={`hidden sm:block`}>
+                {layout === 'list' ? (
+                    <div className="space-y-0.5">
+                        {stations.map((station, index) => (
+                            <div
+                                key={station.id}
+                                style={{
+                                    animation: 'card-enter 0.35s ease-out both',
+                                    animationDelay: prefersReducedMotion ? '0ms' : `${index * 30}ms`,
+                                }}
+                            >
+                                <StationRow {...rowProps(station, index)} />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                        {stations.map((station, index) => {
+                            const isCurrent = currentStation?.id === station.id;
+                            return (
+                                <div
+                                    key={station.id}
+                                    style={{
+                                        animation: 'card-enter 0.35s ease-out both',
+                                        animationDelay: prefersReducedMotion ? '0ms' : `${index * 40}ms`,
+                                    }}
+                                >
+                                    <StationCard
+                                        station={station}
+                                        isPlaying={isPlaying && isCurrent}
+                                        isCurrentStation={isCurrent}
+                                        isLoading={!!(isAudioLoading && isCurrent)}
+                                        onPlay={() => onPlay(station)}
+                                        onFavorite={() => onFavorite(station.id)}
+                                        isFavorite={favorites.has(station.id)}
+                                        nowPlaying={isCurrent ? nowPlaying : null}
+                                        liveListeners={listenerCounts?.[station.id] ?? 0}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+        </>
     );
 };

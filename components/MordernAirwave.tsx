@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useCallback, useMemo, useEffect } from 'react';
+import React, { useRef, useCallback, useMemo, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Heart, Play, Pause } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -127,6 +127,8 @@ const ModernAirwave: React.FC = () => {
         [stations, favorites]
     );
 
+    const [viewLayout, setViewLayout] = useState<'grid' | 'list'>('grid');
+
     const browsing =
         !showFavoritesOnly &&
         searchTerm === '' &&
@@ -151,6 +153,8 @@ const ModernAirwave: React.FC = () => {
                 regions={regions}
                 stationCount={displayedStations.length}
                 loading={stationsLoading}
+                layout={viewLayout}
+                onLayoutChange={setViewLayout}
                 trendingSlot={
                     <TrendingStrip
                         stations={stations}
@@ -386,6 +390,7 @@ const ModernAirwave: React.FC = () => {
                 onRetry={refetchStations}
                 nowPlaying={nowPlaying}
                 listenerCounts={listenerCounts}
+                layout={viewLayout}
             />
         </>
     );
