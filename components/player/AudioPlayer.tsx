@@ -90,12 +90,14 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                             isLoading={isLoading}
                             onTogglePlay={onTogglePlay}
                         />
-                        <VolumeControl
-                            volume={volume}
-                            isMuted={isMuted}
-                            onVolumeChange={onVolumeChange}
-                            onMuteToggle={onMuteToggle}
-                        />
+                        <div className="hidden sm:block">
+                            <VolumeControl
+                                volume={volume}
+                                isMuted={isMuted}
+                                onVolumeChange={onVolumeChange}
+                                onMuteToggle={onMuteToggle}
+                            />
+                        </div>
                         <SleepTimer
                             secondsLeft={secondsLeft}
                             isActive={timerActive}

@@ -244,8 +244,8 @@ export const NowPlayingSheet: React.FC<NowPlayingSheetProps> = ({ open, onClose 
                         </button>
                     </div>
 
-                    {/* Volume (pointer devices only) */}
-                    <div className="flex justify-center mt-4">
+                    {/* Volume — desktop only; mobile users have hardware buttons */}
+                    <div className="hidden sm:flex justify-center mt-4">
                         <VolumeControl
                             volume={volume}
                             isMuted={isMuted}
