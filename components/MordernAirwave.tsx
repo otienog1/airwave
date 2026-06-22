@@ -2,7 +2,7 @@
 
 import React, { useRef, useCallback, useMemo, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { Heart, Play, Pause } from 'lucide-react';
+import { Heart, Play, Pause, LayoutGrid, LayoutList } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useStationFilter } from '@/hooks/useStationFilter';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -153,8 +153,6 @@ const ModernAirwave: React.FC = () => {
                 regions={regions}
                 stationCount={displayedStations.length}
                 loading={stationsLoading}
-                layout={viewLayout}
-                onLayoutChange={setViewLayout}
                 trendingSlot={
                     <TrendingStrip
                         stations={stations}
@@ -375,6 +373,34 @@ const ModernAirwave: React.FC = () => {
                 >
                     <Heart className="w-3 h-3" /> Favourites
                 </button>
+
+                {/* Layout toggle — desktop only */}
+                <div className="ml-auto hidden sm:flex items-center rounded-xl p-1 gap-0.5"
+                    style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
+                >
+                    <button
+                        onClick={() => setViewLayout('grid')}
+                        className="p-2 rounded-lg transition-colors cursor-pointer"
+                        style={viewLayout === 'grid'
+                            ? { background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#fff' }
+                            : { color: 'var(--color-text-muted)' }}
+                        aria-label="Grid view"
+                        title="Grid view"
+                    >
+                        <LayoutGrid className="w-4 h-4" />
+                    </button>
+                    <button
+                        onClick={() => setViewLayout('list')}
+                        className="p-2 rounded-lg transition-colors cursor-pointer"
+                        style={viewLayout === 'list'
+                            ? { background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#fff' }
+                            : { color: 'var(--color-text-muted)' }}
+                        aria-label="List view"
+                        title="List view"
+                    >
+                        <LayoutList className="w-4 h-4" />
+                    </button>
+                </div>
             </div>
 
             <StationGrid

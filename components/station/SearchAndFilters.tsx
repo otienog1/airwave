@@ -1,7 +1,7 @@
 'use client';
 
 import React, { forwardRef, useState, type ReactNode } from 'react';
-import { Search, X, SlidersHorizontal, LayoutGrid, LayoutList } from 'lucide-react';
+import { Search, X, SlidersHorizontal } from 'lucide-react';
 
 interface SearchAndFiltersProps {
     searchTerm: string;
@@ -15,8 +15,6 @@ interface SearchAndFiltersProps {
     stationCount: number;
     loading?: boolean;
     trendingSlot?: ReactNode;
-    layout?: 'grid' | 'list';
-    onLayoutChange?: (layout: 'grid' | 'list') => void;
 }
 
 function Chip({
@@ -105,8 +103,6 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
             stationCount,
             loading,
             trendingSlot,
-            layout = 'grid',
-            onLayoutChange,
         },
         ref
     ) => {
@@ -133,36 +129,6 @@ export const SearchAndFilters = forwardRef<HTMLInputElement, SearchAndFiltersPro
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0">
-                            {/* Layout toggle */}
-                            {onLayoutChange && (
-                                <div
-                                    className="flex items-center rounded-xl p-1 gap-0.5"
-                                    style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
-                                >
-                                    <button
-                                        onClick={() => onLayoutChange('grid')}
-                                        className="p-2 rounded-lg transition-colors cursor-pointer"
-                                        style={layout === 'grid'
-                                            ? { background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#fff' }
-                                            : { color: 'var(--color-text-muted)' }}
-                                        aria-label="Grid view"
-                                        title="Grid view"
-                                    >
-                                        <LayoutGrid className="w-4 h-4" />
-                                    </button>
-                                    <button
-                                        onClick={() => onLayoutChange('list')}
-                                        className="p-2 rounded-lg transition-colors cursor-pointer"
-                                        style={layout === 'list'
-                                            ? { background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#fff' }
-                                            : { color: 'var(--color-text-muted)' }}
-                                        aria-label="List view"
-                                        title="List view"
-                                    >
-                                        <LayoutList className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            )}
                             <div className="relative w-72">
                                 <Search
                                     className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
